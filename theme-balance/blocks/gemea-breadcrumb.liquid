@@ -1,0 +1,95 @@
+{{ 'gemea-product.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign gemea_product = closest.product
+  if gemea_product == blank
+    assign gemea_product = product
+  endif
+-%}
+
+{%- if gemea_product != blank -%}
+  <div {{ block.shopify_attributes }}>
+    {%- if block.settings.show_breadcrumb -%}
+      <nav class="gemea-breadcrumb" aria-label="{{ block.settings.aria_label }}">
+        <a href="{{ routes.root_url }}">{{ block.settings.home_label }}</a>
+        <span aria-hidden="true">/</span>
+        {%- if collection != blank -%}
+          <a href="{{ collection.url }}">{{ collection.title }}</a>
+          <span aria-hidden="true">/</span>
+        {%- elsif gemea_product.collections.size > 0 -%}
+          <a href="{{ gemea_product.collections.first.url }}">{{ gemea_product.collections.first.title }}</a>
+          <span aria-hidden="true">/</span>
+        {%- endif -%}
+        <span aria-current="page">{{ gemea_product.title }}</span>
+      </nav>
+    {%- endif -%}
+
+    {%- if block.settings.badge_label != blank -%}
+      {%- assign badge_tag = block.settings.badge_tag | downcase -%}
+      {%- assign show_badge = false -%}
+      {%- if badge_tag == blank -%}
+        {%- assign show_badge = true -%}
+      {%- else -%}
+        {%- for tag in gemea_product.tags -%}
+          {%- assign tag_handle = tag | downcase -%}
+          {%- if tag_handle == badge_tag -%}
+            {%- assign show_badge = true -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      {%- if show_badge -%}
+        <p class="gemea-badge">{{ block.settings.badge_label }}</p>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Fil d'Ariane + étiquette",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Afficher le fil d'Ariane",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Libellé de la page d'accueil",
+      "default": "Accueil"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Libellé d'accessibilité",
+      "default": "Fil d'Ariane"
+    },
+    {
+      "type": "header",
+      "content": "Étiquette produit"
+    },
+    {
+      "type": "text",
+      "id": "badge_label",
+      "label": "Texte de l'étiquette",
+      "info": "Laissez vide pour ne pas afficher d'étiquette.",
+      "default": "Nouveauté"
+    },
+    {
+      "type": "text",
+      "id": "badge_tag",
+      "label": "Afficher uniquement si le produit porte ce tag",
+      "info": "Laissez vide pour afficher l'étiquette sur tous les produits.",
+      "default": "nouveaute"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fil d'Ariane + étiquette"
+    }
+  ]
+}
+{% endschema %}

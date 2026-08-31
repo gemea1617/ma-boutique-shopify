@@ -1,0 +1,42 @@
+{%- liquid
+  assign gemea_product = closest.product
+  if gemea_product == blank
+    assign gemea_product = product
+  endif
+
+  assign gemea_teaser = gemea_product.metafields.custom.accroche.value
+  if gemea_teaser == blank
+    assign gemea_teaser = gemea_product.description | strip_html | truncatewords: block.settings.word_count
+  endif
+-%}
+
+{%- if gemea_teaser != blank -%}
+  <p class="gemea-teaser" {{ block.shopify_attributes }}>{{ gemea_teaser }}</p>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Accroche produit",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Affiche le métachamp custom.accroche s'il existe, sinon un extrait de la description du produit."
+    },
+    {
+      "type": "range",
+      "id": "word_count",
+      "label": "Nombre de mots de l'extrait",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "default": 30
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accroche produit"
+    }
+  ]
+}
+{% endschema %}
