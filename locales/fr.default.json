@@ -1,0 +1,137 @@
+{
+  "general": {
+    "home": "Accueil",
+    "menu": "Menu",
+    "breadcrumb": "Fil d'Ariane",
+    "accessibility": {
+      "skip_to_content": "Aller au contenu"
+    },
+    "meta": {
+      "tags": "Étiquettes : {{ tags }}",
+      "page": "Page {{ page }}"
+    },
+    "search": {
+      "title": "Recherche",
+      "placeholder": "Rechercher un bijou",
+      "results_count": {
+        "one": "{{ count }} résultat",
+        "other": "{{ count }} résultats"
+      },
+      "no_results": "Aucun résultat. Essayez un autre mot."
+    },
+    "pagination": {
+      "label": "Pagination",
+      "previous": "Page précédente",
+      "next": "Page suivante"
+    },
+    "password_page": {
+      "password": "Mot de passe",
+      "enter": "Entrer"
+    }
+  },
+  "onboarding": {
+    "product_title": "Nom du produit"
+  },
+  "newsletter": {
+    "label": "Adresse e-mail",
+    "placeholder": "Votre adresse e-mail",
+    "success": "Merci, votre inscription est enregistrée."
+  },
+  "contact": {
+    "name": "Nom",
+    "email": "E-mail",
+    "message": "Message",
+    "send": "Envoyer",
+    "success": "Message envoyé. Nous répondons sous 24 h ouvrées."
+  },
+  "blogs": {
+    "eyebrow": "Journal",
+    "back": "Retour au journal"
+  },
+  "collections": {
+    "general": {
+      "eyebrow": "Collection",
+      "count": {
+        "one": "{{ count }} pièce",
+        "other": "{{ count }} pièces"
+      },
+      "empty": "Cette collection est vide pour le moment."
+    },
+    "sorting": {
+      "title": "Trier par"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Ajouter au panier",
+      "sold_out": "Épuisé",
+      "on_sale": "Promo",
+      "price_from": "À partir de {{ price }}",
+      "quantity": "Quantité",
+      "quantity_increase": "Augmenter la quantité",
+      "quantity_decrease": "Diminuer la quantité",
+      "description": "Description",
+      "media_label": "Visuel {{ index }}"
+    }
+  },
+  "sections": {
+    "cart": {
+      "title": "Panier",
+      "empty": "Votre panier est vide",
+      "empty_subtext": "Il reste beaucoup à découvrir.",
+      "continue": "Voir les bijoux",
+      "remove": "Retirer",
+      "update": "Mettre à jour",
+      "checkout": "Passer commande",
+      "subtotal": "Sous-total",
+      "taxes_note": "Taxes incluses. Livraison calculée au paiement."
+    },
+    "featured_collection": {
+      "view_all": "Voir toute la collection"
+    }
+  },
+  "customer": {
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "first_name": "Prénom",
+    "last_name": "Nom",
+    "log_out": "Se déconnecter",
+    "login": {
+      "title": "Connexion",
+      "submit": "Se connecter",
+      "create": "Créer un compte"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "submit": "Créer mon compte"
+    },
+    "account": {
+      "title": "Mon compte",
+      "return": "Retour à mon compte"
+    },
+    "orders": {
+      "title": "Commandes",
+      "none": "Aucune commande pour le moment.",
+      "quantity": "Quantité"
+    },
+    "addresses": {
+      "title": "Mes adresses",
+      "none": "Aucune adresse enregistrée."
+    },
+    "reset_password": {
+      "title": "Nouveau mot de passe",
+      "confirm": "Confirmer le mot de passe",
+      "submit": "Enregistrer"
+    },
+    "activate_account": {
+      "title": "Activer mon compte",
+      "submit": "Activer",
+      "decline": "Refuser"
+    }
+  },
+  "404": {
+    "title": "Page introuvable",
+    "subtext": "Le lien est peut-être ancien, ou la pièce n'est plus en ligne.",
+    "link": "Voir les bijoux"
+  }
+}

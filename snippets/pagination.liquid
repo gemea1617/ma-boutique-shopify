@@ -1,0 +1,28 @@
+{%- if paginate.pages > 1 -%}
+  {%- comment -%}
+    part.title est une chaîne, paginate.current_page un entier : on compare
+    les deux sous forme de chaîne, sinon la page courante n'est jamais repérée.
+  {%- endcomment -%}
+  {%- assign current_label = paginate.current_page | append: '' -%}
+
+  <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+    {%- if paginate.previous -%}
+      <a href="{{ paginate.previous.url }}" aria-label="{{ 'general.pagination.previous' | t }}">&larr;</a>
+    {%- endif -%}
+
+    {%- for part in paginate.parts -%}
+      {%- if part.is_link -%}
+        <a href="{{ part.url }}">{{ part.title }}</a>
+      {%- elsif part.title == current_label -%}
+        <span aria-current="page">{{ part.title }}</span>
+      {%- else -%}
+        {%- comment -%} Les points de suspension entre deux plages de pages {%- endcomment -%}
+        <span>{{ part.title }}</span>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if paginate.next -%}
+      <a href="{{ paginate.next.url }}" aria-label="{{ 'general.pagination.next' | t }}">&rarr;</a>
+    {%- endif -%}
+  </nav>
+{%- endif -%}

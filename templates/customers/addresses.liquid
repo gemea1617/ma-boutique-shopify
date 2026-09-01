@@ -1,0 +1,13 @@
+<div class="page-width page-width--narrow section">
+  <h1 style="margin-bottom:28px">{{ 'customer.addresses.title' | t }}</h1>
+
+  {%- for address in customer.addresses -%}
+    <div class="cart-item" style="grid-template-columns:1fr">
+      <div>{{ address | format_address }}</div>
+    </div>
+  {%- else -%}
+    <p>{{ 'customer.addresses.none' | t }}</p>
+  {%- endfor -%}
+
+  <p style="margin-top:34px"><a class="link-line" href="{{ routes.account_url }}">{{ 'customer.account.return' | t }}</a></p>
+</div>

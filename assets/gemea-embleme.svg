@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 100" width="150" height="100" role="img" aria-label="GEMEA">
+  <clipPath id="gemea-weave"><rect x="52" y="0" width="20" height="100"/></clipPath>
+  <ellipse cx="52" cy="50" rx="34" ry="24" fill="none" stroke="#0F0F0F" stroke-width="4"/>
+  <ellipse cx="98" cy="50" rx="34" ry="24" fill="none" stroke="#0F0F0F" stroke-width="4"/>
+  <g clip-path="url(#gemea-weave)">
+    <ellipse cx="52" cy="50" rx="34" ry="24" fill="none" stroke="#0F0F0F" stroke-width="4"/>
+  </g>
+</svg>

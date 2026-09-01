@@ -1,0 +1,28 @@
+<div class="page-width section">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; gap:20px; flex-wrap:wrap">
+    <h1>{{ 'customer.account.title' | t }}</h1>
+    <a class="link-line" href="{{ routes.account_logout_url }}">{{ 'customer.log_out' | t }}</a>
+  </div>
+
+  <h2 style="margin-top:44px">{{ 'customer.orders.title' | t }}</h2>
+
+  {%- paginate customer.orders by 20 -%}
+    {%- if customer.orders.size == 0 -%}
+      <p style="margin-top:16px">{{ 'customer.orders.none' | t }}</p>
+    {%- else -%}
+      {%- for order in customer.orders -%}
+        <div class="cart-item" style="grid-template-columns:1fr">
+          <div class="cart-item__row" style="margin-top:0">
+            <div>
+              <a class="cart-item__title" href="{{ order.customer_url }}">{{ order.name }}</a>
+              <div class="cart-item__variant">{{ order.created_at | date: '%d.%m.%Y' }} · {{ order.financial_status_label }}</div>
+            </div>
+            <div style="letter-spacing:.06em">{{ order.total_price | money }}</div>
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+
+    {% render 'pagination', paginate: paginate %}
+  {%- endpaginate -%}
+</div>

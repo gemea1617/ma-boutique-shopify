@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-contact",
+      "settings": { "eyebrow": "Une question ?" }
+    }
+  },
+  "order": ["main"]
+}

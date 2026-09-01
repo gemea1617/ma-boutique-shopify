@@ -1,0 +1,50 @@
+<div class="page-width section">
+  <div class="page-width--narrow" style="margin:0 auto; text-align:center">
+    <h1>{{ 'general.search.title' | t }}</h1>
+    <form action="{{ routes.search_url }}" method="get" role="search" style="margin-top:26px">
+      <div class="field" style="margin:0">
+        <label class="visually-hidden" for="SearchInput">{{ 'general.search.placeholder' | t }}</label>
+        <input
+          id="SearchInput"
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="{{ 'general.search.placeholder' | t }}"
+        >
+      </div>
+    </form>
+  </div>
+
+  {%- if search.performed -%}
+    <p class="eyebrow" style="text-align:center; margin-top:44px">
+      {{ 'general.search.results_count' | t: count: search.results_count }}
+    </p>
+
+    {%- paginate search.results by 12 -%}
+      <ul class="product-grid product-grid--4" style="margin-top:24px">
+        {%- for item in search.results -%}
+          {%- if item.object_type == 'product' -%}
+            {% render 'product-card', card_product: item %}
+          {%- else -%}
+            <li class="card">
+              <div class="card__info" style="text-align:left">
+                <a class="card__title" href="{{ item.url }}">{{ item.title }}</a>
+                <p class="mention" style="margin-top:8px">{{ item.content | strip_html | truncatewords: 22 }}</p>
+              </div>
+            </li>
+          {%- endif -%}
+        {%- else -%}
+          <li style="grid-column:1/-1; text-align:center; color:var(--gris)">
+            {{ 'general.search.no_results' | t }}
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      {% render 'pagination', paginate: paginate %}
+    {%- endpaginate -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{ "name": "Recherche" }
+{% endschema %}

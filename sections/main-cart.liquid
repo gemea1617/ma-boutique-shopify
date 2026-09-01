@@ -1,0 +1,76 @@
+<div class="page-width page-width--narrow section">
+  {%- if cart.item_count == 0 -%}
+    <div class="empty-state" style="padding-block:40px">
+      {% render 'logo', width: 84, unique_id: 'cart' %}
+      <h1 style="margin-top:26px">{{ 'sections.cart.empty' | t }}</h1>
+      <p>{{ 'sections.cart.empty_subtext' | t }}</p>
+      <a class="btn" href="{{ routes.all_products_collection_url }}">{{ 'sections.cart.continue' | t }}</a>
+    </div>
+  {%- else -%}
+    <h1 style="text-align:center; margin-bottom:40px">{{ 'sections.cart.title' | t }}</h1>
+
+    <form action="{{ routes.cart_url }}" method="post" novalidate>
+      {%- for item in cart.items -%}
+        <div class="cart-item">
+          <a href="{{ item.url }}">
+            {%- if item.image -%}
+              <img
+                src="{{ item.image | image_url: width: 200 }}"
+                alt="{{ item.image.alt | escape }}"
+                width="88"
+                height="110"
+                style="object-fit:cover; aspect-ratio:4/5"
+                loading="lazy"
+              >
+            {%- else -%}
+              <span class="placeholder" style="aspect-ratio:4/5">{% render 'logo', width: 44, unique_id: item.key %}</span>
+            {%- endif -%}
+          </a>
+
+          <div>
+            <a class="cart-item__title" href="{{ item.url }}">{{ item.product.title }}</a>
+            {%- unless item.product.has_only_default_variant -%}
+              <div class="cart-item__variant">{{ item.variant.title }}</div>
+            {%- endunless -%}
+
+            <div class="cart-item__row">
+              <div class="qty" data-qty>
+                <button type="button" data-qty-step="-1" aria-label="{{ 'products.product.quantity_decrease' | t }}">&minus;</button>
+                <input
+                  type="number"
+                  name="updates[]"
+                  value="{{ item.quantity }}"
+                  min="0"
+                  inputmode="numeric"
+                  aria-label="{{ 'products.product.quantity' | t }}"
+                >
+                <button type="button" data-qty-step="1" aria-label="{{ 'products.product.quantity_increase' | t }}">+</button>
+              </div>
+
+              <div style="text-align:right">
+                <div style="letter-spacing:.06em">{{ item.final_line_price | money }}</div>
+                <a class="cart-item__remove" href="{{ item.url_to_remove }}">{{ 'sections.cart.remove' | t }}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+
+      <div class="cart-summary">
+        <div class="cart-total">
+          {{ 'sections.cart.subtotal' | t }} <span>{{ cart.total_price | money }}</span>
+        </div>
+        <p class="mention">{{ 'sections.cart.taxes_note' | t }}</p>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-end">
+          <button class="btn btn--ghost" type="submit" name="update">{{ 'sections.cart.update' | t }}</button>
+          <button class="btn" type="submit" name="checkout">{{ 'sections.cart.checkout' | t }}</button>
+        </div>
+      </div>
+    </form>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{ "name": "Panier" }
+{% endschema %}

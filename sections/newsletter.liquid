@@ -1,0 +1,59 @@
+<section class="section band">
+  <div class="page-width page-width--narrow">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    <h2>{{ section.settings.heading }}</h2>
+    {%- if section.settings.text != blank -%}
+      <p style="margin-top:12px">{{ section.settings.text }}</p>
+    {%- endif -%}
+
+    {%- form 'customer', class: 'newsletter-form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <label class="visually-hidden" for="NewsletterEmail">{{ 'newsletter.label' | t }}</label>
+      <input
+        id="NewsletterEmail"
+        type="email"
+        name="contact[email]"
+        placeholder="{{ 'newsletter.placeholder' | t }}"
+        autocomplete="email"
+        required
+      >
+      <button class="btn" type="submit">{{ section.settings.button_label }}</button>
+
+      {%- if form.posted_successfully? -%}
+        <p style="flex:1 1 100%; margin-top:14px">{{ 'newsletter.success' | t }}</p>
+      {%- elsif form.errors -%}
+        <p style="flex:1 1 100%; margin-top:14px">{{ form.errors.messages.email }}</p>
+      {%- endif -%}
+    {%- endform -%}
+
+    {%- if section.settings.mention != blank -%}
+      <p class="mention" style="margin-top:20px">{{ section.settings.mention }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Lettre GEMEA" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "-10 % sur votre première commande" },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Texte",
+      "default": "Les nouveautés, les réassorts et rien d'autre. Une à deux fois par mois."
+    },
+    { "type": "text", "id": "button_label", "label": "Bouton", "default": "S'inscrire" },
+    {
+      "type": "text",
+      "id": "mention",
+      "label": "Mention",
+      "default": "Désinscription en un clic. Aucune donnée revendue."
+    }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

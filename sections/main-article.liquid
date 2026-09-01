@@ -1,0 +1,26 @@
+<article class="page-width page-width--narrow section">
+  <header style="text-align:center; margin-bottom:38px">
+    <p class="eyebrow">{{ article.published_at | date: '%d.%m.%Y' }}</p>
+    <h1>{{ article.title }}</h1>
+  </header>
+
+  {%- if article.image -%}
+    <img
+      src="{{ article.image | image_url: width: 1400 }}"
+      alt="{{ article.image.alt | escape }}"
+      width="{{ article.image.width }}"
+      height="{{ article.image.height }}"
+      style="margin-bottom:38px"
+    >
+  {%- endif -%}
+
+  <div class="rte">{{ article.content }}</div>
+
+  <p style="margin-top:44px; text-align:center">
+    <a class="link-line" href="{{ blog.url }}">{{ 'blogs.back' | t }}</a>
+  </p>
+</article>
+
+{% schema %}
+{ "name": "Article" }
+{% endschema %}

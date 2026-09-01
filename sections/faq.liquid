@@ -1,0 +1,53 @@
+<section class="section">
+  <div class="page-width page-width--narrow">
+    <div class="section-head section-head--center">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h2>{{ section.settings.heading }}</h2>
+    </div>
+
+    {%- for block in section.blocks -%}
+      <details class="accordion" {{ block.shopify_attributes }}>
+        <summary>{{ block.settings.question }}</summary>
+        <div class="accordion__body rte">{{ block.settings.answer }}</div>
+      </details>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Bon à savoir" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Questions fréquentes" }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Le bijou résiste-t-il à l'eau ?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Réponse",
+          "default": "<p>Oui. Douche, piscine, mer : le plaquage 3 microns tient. Rincez à l'eau claire après la mer, c'est tout.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [{ "type": "question" }, { "type": "question" }, { "type": "question" }]
+    }
+  ]
+}
+{% endschema %}

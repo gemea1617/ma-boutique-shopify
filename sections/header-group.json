@@ -1,0 +1,20 @@
+{
+  "name": "En-tête",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "text": "Livraison offerte dès 50 € · Retours sous 30 jours"
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_height": 44,
+        "menu": "main-menu"
+      }
+    }
+  },
+  "order": ["announcement-bar", "header"]
+}

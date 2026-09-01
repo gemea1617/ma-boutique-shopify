@@ -1,0 +1,83 @@
+<header class="header">
+  <div class="page-width header__inner">
+    <button
+      class="header__icon menu-toggle"
+      type="button"
+      data-menu-toggle
+      aria-controls="MobileMenu"
+      aria-expanded="false"
+      aria-label="{{ 'general.menu' | t }}"
+    >
+      {% render 'icon', name: 'menu', size: 20 %}
+    </button>
+
+    <nav class="header__nav" role="navigation">
+      {%- for link in section.settings.menu.links -%}
+        <a
+          class="nav-link"
+          href="{{ link.url }}"
+          {% if link.active %}aria-current="page"{% endif %}
+        >{{ link.title }}</a>
+      {%- endfor -%}
+    </nav>
+
+    <a class="header__logo" href="{{ routes.root_url }}">
+      {%- if section.settings.logo != blank -%}
+        <img
+          src="{{ section.settings.logo | image_url: width: 400 }}"
+          alt="{{ shop.name | escape }}"
+          width="{{ section.settings.logo.width }}"
+          height="{{ section.settings.logo.height }}"
+          style="max-height: {{ section.settings.logo_height }}px"
+        >
+      {%- else -%}
+        {% render 'logo', width: 46, unique_id: 'header' %}
+        <span class="wordmark">{{ shop.name | upcase | strip }}</span>
+      {%- endif -%}
+    </a>
+
+    <div class="header__actions">
+      <a class="header__icon" href="{{ routes.search_url }}" aria-label="{{ 'general.search.title' | t }}">
+        {% render 'icon', name: 'search' %}
+      </a>
+
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="header__icon" href="{{ routes.account_url }}" aria-label="{{ 'customer.account.title' | t }}">
+          {% render 'icon', name: 'account' %}
+        </a>
+      {%- endif -%}
+
+      <a class="header__icon" href="{{ routes.cart_url }}" aria-label="{{ 'sections.cart.title' | t }}">
+        {% render 'icon', name: 'cart' %}
+        <span class="cart-count" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+
+  <nav class="menu-panel" id="MobileMenu" hidden>
+    {%- for link in section.settings.menu.links -%}
+      <a href="{{ link.url }}">{{ link.title }}</a>
+    {%- endfor -%}
+  </nav>
+</header>
+
+{% schema %}
+{
+  "name": "En-tête",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Hauteur du logo",
+      "min": 24,
+      "max": 70,
+      "step": 2,
+      "unit": "px",
+      "default": 44
+    },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" }
+  ],
+  "enabled_on": { "groups": ["header"] }
+}
+{% endschema %}

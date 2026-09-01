@@ -1,0 +1,54 @@
+<section class="split{% if section.settings.reverse %} split--reverse{% endif %}">
+  <div class="split__media">
+    {%- if section.settings.image != blank -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 1200 }}"
+        srcset="
+          {{ section.settings.image | image_url: width: 600 }} 600w,
+          {{ section.settings.image | image_url: width: 1200 }} 1200w
+        "
+        sizes="(min-width: 900px) 50vw, 100vw"
+        alt="{{ section.settings.image.alt | escape }}"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        loading="lazy"
+      >
+    {%- else -%}
+      <span class="placeholder">{% render 'logo', width: 110, unique_id: section.id %}</span>
+    {%- endif -%}
+  </div>
+
+  <div class="split__copy">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    <h2>{{ section.settings.heading }}</h2>
+    <div class="rte" style="margin-top:16px">{{ section.settings.text }}</div>
+    {%- if section.settings.button_label != blank -%}
+      <div style="margin-top:30px">
+        <a class="btn btn--ghost" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image et texte",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "checkbox", "id": "reverse", "label": "Image à droite", "default": false },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Notre matière" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Plaqué or 18 carats" },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Texte",
+      "default": "<p>Une couche d'or de 3 microns déposée sur laiton, épaisse assez pour tenir la douche, la mer et les jours qui s'enchaînent. Nos pièces ne noircissent pas et ne verdissent pas la peau.</p>"
+    },
+    { "type": "text", "id": "button_label", "label": "Bouton" },
+    { "type": "url", "id": "button_link", "label": "Lien du bouton" }
+  ],
+  "presets": [{ "name": "Image et texte" }]
+}
+{% endschema %}

@@ -1,0 +1,72 @@
+<div class="page-width">
+  <header class="collection-header">
+    <p class="eyebrow">{{ 'collections.general.eyebrow' | t }}</p>
+    <h1>{{ collection.title }}</h1>
+    {%- if collection.description != blank and section.settings.show_description -%}
+      <div class="rte" style="margin-top:14px">{{ collection.description }}</div>
+    {%- endif -%}
+  </header>
+
+  {%- paginate collection.products by section.settings.per_page -%}
+    <div class="collection-toolbar">
+      <span class="count">
+        {{ 'collections.general.count' | t: count: collection.products_count }}
+      </span>
+
+      {%- if section.settings.show_sort -%}
+        {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+        <label class="visually-hidden" for="SortBy">{{ 'collections.sorting.title' | t }}</label>
+        <select id="SortBy" data-sort>
+          {%- for option in collection.sort_options -%}
+            <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>
+              {{ option.name }}
+            </option>
+          {%- endfor -%}
+        </select>
+      {%- endif -%}
+    </div>
+
+    <ul class="product-grid{% if section.settings.columns == '4' %} product-grid--4{% endif %}">
+      {%- for product in collection.products -%}
+        {% render 'product-card', card_product: product %}
+      {%- else -%}
+        <li style="grid-column:1/-1; text-align:center; color:var(--gris)">
+          {{ 'collections.general.empty' | t }}
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {% render 'pagination', paginate: paginate %}
+  {%- endpaginate -%}
+
+  <div style="height: var(--section-y)"></div>
+</div>
+
+{% schema %}
+{
+  "name": "Page collection",
+  "settings": [
+    { "type": "checkbox", "id": "show_description", "label": "Afficher la description", "default": true },
+    { "type": "checkbox", "id": "show_sort", "label": "Afficher le tri", "default": true },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Produits par page",
+      "min": 6,
+      "max": 24,
+      "step": 3,
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Colonnes sur grand écran",
+      "options": [
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "4"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,30 @@
+{%- comment -%}
+  Prix d'un produit ou d'une variante.
+  Accepte : target (product ou variant), show_from (bool)
+{%- endcomment -%}
+
+{%- liquid
+  if target == null
+    assign target = product
+  endif
+
+  assign on_sale = false
+  if target.compare_at_price > target.price
+    assign on_sale = true
+  endif
+-%}
+
+{%- if target.price == 0 and target.available == false -%}
+  <span class="price--unavailable">{{ 'products.product.sold_out' | t }}</span>
+{%- else -%}
+  {%- if on_sale -%}
+    <s>{{ target.compare_at_price | money }}</s>
+    <span class="price--sale">{{ target.price | money }}</span>
+  {%- else -%}
+    {%- if show_from and target.price_varies -%}
+      {{ 'products.product.price_from' | t: price: target.price_min | money }}
+    {%- else -%}
+      {{ target.price | money }}
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}

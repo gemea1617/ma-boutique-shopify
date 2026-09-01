@@ -1,0 +1,49 @@
+{%- comment -%}
+  Emblème GEMEA : deux anneaux entrelacés.
+
+  L'entrelacement est obtenu en redessinant l'anneau gauche dans une bande
+  verticale étroite (le clipPath), pour qu'il repasse par-dessus l'anneau
+  droit à cet endroit précis. Sans ce troisième tracé, les deux anneaux ne
+  sont que superposés — ce que la charte interdit.
+
+  Le trait s'épaissit à mesure que le logo rétrécit, sinon l'entrelacement
+  se referme visuellement.
+
+  Accepte : width (px), stroke (couleur CSS), unique_id
+{%- endcomment -%}
+
+{%- liquid
+  assign w = width | default: 52
+  assign color = stroke | default: 'currentColor'
+  assign uid = unique_id | default: 'default'
+
+  if w >= 90
+    assign sw = 3.4
+  elsif w >= 60
+    assign sw = 4.4
+  elsif w >= 40
+    assign sw = 5
+  elsif w >= 28
+    assign sw = 6
+  else
+    assign sw = 8
+  endif
+
+  assign h = w | times: 100 | divided_by: 150
+-%}
+
+<svg
+  width="{{ w }}"
+  height="{{ h }}"
+  viewBox="0 0 150 100"
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  <clipPath id="gemea-weave-{{ uid }}"><rect x="52" y="0" width="20" height="100"/></clipPath>
+  <ellipse cx="52" cy="50" rx="34" ry="24" stroke="{{ color }}" stroke-width="{{ sw }}"/>
+  <ellipse cx="98" cy="50" rx="34" ry="24" stroke="{{ color }}" stroke-width="{{ sw }}"/>
+  <g clip-path="url(#gemea-weave-{{ uid }})">
+    <ellipse cx="52" cy="50" rx="34" ry="24" stroke="{{ color }}" stroke-width="{{ sw }}"/>
+  </g>
+</svg>

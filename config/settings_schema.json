@@ -1,0 +1,35 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "GEMEA",
+    "theme_version": "1.0.0",
+    "theme_author": "GEMEA",
+    "theme_documentation_url": "https://github.com/gemea1617/ma-boutique-shopify",
+    "theme_support_url": "https://github.com/gemea1617/ma-boutique-shopify/issues"
+  },
+  {
+    "name": "Marque",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "La palette et les polices sont fixées par la charte GEMEA et ne se règlent pas ici : Tenor Sans pour les titres, Jost pour le texte, ivoire dominant, noir en accent."
+      },
+      { "type": "image_picker", "id": "favicon", "label": "Favicon" },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Image de partage",
+        "info": "Utilisée quand une page sans photo produit est partagée sur les réseaux."
+      }
+    ]
+  },
+  {
+    "name": "Réseaux sociaux",
+    "settings": [
+      { "type": "url", "id": "social_instagram", "label": "Instagram" },
+      { "type": "url", "id": "social_tiktok", "label": "TikTok" },
+      { "type": "url", "id": "social_facebook", "label": "Facebook" },
+      { "type": "url", "id": "social_pinterest", "label": "Pinterest" }
+    ]
+  }
+]

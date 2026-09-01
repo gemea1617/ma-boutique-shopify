@@ -1,0 +1,130 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "Collection signature",
+        "heading": "Le bijou qu'on ne retire plus",
+        "text": "Plaqué or 18 carats, résistant à l'eau, pensé pour un usage quotidien.",
+        "button_label": "Découvrir",
+        "button_label_2": "Nos collections"
+      }
+    },
+    "promesses": {
+      "type": "promesses",
+      "blocks": {
+        "b1": {
+          "type": "promesse",
+          "settings": {
+            "icon": "gem",
+            "heading": "Plaqué or 18 carats",
+            "text": "3 microns d'or sur laiton, pour une tenue qui dure."
+          }
+        },
+        "b2": {
+          "type": "promesse",
+          "settings": {
+            "icon": "water",
+            "heading": "Résistant à l'eau",
+            "text": "Douche, piscine, mer : gardez-le sur vous."
+          }
+        },
+        "b3": {
+          "type": "promesse",
+          "settings": {
+            "icon": "truck",
+            "heading": "Expédié sous 24 h",
+            "text": "Depuis la France, livraison offerte dès 50 €."
+          }
+        }
+      },
+      "block_order": ["b1", "b2", "b3"],
+      "settings": { "background": "#FFFFFF" }
+    },
+    "featured": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "La sélection",
+        "heading": "Nos collections",
+        "count": 8,
+        "columns": "4"
+      }
+    },
+    "matiere": {
+      "type": "image-with-text",
+      "settings": {
+        "eyebrow": "Notre matière",
+        "heading": "Fait pour être porté tous les jours",
+        "text": "<p>Une couche d'or de 3 microns déposée sur laiton, assez épaisse pour tenir la douche, la mer et les jours qui s'enchaînent. Nos pièces ne noircissent pas et ne verdissent pas la peau.</p>",
+        "button_label": "Notre histoire",
+        "reverse": true
+      }
+    },
+    "avis": {
+      "type": "avis",
+      "blocks": {
+        "a1": {
+          "type": "avis",
+          "settings": {
+            "stars": 5,
+            "text": "Je le porte jour et nuit depuis six mois, il n'a pas bougé d'un ton.",
+            "author": "Camille, Lyon"
+          }
+        },
+        "a2": {
+          "type": "avis",
+          "settings": {
+            "stars": 5,
+            "text": "Emballage soigné, envoi rapide. La chaîne est plus jolie qu'en photo.",
+            "author": "Inès, Bordeaux"
+          }
+        },
+        "a3": {
+          "type": "avis",
+          "settings": {
+            "stars": 5,
+            "text": "J'avais peur que ça verdisse comme les autres. Rien du tout après l'été.",
+            "author": "Sarah, Marseille"
+          }
+        }
+      },
+      "block_order": ["a1", "a2", "a3"],
+      "settings": { "background": "#FAF9F7" }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "Le bijou résiste-t-il à l'eau ?",
+            "answer": "<p>Oui. Douche, piscine, mer : le plaquage 3 microns tient. Rincez à l'eau claire après la mer, c'est tout.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "En combien de temps suis-je livrée ?",
+            "answer": "<p>Expédition sous 24 h ouvrées depuis la France, livraison en 2 à 4 jours. Offerte dès 50 €.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "Puis-je retourner ma commande ?",
+            "answer": "<p>Sous 30 jours, retours gratuits, sans justification. Le bijou doit être non porté et dans son emballage.</p>"
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "Comment entretenir mes bijoux ?",
+            "answer": "<p>Évitez le contact direct avec les parfums et les crèmes. Un chiffon doux et sec suffit à leur rendre leur éclat.</p>"
+          }
+        }
+      },
+      "block_order": ["q1", "q2", "q3", "q4"]
+    }
+  },
+  "order": ["hero", "promesses", "featured", "matiere", "avis", "faq"]
+}

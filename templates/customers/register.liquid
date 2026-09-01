@@ -1,0 +1,31 @@
+<div class="page-width page-width--narrow section" style="max-width:440px">
+  <h1 style="text-align:center; margin-bottom:32px">{{ 'customer.register.title' | t }}</h1>
+
+  {%- form 'create_customer' -%}
+    {%- if form.errors -%}
+      <p class="form-message form-message--error">{{ form.errors | default_errors }}</p>
+    {%- endif -%}
+
+    <div class="field">
+      <label for="RegisterFirstName">{{ 'customer.first_name' | t }}</label>
+      <input id="RegisterFirstName" type="text" name="customer[first_name]" autocomplete="given-name">
+    </div>
+
+    <div class="field">
+      <label for="RegisterLastName">{{ 'customer.last_name' | t }}</label>
+      <input id="RegisterLastName" type="text" name="customer[last_name]" autocomplete="family-name">
+    </div>
+
+    <div class="field">
+      <label for="RegisterEmail">{{ 'customer.email' | t }}</label>
+      <input id="RegisterEmail" type="email" name="customer[email]" autocomplete="email" required>
+    </div>
+
+    <div class="field">
+      <label for="RegisterPassword">{{ 'customer.password' | t }}</label>
+      <input id="RegisterPassword" type="password" name="customer[password]" autocomplete="new-password">
+    </div>
+
+    <button class="btn btn--full" type="submit">{{ 'customer.register.submit' | t }}</button>
+  {%- endform -%}
+</div>

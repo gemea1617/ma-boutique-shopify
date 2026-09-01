@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="GEMEA">
+  <circle cx="100" cy="100" r="100" fill="#0F0F0F"/>
+  <clipPath id="gemea-weave-pn"><rect x="87" y="65" width="20" height="70"/></clipPath>
+  <g transform="translate(35,50)">
+    <ellipse cx="52" cy="50" rx="34" ry="24" fill="none" stroke="#FAF9F7" stroke-width="6"/>
+    <ellipse cx="98" cy="50" rx="34" ry="24" fill="none" stroke="#FAF9F7" stroke-width="6"/>
+  </g>
+  <g clip-path="url(#gemea-weave-pn)" transform="translate(35,50)">
+    <ellipse cx="52" cy="50" rx="34" ry="24" fill="none" stroke="#FAF9F7" stroke-width="6"/>
+  </g>
+</svg>

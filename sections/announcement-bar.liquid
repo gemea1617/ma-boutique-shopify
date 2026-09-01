@@ -1,0 +1,25 @@
+{%- if section.settings.text != blank -%}
+  <div class="announcement">
+    {%- if section.settings.link != blank -%}
+      <a href="{{ section.settings.link }}">{{ section.settings.text }}</a>
+    {%- else -%}
+      {{ section.settings.text }}
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Barre d'annonce",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Texte",
+      "default": "Livraison offerte dès 50 € · Retours sous 30 jours"
+    },
+    { "type": "url", "id": "link", "label": "Lien (optionnel)" }
+  ],
+  "enabled_on": { "groups": ["header"] }
+}
+{% endschema %}

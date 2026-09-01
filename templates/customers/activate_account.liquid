@@ -1,0 +1,24 @@
+<div class="page-width page-width--narrow section" style="max-width:440px">
+  <h1 style="text-align:center; margin-bottom:32px">{{ 'customer.activate_account.title' | t }}</h1>
+
+  {%- form 'activate_customer_password' -%}
+    {%- if form.errors -%}
+      <p class="form-message form-message--error">{{ form.errors | default_errors }}</p>
+    {%- endif -%}
+
+    <div class="field">
+      <label for="ActivatePassword">{{ 'customer.password' | t }}</label>
+      <input id="ActivatePassword" type="password" name="customer[password]" autocomplete="new-password">
+    </div>
+
+    <div class="field">
+      <label for="ActivatePasswordConfirm">{{ 'customer.reset_password.confirm' | t }}</label>
+      <input id="ActivatePasswordConfirm" type="password" name="customer[password_confirmation]" autocomplete="new-password">
+    </div>
+
+    <button class="btn btn--full" type="submit">{{ 'customer.activate_account.submit' | t }}</button>
+    <button class="btn btn--ghost btn--full" type="submit" name="decline" style="margin-top:12px">
+      {{ 'customer.activate_account.decline' | t }}
+    </button>
+  {%- endform -%}
+</div>

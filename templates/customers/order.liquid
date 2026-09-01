@@ -1,0 +1,22 @@
+<div class="page-width section">
+  <h1>{{ order.name }}</h1>
+  <p class="mention">{{ order.created_at | date: '%d.%m.%Y' }} · {{ order.financial_status_label }} · {{ order.fulfillment_status_label }}</p>
+
+  {%- for line in order.line_items -%}
+    <div class="cart-item" style="grid-template-columns:1fr">
+      <div class="cart-item__row" style="margin-top:0">
+        <div>
+          <span class="cart-item__title">{{ line.title }}</span>
+          <div class="cart-item__variant">{{ 'customer.orders.quantity' | t }} : {{ line.quantity }}</div>
+        </div>
+        <div style="letter-spacing:.06em">{{ line.final_line_price | money }}</div>
+      </div>
+    </div>
+  {%- endfor -%}
+
+  <div class="cart-summary">
+    <div class="cart-total">{{ 'sections.cart.subtotal' | t }} <span>{{ order.total_price | money }}</span></div>
+  </div>
+
+  <p style="margin-top:34px"><a class="link-line" href="{{ routes.account_url }}">{{ 'customer.account.return' | t }}</a></p>
+</div>

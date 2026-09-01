@@ -1,0 +1,38 @@
+<section class="section{% if section.settings.dark %} band{% endif %}">
+  <div class="page-width page-width--narrow" style="text-align:center">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2>{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    <div class="rte" style="margin-top:16px">{{ section.settings.text }}</div>
+    {%- if section.settings.button_label != blank -%}
+      <div style="margin-top:30px">
+        <a class="btn{% unless section.settings.dark %} btn--ghost{% endunless %}" href="{{ section.settings.button_link }}">
+          {{ section.settings.button_label }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Texte",
+  "settings": [
+    { "type": "checkbox", "id": "dark", "label": "Fond noir", "default": false },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Une élégance simple, faite pour durer" },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Texte",
+      "default": "<p>Des pièces plaquées or 18 carats, résistantes à l'eau, pensées pour accompagner chaque journée sans y penser.</p>"
+    },
+    { "type": "text", "id": "button_label", "label": "Bouton" },
+    { "type": "url", "id": "button_link", "label": "Lien du bouton" }
+  ],
+  "presets": [{ "name": "Texte" }]
+}
+{% endschema %}

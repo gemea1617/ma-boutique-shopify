@@ -1,0 +1,75 @@
+<section class="section" style="background: {{ section.settings.background }}">
+  <div class="page-width">
+    <div class="section-head section-head--center">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h2>{{ section.settings.heading }}</h2>
+    </div>
+
+    <div class="quotes quotes--3">
+      {%- for block in section.blocks -%}
+        <figure class="quote" {{ block.shopify_attributes }}>
+          {%- if block.settings.stars > 0 -%}
+            <div class="quote__stars" aria-label="{{ block.settings.stars }}/5">
+              {%- for i in (1..block.settings.stars) -%}&#9679;{%- endfor -%}
+            </div>
+          {%- endif -%}
+          <blockquote style="margin:0"><p>{{ block.settings.text }}</p></blockquote>
+          <figcaption class="quote__author">{{ block.settings.author }}</figcaption>
+        </figure>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Avis clients",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Elles en parlent" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Avis clients" },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Fond",
+      "options": [
+        { "value": "#FAF9F7", "label": "Ivoire" },
+        { "value": "#FFFFFF", "label": "Blanc" }
+      ],
+      "default": "#FAF9F7"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "avis",
+      "name": "Avis",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Note",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Avis",
+          "default": "Je le porte jour et nuit depuis six mois, il n'a pas bougé d'un ton."
+        },
+        { "type": "text", "id": "author", "label": "Signature", "default": "Camille, Lyon" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avis clients",
+      "blocks": [{ "type": "avis" }, { "type": "avis" }, { "type": "avis" }]
+    }
+  ]
+}
+{% endschema %}

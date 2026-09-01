@@ -1,0 +1,69 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "vendor"
+        },
+        "title": {
+          "type": "title"
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "mention": "Taxes incluses. Livraison calculée au paiement."
+          }
+        },
+        "form": {
+          "type": "form"
+        },
+        "reassurance": {
+          "type": "reassurance",
+          "settings": {
+            "lines": "Plaqué or 18 carats, 3 microns\nRésistant à l'eau et au quotidien\nExpédié sous 24 h depuis la France\nRetours gratuits sous 30 jours"
+          }
+        },
+        "description": {
+          "type": "description"
+        },
+        "livraison": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Livraison et retours",
+            "content": "<p>Expédition sous 24 h ouvrées. Livraison offerte dès 50 €. Retours gratuits sous 30 jours.</p>"
+          }
+        },
+        "entretien": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Entretien",
+            "content": "<p>Évitez le contact direct avec les parfums et les crèmes. Un chiffon doux et sec suffit à lui rendre son éclat.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "form",
+        "reassurance",
+        "description",
+        "livraison",
+        "entretien"
+      ]
+    },
+    "recommandations": {
+      "type": "product-recommendations",
+      "settings": {
+        "eyebrow": "Il ira bien avec",
+        "heading": "À porter ensemble",
+        "count": 4
+      }
+    }
+  },
+  "order": [
+    "main",
+    "recommandations"
+  ]
+}
