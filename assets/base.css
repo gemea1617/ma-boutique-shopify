@@ -748,24 +748,29 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
 .guarantee h3 { font-size: 17px; letter-spacing: 0.03em; }
 .guarantee p { font-size: 13px; max-width: 22ch; margin: 0; }
 
-/* Accordéon (description, livraison, entretien, FAQ) */
+/* Accordéon — titre en Tenor Sans, ouvert par + et fermé par −, comme la
+   maquette. Le signe est un caractère, pas un chevron dessiné : il se lit
+   à toutes les tailles et suit la couleur du texte. */
 .accordion { border-bottom: 1px solid var(--gris-clair); }
 .accordion summary {
   list-style: none; cursor: pointer;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  padding: 18px 0;
-  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--noir);
+  padding: 20px 0;
+  font-family: var(--titre); font-size: 16px; letter-spacing: 0.02em;
+  color: var(--noir);
 }
 .accordion summary::-webkit-details-marker { display: none; }
 .accordion summary::after {
-  content: ''; flex: none;
-  width: 9px; height: 9px;
-  border-right: 1px solid var(--gris); border-bottom: 1px solid var(--gris);
-  transform: rotate(45deg) translate(-2px, -2px);
-  transition: transform var(--transition);
+  content: '+';
+  flex: none;
+  font-family: var(--texte); font-size: 20px; line-height: 1;
+  color: var(--gris-fonce);
 }
-.accordion[open] summary::after { transform: rotate(-135deg) translate(-2px, -2px); }
+.accordion[open] summary::after { content: '\2013'; }
 .accordion__body { padding-bottom: 22px; font-size: 14px; }
+
+/* Sur la fiche produit le premier accordéon porte le filet du haut. */
+.pdp__info .accordion:first-of-type { border-top: 1px solid var(--gris-clair); margin-top: 34px; }
 
 /* Réassurance sous le bouton d'achat */
 .reassurance { display: grid; gap: 10px; margin-top: 26px; }
