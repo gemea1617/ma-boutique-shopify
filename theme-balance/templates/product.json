@@ -312,9 +312,17 @@
                 "note",
                 "icons"
               ]
+            },
+            "mx": {
+              "type": "gemea-mobile-ux",
+              "settings": {
+                "enable_size_guide_sheet": true,
+                "show_size_table": true
+              }
             }
           },
           "block_order": [
+            "mx",
             "bc",
             "hd",
             "te",

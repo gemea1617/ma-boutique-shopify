@@ -1,0 +1,106 @@
+{{ 'gemea-mobile.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'gemea-mobile.js' | asset_url }}" defer></script>
+
+{%- if block.settings.enable_size_guide_sheet -%}
+  <dialog id="gemea-size-guide" class="gemea-sheet" aria-label="{{ block.settings.sheet_title }}">
+    <div class="gemea-sheet__panel">
+      <div class="gemea-sheet__grip" aria-hidden="true"></div>
+      <div class="gemea-sheet__header">
+        <h2 class="gemea-sheet__title">{{ block.settings.sheet_title }}</h2>
+        <button type="button" class="gemea-sheet__close" data-gemea-sheet-close aria-label="Fermer">
+          &times;
+        </button>
+      </div>
+      <div class="gemea-sheet__content">
+        {{ block.settings.sheet_content }}
+
+        {%- if block.settings.show_size_table -%}
+          <table>
+            <caption class="visually-hidden">Correspondance des tailles de bague</caption>
+            <thead>
+              <tr>
+                <th scope="col">Taille</th>
+                <th scope="col">Circonférence</th>
+                <th scope="col">Diamètre</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- assign sizes = block.settings.size_values | split: ',' -%}
+              {%- for size in sizes -%}
+                {%- assign circumference = size | strip | times: 1 -%}
+                {%- if circumference > 0 -%}
+                  {%- comment -%}
+                    Diamètre = circonférence / pi, en dixièmes de mm et arrondi
+                    au plus proche : (C * 2000 + 314) / 628.
+                  {%- endcomment -%}
+                  {%- assign tenths = circumference | times: 2000 | plus: 314 | divided_by: 628 -%}
+                  {%- assign diameter = tenths | divided_by: 10 -%}
+                  {%- assign diameter_decimal = tenths | modulo: 10 -%}
+                  <tr>
+                    <td>{{ circumference }}</td>
+                    <td>{{ circumference }} mm</td>
+                    <td>{{ diameter }},{{ diameter_decimal }} mm</td>
+                  </tr>
+                {%- endif -%}
+              {%- endfor -%}
+            </tbody>
+          </table>
+        {%- endif -%}
+      </div>
+    </div>
+  </dialog>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Interactions mobiles",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Active les comportements mobiles de la page produit : barre d'achat collante réservée au mobile, bandeaux d'icônes défilants, accroche repliable, accordéons fermés par défaut et retour tactile. Sans effet au-dessus de 750 px."
+    },
+    {
+      "type": "header",
+      "content": "Guide des tailles"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_size_guide_sheet",
+      "label": "Ouvrir le guide des tailles dans un panneau glissant",
+      "info": "Sur mobile, le lien « Guide des tailles » ouvre ce panneau au lieu de changer de page. Sur ordinateur, le lien reste normal.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sheet_title",
+      "label": "Titre du panneau",
+      "default": "Guide des tailles"
+    },
+    {
+      "type": "richtext",
+      "id": "sheet_content",
+      "label": "Contenu du panneau",
+      "default": "<p>La taille française correspond à la circonférence de votre doigt en millimètres. Entourez votre doigt d'une bande de papier, marquez le point de jonction, puis mesurez la longueur obtenue.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_table",
+      "label": "Afficher le tableau des tailles",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "size_values",
+      "label": "Tailles proposées",
+      "info": "Circonférences en millimètres, séparées par des virgules. Le diamètre est calculé automatiquement.",
+      "default": "48, 50, 52, 54, 56, 58"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Interactions mobiles"
+    }
+  ]
+}
+{% endschema %}
