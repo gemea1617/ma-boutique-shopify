@@ -1,5 +1,6 @@
 {%- liquid
   assign current = product.selected_or_first_available_variant
+  assign media_count = product.media.size
 -%}
 
 <div class="page-width">
@@ -13,76 +14,127 @@
     <span>{{ product.title }}</span>
   </nav>
 
-  <div class="product" style="padding-bottom: var(--section-y)">
-    <div class="product__gallery" data-gallery>
-      {%- if product.media.size > 0 -%}
-        <img
-          data-gallery-main
-          src="{{ product.featured_media | image_url: width: 1200 }}"
-          srcset="
-            {{ product.featured_media | image_url: width: 600 }} 600w,
-            {{ product.featured_media | image_url: width: 1200 }} 1200w,
-            {{ product.featured_media | image_url: width: 1800 }} 1800w
-          "
-          sizes="(min-width: 900px) 55vw, 100vw"
-          alt="{{ product.featured_media.alt | escape }}"
-          width="{{ product.featured_media.width }}"
-          height="{{ product.featured_media.height }}"
-          fetchpriority="high"
-        >
-
-        {%- if product.media.size > 1 -%}
-          <div class="product__thumbs">
-            {%- for media in product.media -%}
-              <button
-                type="button"
-                data-gallery-thumb
-                data-full="{{ media | image_url: width: 1200 }}"
-                data-alt="{{ media.alt | escape }}"
-                aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
-                aria-label="{{ 'products.product.media_label' | t: index: forloop.index }}"
+  <div class="pdp" data-pdp data-product-id="{{ product.id }}" style="padding-bottom: var(--section-y)">
+    {%- comment -%} ------------------------------------------------ Galerie {%- endcomment -%}
+    <div class="gallery" data-gallery>
+      {%- if media_count > 1 -%}
+        <div class="gallery__rail" role="tablist" aria-label="{{ 'products.product.media_gallery' | t }}">
+          {%- for media in product.media -%}
+            <button
+              type="button"
+              role="tab"
+              data-thumb
+              data-index="{{ forloop.index0 }}"
+              data-full="{{ media | image_url: width: 1400 }}"
+              data-alt="{{ media.alt | escape }}"
+              aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-label="{{ 'products.product.media_label' | t: index: forloop.index }}"
+            >
+              <img
+                src="{{ media | image_url: width: 200 }}"
+                alt=""
+                width="{{ media.width }}"
+                height="{{ media.height }}"
+                loading="lazy"
               >
-                <img
-                  src="{{ media | image_url: width: 160 }}"
-                  alt=""
-                  width="{{ media.width }}"
-                  height="{{ media.height }}"
-                  loading="lazy"
-                >
-              </button>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-      {%- else -%}
-        <div class="placeholder" style="aspect-ratio:4/5">
-          {% render 'logo', width: 120, unique_id: 'product' %}
+            </button>
+          {%- endfor -%}
         </div>
       {%- endif -%}
+
+      <div class="gallery__stage" data-stage>
+        {%- if media_count > 0 -%}
+          <img
+            data-stage-image
+            src="{{ product.featured_media | image_url: width: 1400 }}"
+            srcset="
+              {{ product.featured_media | image_url: width: 700 }} 700w,
+              {{ product.featured_media | image_url: width: 1400 }} 1400w,
+              {{ product.featured_media | image_url: width: 2000 }} 2000w
+            "
+            sizes="(min-width: 990px) 55vw, 100vw"
+            alt="{{ product.featured_media.alt | escape }}"
+            width="{{ product.featured_media.width }}"
+            height="{{ product.featured_media.height }}"
+            fetchpriority="high"
+          >
+
+          {%- if media_count > 1 -%}
+            <button class="gallery__arrow gallery__arrow--prev" type="button" data-step="-1" aria-label="{{ 'products.product.media_previous' | t }}">
+              {% render 'icon', name: 'arrow-left', size: 18 %}
+            </button>
+            <button class="gallery__arrow gallery__arrow--next" type="button" data-step="1" aria-label="{{ 'products.product.media_next' | t }}">
+              {% render 'icon', name: 'arrow-right', size: 18 %}
+            </button>
+            <span class="gallery__counter"><span data-counter>1</span> / {{ media_count }}</span>
+          {%- endif -%}
+        {%- else -%}
+          <span class="placeholder">{% render 'logo', width: 120, unique_id: 'product' %}</span>
+        {%- endif -%}
+      </div>
     </div>
 
-    <div class="product__info">
+    {%- comment -%} -------------------------------------------- Informations {%- endcomment -%}
+    <div class="pdp__info">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
+
           {%- when 'vendor' -%}
             {%- if product.vendor != blank -%}
               <p class="eyebrow" {{ block.shopify_attributes }}>{{ product.vendor }}</p>
             {%- endif -%}
 
           {%- when 'title' -%}
-            <h1 class="product__title" {{ block.shopify_attributes }}>{{ product.title }}</h1>
+            <h1 class="pdp__title" {{ block.shopify_attributes }}>{{ product.title }}</h1>
+
+          {%- when 'rating' -%}
+            {%- comment -%}
+              Affiché uniquement si une note existe réellement dans les
+              métachamps de la boutique. Pas de note décorative.
+            {%- endcomment -%}
+            {%- assign rating = product.metafields.reviews.rating.value -%}
+            {%- if rating != blank and rating.rating > 0 -%}
+              {%- assign filled = rating.rating | round -%}
+              <div class="stars" {{ block.shopify_attributes }}>
+                <span class="stars__marks" aria-hidden="true">
+                  {%- for i in (1..5) -%}{% if i <= filled %}&#9733;{% else %}&#9734;{% endif %}{%- endfor -%}
+                </span>
+                <span class="stars__count">
+                  {{ rating.rating }}/{{ rating.scale_max }}
+                  {%- assign count = product.metafields.reviews.rating_count.value -%}
+                  {%- if count > 0 %} · {{ 'products.product.reviews' | t: count: count }}{% endif -%}
+                </span>
+              </div>
+            {%- endif -%}
 
           {%- when 'price' -%}
-            <div class="product__price" data-variant-price {{ block.shopify_attributes }}>
-              {% render 'price', target: current %}
+            <div {{ block.shopify_attributes }}>
+              <div class="price-row" data-price-row>
+                <span class="amount" data-variant-price>{% render 'price', target: current %}</span>
+                {%- assign saved = 0 -%}
+                {%- if current.compare_at_price > current.price -%}
+                  {%- assign saved = current.compare_at_price | minus: current.price | times: 100 | divided_by: current.compare_at_price -%}
+                {%- endif -%}
+                <span class="badge-save" data-save {% if saved == 0 %}hidden{% endif %}>
+                  {{- 'products.product.save' | t: percent: saved -}}
+                </span>
+              </div>
+              {%- if block.settings.mention != blank -%}
+                <p class="mention" style="margin-top:6px">{{ block.settings.mention }}</p>
+              {%- endif -%}
             </div>
-            <p class="mention">{{ block.settings.mention }}</p>
+
+          {%- when 'pitch' -%}
+            {%- if block.settings.text != blank -%}
+              <div class="pdp__pitch rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+            {%- endif -%}
 
           {%- when 'form' -%}
             <div {{ block.shopify_attributes }}>
               {%- form 'product',
                 product,
                 id: 'ProductForm',
-                class: 'product__form',
+                class: 'pdp__form',
                 novalidate: 'novalidate',
                 data-variants: ''
               -%}
@@ -93,7 +145,10 @@
                         "id": {{ variant.id }},
                         "options": {{ variant.options | json }},
                         "available": {{ variant.available }},
-                        "price_html": {{ variant.price | money | json }}
+                        "media_index": {{ variant.featured_media.position | default: 0 | minus: 1 }},
+                        "price_html": {{ variant.price | money | json }},
+                        "compare_html": {%- if variant.compare_at_price > variant.price -%}{{ variant.compare_at_price | money | json }}{%- else -%}null{%- endif -%},
+                        "save_percent": {%- if variant.compare_at_price > variant.price -%}{{ variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price }}{%- else -%}0{%- endif -%}
                       }{%- unless forloop.last -%},{%- endunless -%}
                     {%- endfor -%}
                   ]
@@ -101,19 +156,64 @@
 
                 {%- unless product.has_only_default_variant -%}
                   {%- for option in product.options_with_values -%}
-                    <fieldset class="option" data-option-index="{{ forloop.index0 }}" style="border:0;padding:0;margin:0">
-                      <legend class="option__label">{{ option.name }}</legend>
-                      <div class="option__values">
+                    {%- liquid
+                      assign index0 = forloop.index0
+                      assign name_key = option.name | downcase
+                      assign is_swatch = false
+                      if name_key contains 'couleur' or name_key contains 'color' or name_key contains 'coloris'
+                        assign is_swatch = true
+                      endif
+                    -%}
+
+                    <fieldset class="opt" data-option-index="{{ index0 }}">
+                      <div class="opt__head">
+                        <legend class="opt__label">{{ option.name }}</legend>
+                        <span class="opt__chosen" data-option-chosen>{{ option.selected_value }}</span>
+                      </div>
+
+                      <div class="opt__values">
                         {%- for value in option.values -%}
-                          <label class="option__value">
-                            <input
-                              type="radio"
-                              name="option-{{ option.position }}"
-                              value="{{ value | escape }}"
-                              {% if option.selected_value == value %}checked{% endif %}
+                          {%- liquid
+                            assign value_available = false
+                            assign swatch_image = null
+                            for variant in product.variants
+                              if variant.options[index0] == value
+                                if variant.available
+                                  assign value_available = true
+                                endif
+                                if swatch_image == null and variant.image
+                                  assign swatch_image = variant.image
+                                endif
+                              endif
+                            endfor
+                          -%}
+
+                          {%- if is_swatch and swatch_image -%}
+                            <label
+                              class="swatch{% unless value_available %} swatch--out{% endunless %}"
+                              data-value-label
+                              title="{{ value | escape }}"
                             >
-                            {{ value }}
-                          </label>
+                              <input
+                                type="radio"
+                                name="option-{{ option.position }}"
+                                value="{{ value | escape }}"
+                                {% if option.selected_value == value %}checked{% endif %}
+                              >
+                              <img src="{{ swatch_image | image_url: width: 120 }}" alt="{{ value | escape }}" width="44" height="44" loading="lazy">
+                              <span class="visually-hidden">{{ value }}</span>
+                            </label>
+                          {%- else -%}
+                            <label class="pill{% unless value_available %} pill--out{% endunless %}" data-value-label>
+                              <input
+                                type="radio"
+                                name="option-{{ option.position }}"
+                                value="{{ value | escape }}"
+                                {% if option.selected_value == value %}checked{% endif %}
+                              >
+                              {{ value }}
+                            </label>
+                          {%- endif -%}
                         {%- endfor -%}
                       </div>
                     </fieldset>
@@ -122,8 +222,8 @@
 
                 <input type="hidden" name="id" value="{{ current.id }}" data-variant-id>
 
-                <div class="option">
-                  <label class="option__label" for="Quantity">{{ 'products.product.quantity' | t }}</label>
+                <div class="opt">
+                  <label class="opt__label" for="Quantity">{{ 'products.product.quantity' | t }}</label>
                   <div class="qty" data-qty>
                     <button type="button" data-qty-step="-1" aria-label="{{ 'products.product.quantity_decrease' | t }}">&minus;</button>
                     <input id="Quantity" type="number" name="quantity" value="1" min="1" inputmode="numeric">
@@ -131,21 +231,40 @@
                   </div>
                 </div>
 
-                <button
-                  class="btn btn--full"
-                  type="submit"
-                  name="add"
-                  data-add-button
-                  data-add="{{ 'products.product.add_to_cart' | t }}"
-                  data-sold-out="{{ 'products.product.sold_out' | t }}"
-                  {% unless current.available %}disabled{% endunless %}
-                >
-                  {%- if current.available -%}
-                    {{ 'products.product.add_to_cart' | t }}
-                  {%- else -%}
-                    {{ 'products.product.sold_out' | t }}
+                <div class="buy">
+                  <button
+                    class="btn btn--full"
+                    type="submit"
+                    name="add"
+                    data-add-button
+                    data-add="{{ 'products.product.add_to_cart' | t }}"
+                    data-sold-out="{{ 'products.product.sold_out' | t }}"
+                    {% unless current.available %}disabled{% endunless %}
+                  >
+                    {%- if current.available -%}
+                      {{ 'products.product.add_to_cart' | t }}
+                    {%- else -%}
+                      {{ 'products.product.sold_out' | t }}
+                    {%- endif -%}
+                  </button>
+
+                  {%- if block.settings.show_payment_button -%}
+                    {{ form | payment_button }}
                   {%- endif -%}
-                </button>
+
+                  <p
+                    class="stock{% unless current.available %} stock--out{% endunless %}"
+                    data-stock
+                    data-in-stock="{{ 'products.product.in_stock' | t }}"
+                    data-sold-out="{{ 'products.product.sold_out' | t }}"
+                  >
+                    {%- if current.available -%}
+                      {{ 'products.product.in_stock' | t }}
+                    {%- else -%}
+                      {{ 'products.product.sold_out' | t }}
+                    {%- endif -%}
+                  </p>
+                </div>
               {%- endform -%}
             </div>
 
@@ -156,14 +275,23 @@
                 {%- for line in lines -%}
                   {%- assign trimmed = line | strip -%}
                   {%- if trimmed != blank -%}
-                    <li>{% render 'icon', name: 'gem', size: 15 %}{{ trimmed }}</li>
+                    <li>{% render 'icon', name: 'check', size: 15 %}{{ trimmed }}</li>
                   {%- endif -%}
                 {%- endfor -%}
               </ul>
             </div>
 
+          {%- when 'payment_icons' -%}
+            {%- if shop.enabled_payment_types.size > 0 -%}
+              <div class="payment-icons" {{ block.shopify_attributes }}>
+                {%- for type in shop.enabled_payment_types -%}
+                  {{ type | payment_type_svg_tag: class: 'payment-icon' }}
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+
           {%- when 'description' -%}
-            <div class="product__meta" {{ block.shopify_attributes }}>
+            <div class="pdp__meta" {{ block.shopify_attributes }}>
               <details class="accordion" open>
                 <summary>{{ 'products.product.description' | t }}</summary>
                 <div class="accordion__body rte">{{ product.description }}</div>
@@ -175,11 +303,44 @@
               <summary>{{ block.settings.heading }}</summary>
               <div class="accordion__body rte">{{ block.settings.content }}</div>
             </details>
+
         {%- endcase -%}
       {%- endfor -%}
     </div>
   </div>
 </div>
+
+{%- comment -%}
+  Barre d'achat collante : elle apparaît quand le bouton principal quitte
+  l'écran. Elle ne duplique pas le formulaire, elle le soumet.
+{%- endcomment -%}
+{%- if section.settings.sticky_buy -%}
+  <div class="sticky-buy" data-sticky-buy data-visible="false">
+    <div class="sticky-buy__inner">
+      {%- if product.featured_media -%}
+        <img src="{{ product.featured_media | image_url: width: 120 }}" alt="" width="46" height="58" loading="lazy">
+      {%- endif -%}
+      <div class="sticky-buy__text">
+        <div class="sticky-buy__title">{{ product.title }}</div>
+        <div class="sticky-buy__price" data-variant-price>{% render 'price', target: current %}</div>
+      </div>
+      <button
+        class="btn"
+        type="button"
+        data-sticky-add
+        data-add="{{ 'products.product.add_to_cart' | t }}"
+        data-sold-out="{{ 'products.product.sold_out' | t }}"
+        {% unless current.available %}disabled{% endunless %}
+      >
+        {%- if current.available -%}
+          {{ 'products.product.add_to_cart' | t }}
+        {%- else -%}
+          {{ 'products.product.sold_out' | t }}
+        {%- endif -%}
+      </button>
+    </div>
+  </div>
+{%- endif -%}
 
 <script type="application/ld+json">
   {{ product | structured_data }}
@@ -188,9 +349,29 @@
 {% schema %}
 {
   "name": "Page produit",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "sticky_buy",
+      "label": "Barre d'achat collante",
+      "info": "Apparaît en bas de l'écran quand le bouton d'ajout au panier n'est plus visible.",
+      "default": true
+    }
+  ],
   "blocks": [
     { "type": "vendor", "name": "Marque", "limit": 1 },
     { "type": "title", "name": "Titre", "limit": 1 },
+    {
+      "type": "rating",
+      "name": "Note",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "La note provient des métachamps d'avis de la boutique. Sans avis enregistré, rien ne s'affiche."
+        }
+      ]
+    },
     {
       "type": "price",
       "name": "Prix",
@@ -204,7 +385,32 @@
         }
       ]
     },
-    { "type": "form", "name": "Choix et panier", "limit": 1 },
+    {
+      "type": "pitch",
+      "name": "Accroche",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Texte",
+          "default": "<p>Plaqué or 18 carats, résistant à l'eau. Pensé pour ne plus le retirer.</p>"
+        }
+      ]
+    },
+    {
+      "type": "form",
+      "name": "Choix et panier",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_payment_button",
+          "label": "Bouton de paiement express",
+          "default": true
+        }
+      ]
+    },
     {
       "type": "reassurance",
       "name": "Réassurance",
@@ -218,6 +424,7 @@
         }
       ]
     },
+    { "type": "payment_icons", "name": "Moyens de paiement", "limit": 1 },
     { "type": "description", "name": "Description", "limit": 1 },
     {
       "type": "accordion",
@@ -239,9 +446,12 @@
       "blocks": [
         { "type": "vendor" },
         { "type": "title" },
+        { "type": "rating" },
         { "type": "price" },
+        { "type": "pitch" },
         { "type": "form" },
         { "type": "reassurance" },
+        { "type": "payment_icons" },
         { "type": "description" },
         { "type": "accordion" }
       ]

@@ -316,55 +316,251 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
 
 /* ---------------------------------------------------------- Page produit */
 
-.product { display: grid; gap: 40px; grid-template-columns: 1fr; }
+.pdp { display: grid; gap: 34px; grid-template-columns: 1fr; }
 
-@media (min-width: 900px) {
-  .product { grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: start; }
-  .product__info { position: sticky; top: 110px; }
+@media (min-width: 990px) {
+  .pdp { grid-template-columns: minmax(0, 1.22fr) minmax(390px, 0.78fr); gap: 56px; align-items: start; }
+  .pdp__info { position: sticky; top: 104px; }
 }
 
-.product__gallery { display: grid; gap: 12px; }
-.product__gallery img { width: 100%; background: var(--blanc); }
+/* --- Galerie : rail de vignettes + scène principale --- */
 
-.product__thumbs { display: flex; gap: 10px; flex-wrap: wrap; }
-.product__thumbs button {
-  width: 62px; padding: 0; border: 1px solid transparent; background: none; cursor: pointer;
+.gallery { display: grid; gap: 12px; }
+
+@media (min-width: 750px) {
+  .gallery { grid-template-columns: 72px minmax(0, 1fr); align-items: start; }
 }
-.product__thumbs button[aria-current='true'] { border-color: var(--noir); }
 
-.product__title { margin-bottom: 10px; }
-.product__price { font-size: 17px; letter-spacing: 0.06em; color: var(--noir); margin-bottom: 6px; }
-.product__price s { color: var(--gris); margin-right: 10px; }
+.gallery__stage {
+  position: relative;
+  background: var(--blanc);
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  cursor: zoom-in;
+}
+.gallery__stage img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 500ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+/* Le zoom suit le curseur : transform-origin est posé en JS. */
+.gallery__stage.is-zoomed img { transform: scale(1.9); transition-duration: 180ms; }
 
-.product__form { margin-top: 30px; display: grid; gap: 22px; }
+.gallery__rail { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+.gallery__rail::-webkit-scrollbar { display: none; }
 
-.option { display: grid; gap: 10px; }
-.option__label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gris); }
-.option__values { display: flex; flex-wrap: wrap; gap: 8px; }
-.option__value {
-  border: 1px solid var(--gris-clair); background: var(--blanc);
-  padding: 10px 16px; cursor: pointer;
+@media (min-width: 750px) {
+  .gallery__rail { flex-direction: column; overflow: visible; }
+}
+
+.gallery__rail button {
+  flex: none;
+  width: 72px;
+  padding: 0;
+  border: 1px solid transparent;
+  background: var(--blanc);
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+.gallery__rail button:hover { border-color: var(--gris-clair); }
+.gallery__rail button[aria-current='true'] { border-color: var(--noir); }
+.gallery__rail img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+
+.gallery__arrow {
+  position: absolute; top: 50%; z-index: 2;
+  transform: translateY(-50%);
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border: 0; cursor: pointer;
+  background: rgba(250, 249, 247, 0.86);
+  color: var(--noir);
+  opacity: 0; transition: opacity var(--transition);
+}
+.gallery__stage:hover .gallery__arrow,
+.gallery__arrow:focus-visible { opacity: 1; }
+.gallery__arrow--prev { left: 12px; }
+.gallery__arrow--next { right: 12px; }
+
+.gallery__counter {
+  position: absolute; right: 12px; bottom: 12px; z-index: 2;
+  background: rgba(250, 249, 247, 0.86);
+  color: var(--gris-fonce);
+  font-size: 10px; letter-spacing: 0.12em;
+  padding: 5px 10px;
+}
+
+/* --- Colonne d'informations --- */
+
+.pdp__title { margin-bottom: 12px; }
+
+.stars { display: flex; align-items: center; gap: 9px; margin-bottom: 16px; }
+.stars__marks { font-size: 11px; letter-spacing: 0.22em; color: var(--noir); }
+.stars__count { font-size: 11.5px; color: var(--gris); letter-spacing: 0.04em; }
+
+.price-row { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.price-row .amount { font-size: 20px; letter-spacing: 0.05em; color: var(--noir); }
+.price-row s { font-size: 15px; color: var(--gris); }
+.badge-save {
+  border: 1px solid var(--noir);
+  font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 4px 9px;
+}
+
+.pdp__pitch { margin-top: 18px; font-size: 14px; max-width: 46ch; }
+
+.pdp__form { margin-top: 30px; display: grid; gap: 26px; }
+
+/* --- Sélecteurs de variante --- */
+
+.opt { display: grid; gap: 12px; border: 0; padding: 0; margin: 0; }
+.opt__head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.opt__label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gris); padding: 0; }
+.opt__chosen { font-size: 12px; letter-spacing: 0.04em; color: var(--noir); }
+.opt__values { display: flex; flex-wrap: wrap; gap: 9px; }
+
+.opt__values input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+.swatch {
+  position: relative;
+  width: 44px; height: 44px;
+  padding: 0; overflow: hidden;
+  border: 1px solid var(--gris-clair); border-radius: 50%;
+  background: var(--blanc);
+  cursor: pointer;
+  transition: outline-color var(--transition);
+  outline: 1px solid transparent; outline-offset: 3px;
+}
+.swatch img { width: 100%; height: 100%; object-fit: cover; }
+.swatch:hover { outline-color: var(--gris-clair); }
+.swatch:has(input:checked) { outline-color: var(--noir); }
+
+.pill {
+  position: relative;
+  min-width: 54px;
+  padding: 12px 17px;
+  border: 1px solid var(--gris-clair);
+  background: var(--blanc);
+  cursor: pointer;
   font-family: var(--texte); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gris-fonce);
+  text-align: center;
   transition: border-color var(--transition), color var(--transition);
 }
-.option__value:hover { border-color: var(--gris); }
-.option__value input { position: absolute; opacity: 0; pointer-events: none; }
-.option__value:has(input:checked) { border-color: var(--noir); color: var(--noir); }
-.option__value--unavailable { color: var(--gris); text-decoration: line-through; }
+.pill:hover { border-color: var(--gris); }
+.pill:has(input:checked) { border-color: var(--noir); color: var(--noir); }
+
+/* Une variante indisponible reste cliquable : on la barre sans la cacher,
+   pour que le client voie qu'elle existe et qu'elle est en rupture. */
+.pill--out, .swatch--out { opacity: 0.45; }
+.pill--out { text-decoration: line-through; }
+
+/* --- Quantité et achat --- */
 
 .qty { display: inline-flex; border: 1px solid var(--gris-clair); background: var(--blanc); }
 .qty button {
-  width: 42px; height: 44px; border: 0; background: none; cursor: pointer;
+  width: 44px; height: 48px; border: 0; background: none; cursor: pointer;
   font-family: var(--texte); font-size: 15px; color: var(--noir);
 }
 .qty input {
-  width: 46px; border: 0; background: none; text-align: center;
+  width: 48px; border: 0; background: none; text-align: center;
   font-family: var(--texte); font-size: 13px; color: var(--noir);
   -moz-appearance: textfield;
 }
 .qty input::-webkit-outer-spin-button, .qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-.product__meta { margin-top: 32px; border-top: 1px solid var(--gris-clair); }
+.buy { display: grid; gap: 10px; }
+.buy .btn { padding: 17px 30px; }
+
+/* Bouton de paiement express rendu par Shopify : on le ramène dans la charte. */
+.shopify-payment-button__button--unbranded {
+  background: transparent !important;
+  border: 1px solid var(--noir) !important;
+  border-radius: 0 !important;
+  color: var(--noir) !important;
+  font-family: var(--texte) !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  padding: 17px 30px !important;
+  min-height: 0 !important;
+  transition: background var(--transition), color var(--transition);
+}
+.shopify-payment-button__button--unbranded:hover:not([disabled]) {
+  background: var(--noir) !important;
+  color: var(--ivoire) !important;
+}
+.shopify-payment-button__more-options { display: none !important; }
+
+.stock {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 11.5px; letter-spacing: 0.04em; color: var(--gris-fonce);
+}
+.stock::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--noir); flex: none;
+}
+.stock--out::before { background: var(--gris-clair); border: 1px solid var(--gris); }
+
+/* --- Réassurance et moyens de paiement --- */
+
+.reassurance { display: grid; gap: 10px; margin-top: 26px; }
+.reassurance ul { margin: 0; padding: 0; display: grid; gap: 10px; }
+.reassurance li { display: flex; align-items: center; gap: 10px; list-style: none; font-size: 12px; color: var(--gris-fonce); letter-spacing: 0.02em; }
+.reassurance svg { width: 15px; height: 15px; flex: none; color: var(--gris); }
+
+.payment-icons { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--gris-clair); }
+.payment-icons svg { height: 21px; width: auto; opacity: 0.7; }
+
+.pdp__meta { margin-top: 30px; border-top: 1px solid var(--gris-clair); }
+
+/* --- Barre d'achat collante --- */
+
+.sticky-buy {
+  position: fixed; inset: auto 0 0 0; z-index: 30;
+  background: var(--ivoire);
+  border-top: 1px solid var(--gris-clair);
+  transform: translateY(101%);
+  transition: transform var(--transition);
+}
+.sticky-buy[data-visible='true'] { transform: none; }
+
+.sticky-buy__inner {
+  display: flex; align-items: center; gap: 16px;
+  padding: 11px var(--gouttiere);
+  max-width: var(--page); margin: 0 auto;
+}
+.sticky-buy img { width: 46px; aspect-ratio: 4/5; object-fit: cover; flex: none; }
+.sticky-buy__text { flex: 1; min-width: 0; }
+.sticky-buy__title {
+  font-family: var(--titre); font-size: 14px; letter-spacing: 0.03em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sticky-buy__price { font-size: 12px; color: var(--gris-fonce); letter-spacing: 0.05em; }
+.sticky-buy .btn { flex: none; padding: 13px 24px; }
+
+@media (max-width: 749px) {
+  .sticky-buy img, .sticky-buy__price { display: none; }
+}
+
+/* --- Rangée horizontale (associés, vus récemment) --- */
+
+.rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 62%;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  list-style: none; margin: 0; padding: 0 0 8px;
+  scrollbar-width: none;
+}
+.rail::-webkit-scrollbar { display: none; }
+.rail > * { scroll-snap-align: start; }
+
+@media (min-width: 750px) {
+  .rail { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: repeat(4, 1fr); overflow: visible; gap: 28px; }
+}
 
 /* Accordéon (description, livraison, entretien, FAQ) */
 .accordion { border-bottom: 1px solid var(--gris-clair); }

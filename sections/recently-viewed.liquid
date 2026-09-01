@@ -1,0 +1,45 @@
+{%- comment -%}
+  Produits vus récemment. Les identifiants sont conservés dans le
+  navigateur du visiteur ; le script les transforme en requête de
+  recherche et remplace ce bloc par le résultat rendu ici même.
+{%- endcomment -%}
+
+<div
+  data-recently-viewed
+  data-count="{{ section.settings.count }}"
+  data-url="{{ routes.search_url }}?section_id={{ section.id }}&type=product"
+>
+  {%- if search.performed and search.results_count > 0 -%}
+    <section class="section section--tight">
+      <div class="page-width">
+        <div class="section-head">
+          <h2>{{ section.settings.heading }}</h2>
+        </div>
+
+        <ul class="rail">
+          {%- for item in search.results limit: section.settings.count -%}
+            {% render 'product-card', card_product: item %}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </section>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Vus récemment",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Vus récemment" },
+    {
+      "type": "range",
+      "id": "count",
+      "label": "Nombre de produits",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    }
+  ]
+}
+{% endschema %}

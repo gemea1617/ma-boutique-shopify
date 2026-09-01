@@ -16,7 +16,10 @@
           }
         },
         "form": {
-          "type": "form"
+          "type": "form",
+          "settings": {
+            "show_payment_button": true
+          }
         },
         "reassurance": {
           "type": "reassurance",
@@ -40,18 +43,36 @@
             "heading": "Entretien",
             "content": "<p>Évitez le contact direct avec les parfums et les crèmes. Un chiffon doux et sec suffit à lui rendre son éclat.</p>"
           }
+        },
+        "rating": {
+          "type": "rating"
+        },
+        "pitch": {
+          "type": "pitch",
+          "settings": {
+            "text": "<p>Plaqué or 18 carats, résistant à l'eau. Pensé pour ne plus le retirer.</p>"
+          }
+        },
+        "payment": {
+          "type": "payment_icons"
         }
       },
       "block_order": [
         "vendor",
         "title",
+        "rating",
         "price",
+        "pitch",
         "form",
         "reassurance",
+        "payment",
         "description",
         "livraison",
         "entretien"
-      ]
+      ],
+      "settings": {
+        "sticky_buy": true
+      }
     },
     "recommandations": {
       "type": "product-recommendations",
@@ -60,10 +81,27 @@
         "heading": "À porter ensemble",
         "count": 4
       }
+    },
+    "complementaires": {
+      "type": "complementary-products",
+      "settings": {
+        "eyebrow": "Portés ensemble",
+        "heading": "Complétez la parure",
+        "count": 4
+      }
+    },
+    "vus": {
+      "type": "recently-viewed",
+      "settings": {
+        "heading": "Vus récemment",
+        "count": 4
+      }
     }
   },
   "order": [
     "main",
-    "recommandations"
+    "complementaires",
+    "recommandations",
+    "vus"
   ]
 }

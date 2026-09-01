@@ -71,7 +71,16 @@
       "quantity_increase": "Augmenter la quantité",
       "quantity_decrease": "Diminuer la quantité",
       "description": "Description",
-      "media_label": "Visuel {{ index }}"
+      "media_label": "Visuel {{ index }}",
+      "media_gallery": "Visuels du produit",
+      "media_previous": "Visuel précédent",
+      "media_next": "Visuel suivant",
+      "in_stock": "En stock, expédié sous 24 h",
+      "save": "-{{ percent }} %",
+      "reviews": {
+        "one": "{{ count }} avis",
+        "other": "{{ count }} avis"
+      }
     }
   },
   "sections": {

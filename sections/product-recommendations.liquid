@@ -19,7 +19,7 @@
           <h2>{{ section.settings.heading }}</h2>
         </div>
 
-        <ul class="product-grid product-grid--4">
+        <ul class="rail">
           {%- for product in recommendations.products -%}
             {% render 'product-card', card_product: product %}
           {%- endfor -%}

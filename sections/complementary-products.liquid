@@ -1,0 +1,53 @@
+{%- comment -%}
+  « Complétez la parure » — les produits complémentaires définis dans
+  l'application Search & Discovery de Shopify. Comme les recommandations,
+  ils ne sont calculés que sur la requête dédiée : la section est vide au
+  premier rendu et le script la remplit.
+{%- endcomment -%}
+
+<div
+  data-recommendations
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.count }}&intent=complementary"
+>
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    <section class="section section--tight" style="background: var(--blanc)">
+      <div class="page-width">
+        <div class="section-head">
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+          {%- endif -%}
+          <h2>{{ section.settings.heading }}</h2>
+        </div>
+
+        <ul class="rail">
+          {%- for product in recommendations.products -%}
+            {% render 'product-card', card_product: product %}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </section>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Complétez la parure",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Les associations se définissent dans l'application Shopify « Search & Discovery », onglet Recommandations."
+    },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Portés ensemble" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Complétez la parure" },
+    {
+      "type": "range",
+      "id": "count",
+      "label": "Nombre de produits",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    }
+  ]
+}
+{% endschema %}
