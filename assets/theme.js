@@ -32,48 +32,64 @@
 
   /* ------------------------------------------------------ Galerie produit */
   document.querySelectorAll('[data-gallery]').forEach(function (gallery) {
-    var image = gallery.querySelector('[data-stage-image]');
-    var thumbs = Array.prototype.slice.call(gallery.querySelectorAll('[data-thumb]'));
-    if (!image) return;
+    var track = gallery.querySelector('[data-track]');
+    if (!track) return;
 
+    var slides = Array.prototype.slice.call(track.querySelectorAll('[data-slide]'));
+    var thumbs = Array.prototype.slice.call(gallery.querySelectorAll('[data-thumb]'));
+    var dots = Array.prototype.slice.call(gallery.querySelectorAll('[data-dots] span'));
     var index = 0;
 
-    function show(next) {
-      if (!thumbs.length) return;
-      index = (next + thumbs.length) % thumbs.length;
+    function goTo(next) {
+      index = Math.max(0, Math.min(next, slides.length - 1));
+      track.scrollTo({ left: slides[index].offsetLeft - track.offsetLeft, behavior: 'smooth' });
+    }
 
-      var thumb = thumbs[index];
-      image.src = thumb.dataset.full;
-      image.srcset = '';
-      image.alt = thumb.dataset.alt || '';
-
-      thumbs.forEach(function (other) { other.setAttribute('aria-current', 'false'); });
-      thumb.setAttribute('aria-current', 'true');
-      thumb.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    function mark(active) {
+      index = active;
+      thumbs.forEach(function (thumb, i) { thumb.setAttribute('aria-current', String(i === active)); });
+      dots.forEach(function (dot, i) {
+        if (i === active) dot.setAttribute('data-active', '');
+        else dot.removeAttribute('data-active');
+      });
+      if (thumbs[active]) thumbs[active].scrollIntoView({ block: 'nearest', inline: 'nearest' });
     }
 
     thumbs.forEach(function (thumb, position) {
-      thumb.addEventListener('click', function () { show(position); });
+      thumb.addEventListener('click', function () { goTo(position); });
     });
+
+    /* Le doigt fait défiler la piste : c'est elle qui dit où l'on en est,
+       pas l'inverse. On lit la position plutôt que de la deviner. */
+    var pending;
+    track.addEventListener('scroll', function () {
+      window.clearTimeout(pending);
+      pending = window.setTimeout(function () {
+        var width = track.clientWidth || 1;
+        mark(Math.round(track.scrollLeft / width));
+      }, 80);
+    }, { passive: true });
 
     // Une variante choisie amène son visuel au premier plan.
     var pdp = gallery.closest('[data-pdp]');
     if (pdp) {
       pdp.addEventListener('gemea:variant', function (event) {
         var target = event.detail.mediaIndex;
-        if (target >= 0 && target < thumbs.length && target !== index) show(target);
+        if (target >= 0 && target < slides.length && target !== index) goTo(target);
       });
     }
 
-    /* Visionneuse plein écran */
+    /* Visionneuse plein écran, sur le visuel affiché. */
     var dialog = document.querySelector('[data-lightbox]');
     var opener = gallery.querySelector('[data-zoom-open]');
     if (dialog && opener && typeof dialog.showModal === 'function') {
       var large = dialog.querySelector('[data-lightbox-image]');
 
       opener.addEventListener('click', function () {
-        large.src = image.src;
-        large.alt = image.alt;
+        var shown = slides[index] && slides[index].querySelector('img');
+        if (!shown) return;
+        large.src = shown.currentSrc || shown.src;
+        large.alt = shown.alt;
         dialog.showModal();
       });
 
@@ -81,7 +97,7 @@
         dialog.close();
       });
 
-      // Un clic sur le fond ferme aussi, comme on s'y attend d'une visionneuse.
+      // Un appui hors de l'image ferme aussi, comme on s'y attend.
       dialog.addEventListener('click', function (event) {
         if (event.target === dialog) dialog.close();
       });
@@ -103,7 +119,10 @@
     var groups = Array.prototype.slice.call(form.querySelectorAll('[data-option-index]'));
     var stock = form.querySelector('[data-stock]');
     var saveBadge = scope.querySelector('[data-save]');
-    var button = form.querySelector('[data-add-button]');
+    // Le bouton principal et celui de la barre collante partagent leur état.
+    var buttons = Array.prototype.slice.call(
+      document.querySelectorAll('[data-add-button], [data-sticky-add]')
+    );
     var priceNodes = Array.prototype.slice.call(scope.querySelectorAll('[data-variant-price]'));
 
     function chosen() {
@@ -169,10 +188,10 @@
         if (match.compare_html) saveBadge.textContent = '-' + match.save_percent + ' %';
       }
 
-      if (button) {
-        button.disabled = !match.available;
-        button.textContent = match.available ? button.dataset.add : button.dataset.soldOut;
-      }
+      buttons.forEach(function (node) {
+        node.disabled = !match.available;
+        node.textContent = match.available ? node.dataset.add : node.dataset.soldOut;
+      });
 
       if (stock) {
         stock.classList.toggle('stock--out', !match.available);
@@ -316,6 +335,28 @@
       })
       .catch(function () { /* pas de suggestions : la section reste vide */ });
   });
+
+  /* --------------------------------------------- Barre d'achat collante
+     Elle apparaît quand le bouton principal a quitté l'écran par le haut.
+     Elle ne porte pas de formulaire : elle soumet celui de la page. */
+  (function () {
+    var bar = document.querySelector('[data-sticky-buy]');
+    var anchorButton = document.querySelector('[data-add-button]');
+    if (!bar || !anchorButton || !('IntersectionObserver' in window)) return;
+
+    bar.querySelector('[data-sticky-add]').addEventListener('click', function () {
+      var form = anchorButton.closest('form');
+      if (form) form.requestSubmit(anchorButton);
+    });
+
+    new IntersectionObserver(
+      function (entries) {
+        var entry = entries[0];
+        bar.dataset.visible = String(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+      },
+      { threshold: 0 }
+    ).observe(anchorButton);
+  })();
 
   /* --------------------------------------------------- Retour en haut de page */
   (function () {

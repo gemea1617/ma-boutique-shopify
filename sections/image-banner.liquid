@@ -21,7 +21,7 @@
     >
   {%- endif -%}
 
-  <div class="banner__veil"></div>
+  <div class="banner__veil" style="background: rgb(15 15 15 / {{ section.settings.veil | divided_by: 100.0 }})"></div>
 
   <div class="banner__copy page-width page-width--narrow">
     <h2>{{ section.settings.heading }}</h2>
@@ -52,11 +52,12 @@
       "type": "range",
       "id": "veil",
       "label": "Intensité du voile",
+      "info": "En dessous de 45 %, le texte devient illisible sur une photo claire.",
       "min": 0,
       "max": 70,
       "step": 5,
       "unit": "%",
-      "default": 35
+      "default": 55
     }
   ],
   "presets": [{ "name": "Bandeau image" }]

@@ -16,26 +16,43 @@
 <div class="page-width">
   <div class="pdp" data-pdp data-product-id="{{ product.id }}">
     <div class="gallery" data-gallery>
-      <div class="gallery__stage" data-stage>
+      <div class="gallery__stage">
         {%- if media_count > 0 -%}
-          <img
-            data-stage-image
-            src="{{ product.featured_media | image_url: width: 1400 }}"
-            srcset="
-              {{ product.featured_media | image_url: width: 700 }} 700w,
-              {{ product.featured_media | image_url: width: 1400 }} 1400w,
-              {{ product.featured_media | image_url: width: 2000 }} 2000w
-            "
-            sizes="(min-width: 990px) 50vw, 100vw"
-            alt="{{ product.featured_media.alt | escape }}"
-            width="{{ product.featured_media.width }}"
-            height="{{ product.featured_media.height }}"
-            fetchpriority="high"
-          >
+          <div class="gallery__track" data-track>
+            {%- for media in product.media -%}
+              <div class="gallery__slide" data-slide>
+                <img
+                  src="{{ media | image_url: width: 1400 }}"
+                  srcset="
+                    {{ media | image_url: width: 600 }} 600w,
+                    {{ media | image_url: width: 1000 }} 1000w,
+                    {{ media | image_url: width: 1600 }} 1600w
+                  "
+                  sizes="(min-width: 990px) 50vw, 100vw"
+                  alt="{{ media.alt | escape }}"
+                  width="{{ media.width }}"
+                  height="{{ media.height }}"
+                  {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                >
+              </div>
+            {%- endfor -%}
+          </div>
 
           <button class="gallery__zoom" type="button" data-zoom-open aria-label="{{ 'products.product.zoom' | t }}">
             {% render 'icon', name: 'expand', size: 16 %}
           </button>
+
+          {%- if media_count > 1 -%}
+            {%- comment -%}
+              Les points ne servent qu'au tactile : sur grand écran les
+              vignettes disent déjà où l'on en est.
+            {%- endcomment -%}
+            <div class="gallery__dots" data-dots aria-hidden="true">
+              {%- for media in product.media -%}
+                <span{% if forloop.first %} data-active{% endif %}></span>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
         {%- else -%}
           <span class="placeholder">{% render 'logo', width: 120, unique_id: 'product' %}</span>
         {%- endif -%}
@@ -47,9 +64,6 @@
             <button
               type="button"
               data-thumb
-              data-index="{{ forloop.index0 }}"
-              data-full="{{ media | image_url: width: 1400 }}"
-              data-alt="{{ media.alt | escape }}"
               aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
               aria-label="{{ 'products.product.media_label' | t: index: forloop.index }}"
             >
@@ -288,6 +302,36 @@
   </div>
 </div>
 
+{%- comment -%}
+  Barre d'achat collante. Elle n'existe qu'au téléphone : sur grand écran la
+  colonne d'achat reste visible d'elle-même. Elle ne duplique pas le
+  formulaire, elle le soumet — un seul panier, une seule source de vérité.
+{%- endcomment -%}
+{%- if section.settings.sticky_buy -%}
+  <div class="sticky-buy" data-sticky-buy data-visible="false">
+    <div class="sticky-buy__inner">
+      <div class="sticky-buy__text">
+        <div class="sticky-buy__title">{{ product.title }}</div>
+        <div class="sticky-buy__price" data-variant-price>{% render 'price', target: current %}</div>
+      </div>
+      <button
+        class="btn"
+        type="button"
+        data-sticky-add
+        data-add="{{ 'products.product.add_to_cart' | t }}"
+        data-sold-out="{{ 'products.product.sold_out' | t }}"
+        {% unless current.available %}disabled{% endunless %}
+      >
+        {%- if current.available -%}
+          {{ 'products.product.add_to_cart' | t }}
+        {%- else -%}
+          {{ 'products.product.sold_out' | t }}
+        {%- endif -%}
+      </button>
+    </div>
+  </div>
+{%- endif -%}
+
 <dialog class="lightbox" data-lightbox>
   <button class="lightbox__close" type="button" data-lightbox-close aria-label="{{ 'general.close' | t }}">
     {% render 'icon', name: 'close', size: 20 %}
@@ -302,6 +346,15 @@
 {% schema %}
 {
   "name": "Page produit",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "sticky_buy",
+      "label": "Barre d'achat collante au téléphone",
+      "info": "Apparaît en bas de l'écran dès que le bouton d'ajout n'est plus visible. Sans effet sur grand écran.",
+      "default": true
+    }
+  ],
   "blocks": [
     { "type": "vendor", "name": "Marque", "limit": 1 },
     { "type": "title", "name": "Titre", "limit": 1 },

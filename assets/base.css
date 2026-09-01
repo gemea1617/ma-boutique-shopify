@@ -325,7 +325,7 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
    angles droits de la charte — un seul jeton à changer pour basculer. */
 :root { --rayon: 0px; }
 
-.pdp { display: grid; gap: 36px; grid-template-columns: 1fr; padding-block: 34px 64px; }
+.pdp { display: grid; gap: 36px; grid-template-columns: minmax(0, 1fr); padding-block: 34px 64px; }
 
 @media (min-width: 990px) {
   .pdp { grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr); gap: 60px; align-items: start; }
@@ -334,7 +334,7 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
 
 /* --- Galerie : grand visuel, vignettes en dessous --- */
 
-.gallery { display: grid; gap: 14px; }
+.gallery { display: grid; gap: 14px; min-width: 0; }
 
 .gallery__stage {
   position: relative;
@@ -342,9 +342,40 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
   border: 1px solid var(--gris-clair);
   border-radius: var(--rayon);
   overflow: hidden;
-  aspect-ratio: 1;
 }
-.gallery__stage img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Une piste à défilement plutôt qu'une image unique : le doigt fait glisser
+   les visuels, et les vignettes n'ont plus qu'à amener la bonne diapositive. */
+.gallery__track {
+  display: flex;
+  min-width: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.gallery__track::-webkit-scrollbar { display: none; }
+
+.gallery__slide { flex: 0 0 100%; scroll-snap-align: center; aspect-ratio: 1; }
+.gallery__slide img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Les points ne servent qu'au tactile. */
+.gallery__dots {
+  position: absolute; left: 0; right: 0; bottom: 14px; z-index: 2;
+  display: flex; justify-content: center; gap: 7px;
+  pointer-events: none;
+}
+.gallery__dots span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gris-clair);
+  border: 1px solid var(--gris);
+  transition: background var(--transition);
+}
+.gallery__dots span[data-active] { background: var(--noir); border-color: var(--noir); }
+
+@media (min-width: 750px) { .gallery__dots { display: none; } }
 
 .gallery__zoom {
   position: absolute; right: 14px; bottom: 14px; z-index: 2;
@@ -361,7 +392,7 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
 .gallery__thumbs::-webkit-scrollbar { display: none; }
 .gallery__thumbs button {
   flex: none;
-  width: 92px;
+  width: 68px;
   padding: 0;
   border: 1px solid var(--gris-clair);
   border-radius: var(--rayon);
@@ -373,6 +404,8 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
 .gallery__thumbs button:hover { border-color: var(--gris); }
 .gallery__thumbs button[aria-current='true'] { border-color: var(--noir); }
 .gallery__thumbs img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+
+@media (min-width: 750px) { .gallery__thumbs button { width: 92px; } }
 
 /* Visionneuse plein écran */
 .lightbox {
@@ -548,7 +581,8 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
 
 .banner__image, .banner__veil { position: absolute; inset: 0; width: 100%; height: 100%; }
 .banner__image { object-fit: cover; }
-.banner__veil { background: rgb(15 15 15 / 0.35); }
+/* Repli : la section pose sa propre valeur en ligne depuis le réglage. */
+.banner__veil { background: rgb(15 15 15 / 0.55); }
 
 .banner__copy {
   position: relative; z-index: 1;
@@ -558,7 +592,7 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
   color: var(--ivoire);
 }
 .banner__copy h2 { color: var(--ivoire); font-size: clamp(26px, 3.4vw, 36px); letter-spacing: 0.04em; }
-.banner__copy p { color: var(--gris-clair); margin-top: 16px; font-size: 14.5px; }
+.banner__copy p { color: var(--ivoire); margin-top: 16px; font-size: 14.5px; }
 .banner__copy .btn { margin-top: 26px; }
 
 .btn--light {
@@ -581,6 +615,7 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
 
 .rail {
   display: grid;
+  min-width: 0;
   grid-auto-flow: column;
   grid-auto-columns: 46%;
   gap: 18px;
@@ -958,3 +993,116 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ==========================================================================
+   Téléphone
+   Le reste de la feuille est écrit pour le mobile d'abord ; ce bloc règle ce
+   qui ne peut se décider qu'au petit écran : place disponible, doigt, encoche.
+   ========================================================================== */
+
+@media (max-width: 749px) {
+  /* Le bandeau doit tenir : moins d'interlettrage, retour à la ligne permis. */
+  .announcement {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    padding: 10px 16px;
+    line-height: 1.6;
+  }
+
+  /* La marque rétrécit pour laisser la place aux icônes du panier. */
+  .header__inner { gap: 8px; padding-block: 14px; }
+  .header__logo .wordmark { font-size: 17px; letter-spacing: 0.2em; text-indent: 0.2em; }
+  .header__actions { gap: 16px; }
+  .header__left { gap: 0; }
+
+  /* Toute cible tactile fait au moins 44 px — le pouce n'est pas une souris. */
+  .header__icon, .menu-toggle { min-width: 44px; min-height: 44px; justify-content: center; }
+  .header__left .menu-toggle { margin-inline-start: -12px; }
+  .header__actions .header__icon { justify-content: center; }
+  .accordion summary { min-height: 52px; }
+  .share a { min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
+
+  /* iOS agrandit la page dès qu'un champ passe sous 16 px : on ne descend pas. */
+  input[type='email'],
+  input[type='text'],
+  input[type='search'],
+  input[type='password'],
+  input[type='number'],
+  textarea,
+  select { font-size: 16px; }
+
+  .pdp { padding-block: 20px 40px; gap: 26px; }
+  .pdp__title { font-size: 27px; letter-spacing: 0.03em; }
+  .price-row .amount { font-size: 22px; }
+
+  /* Les pastilles de taille tiennent sur deux rangs plutôt que de déborder. */
+  .pill { min-width: 54px; padding: 13px 12px; }
+
+  .features { margin-top: 28px; gap: 14px; }
+
+  /* Les rangées débordent volontairement de la gouttière : la carte suivante
+     dépasse du bord, ce qui signale qu'on peut faire glisser. */
+  .rail {
+    grid-auto-columns: 62%;
+    padding-inline: var(--gouttiere);
+    margin-inline: calc(var(--gouttiere) * -1);
+    -webkit-overflow-scrolling: touch;
+  }
+  .rail--wide { grid-auto-columns: 86%; }
+
+  .carousel__progress { margin-top: 24px; }
+
+  .section { padding-block: 48px; }
+  .section-title { margin-bottom: 28px; font-size: 23px; }
+
+  .banner__copy { padding-block: 48px; }
+  .guarantees__grid { gap: 38px 20px; }
+  .guarantee svg { width: 42px; height: 42px; }
+  .guarantee h3 { font-size: 15px; }
+
+  /* Le pied de page garde ses trois colonnes, comme sur la maquette. */
+  .footer { padding-block: 44px 28px; }
+  .footer__links { grid-template-columns: repeat(3, 1fr); gap: 24px 14px; }
+  .footer h4 { font-size: 13px; margin-bottom: 14px; }
+  .footer a { font-size: 12.5px; }
+  .footer ul { gap: 11px; }
+  .footer__signup { margin-top: 40px; }
+  .footer__wordmark { letter-spacing: 0.16em; text-indent: 0.16em; }
+  .footer__legal { flex-direction: column; gap: 12px; }
+
+  /* Le bouton de retour en haut se décale pour ne pas couvrir la barre d'achat. */
+  .to-top { right: 14px; bottom: calc(84px + env(safe-area-inset-bottom)); width: 44px; height: 44px; }
+}
+
+/* Sur écran tactile, l'image de survol des cartes ne se déclenchera jamais :
+   on évite qu'elle reste bloquée après un appui. */
+@media (hover: none) {
+  .card__media img.card__img--hover { display: none; }
+}
+
+/* --------------------------------------------------- Barre d'achat collante */
+
+.sticky-buy {
+  position: fixed; inset: auto 0 0 0; z-index: 30;
+  background: var(--ivoire);
+  border-top: 1px solid var(--gris-clair);
+  transform: translateY(101%);
+  transition: transform var(--transition);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.sticky-buy[data-visible='true'] { transform: none; }
+
+.sticky-buy__inner {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px var(--gouttiere);
+}
+.sticky-buy__text { flex: 1; min-width: 0; }
+.sticky-buy__title {
+  font-family: var(--titre); font-size: 14px; letter-spacing: 0.02em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sticky-buy__price { font-size: 13px; color: var(--gris-fonce); letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
+.sticky-buy .btn { flex: none; padding: 15px 22px; }
+
+/* Sur grand écran la colonne d'achat reste visible : la barre n'a pas lieu d'être. */
+@media (min-width: 750px) { .sticky-buy { display: none; } }
