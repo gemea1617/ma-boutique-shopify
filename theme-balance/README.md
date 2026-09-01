@@ -8,6 +8,9 @@ Fichiers versionnés du thème **Balance** (non publié) de gemeajewels.com.
 | `blocks/gemea-breadcrumb.liquid` | Fil d'Ariane + étiquette « Nouveauté » |
 | `blocks/gemea-teaser.liquid` | Accroche courte sous le titre produit |
 | `assets/gemea-product.css` | Styles des deux blocs ci-dessus |
+| `blocks/gemea-mobile-ux.liquid` | Interactions mobiles + panneau guide des tailles |
+| `assets/gemea-mobile.css` | Règles mobiles (< 750 px) et panneau glissant |
+| `assets/gemea-mobile.js` | Accroche repliable, accordéons, panneau glissant |
 
 Les chemins reproduisent l'arborescence du thème : `theme-balance/templates/product.json`
 correspond à `templates/product.json` dans le thème Shopify.
