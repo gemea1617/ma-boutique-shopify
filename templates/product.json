@@ -3,72 +3,37 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "badge": {
-          "type": "badge",
-          "settings": { "label": "Nouveauté", "tag": "nouveaute" }
-        },
+        "vendor": { "type": "vendor" },
         "title": { "type": "title" },
-        "price": { "type": "price" },
-        "rating": { "type": "rating" },
+        "price": {
+          "type": "price",
+          "settings": { "note": "Taxes incluses. Livraison calculée au paiement." }
+        },
         "pitch": {
           "type": "pitch",
           "settings": {
-            "text": "<p>Un design organique inspiré par le mouvement des vagues. Minimaliste et intemporelle, la bague Onde se porte seule ou en accumulation.</p>"
+            "text": "<p>Des bijoux pensés pour accompagner chaque journée, du bureau au dîner, sans jamais avoir à y penser.</p>"
           }
         },
-        "arguments": {
-          "type": "arguments",
-          "settings": {
-            "icon_1": "gem",
-            "label_1": "Argent 925",
-            "icon_2": "water",
-            "label_2": "Résiste à l'eau",
-            "icon_3": "shield",
-            "label_3": "Garantie 2 ans"
-          }
-        },
+        "divider": { "type": "divider" },
+        "stock": { "type": "stock", "settings": { "in_stock": "En stock" } },
         "form": {
           "type": "form",
           "settings": {
             "size_guide": "/pages/guide-des-tailles",
             "size_guide_label": "Guide des tailles",
-            "show_wishlist": true
+            "show_payment_button": true
           }
         },
-        "payment": {
-          "type": "payment",
-          "settings": { "note": "Paiement en 3x sans frais dès 50 €" }
-        }
-      },
-      "block_order": ["badge", "title", "price", "rating", "pitch", "arguments", "form", "payment"]
-    },
-
-    "reassurance": {
-      "type": "reassurance-bar",
-      "blocks": {
-        "r1": {
-          "type": "item",
-          "settings": { "icon": "truck", "heading": "Livraison offerte", "text": "dès 100 € d'achat" }
+        "features": {
+          "type": "features",
+          "settings": {
+            "text_1": "Argent 925 massif, hypoallergénique",
+            "text_2": "Expédié sous 24 h depuis la France",
+            "text_3": "Retours offerts sous 30 jours"
+          }
         },
-        "r2": {
-          "type": "item",
-          "settings": { "icon": "return", "heading": "Retours offerts", "text": "sous 30 jours" }
-        },
-        "r3": {
-          "type": "item",
-          "settings": { "icon": "lock", "heading": "Paiement sécurisé", "text": "CB, PayPal, 3x sans frais" }
-        },
-        "r4": {
-          "type": "item",
-          "settings": { "icon": "gift", "heading": "Emballage cadeau", "text": "offert avec chaque commande" }
-        }
-      },
-      "block_order": ["r1", "r2", "r3", "r4"]
-    },
-
-    "details": {
-      "type": "product-details",
-      "blocks": {
+        "description": { "type": "description", "settings": { "heading": "Description" } },
         "livraison": {
           "type": "accordion",
           "settings": {
@@ -83,158 +48,108 @@
             "content": "<p>Nettoyez votre bijou avec un chiffon doux et sec. Évitez le contact avec les parfums et les produits ménagers. Rangez-le dans son écrin, à l'abri de l'humidité.</p>"
           }
         },
-        "specs": {
-          "type": "specs",
-          "settings": {
-            "heading": "Matériaux",
-            "content": "<p>Argent 925 massif<br/>Hypoallergénique<br/>Résiste à l'eau et ne ternit pas</p>"
-          }
-        },
-        "finitions": {
-          "type": "finitions",
-          "settings": {
-            "heading": "Finitions disponibles",
-            "name_1": "Argent",
-            "color_1": "#D9D9D9",
-            "name_2": "Plaqué or 18k",
-            "color_2": "#E5C88F"
-          }
-        }
+        "share": { "type": "share" }
       },
-      "block_order": ["livraison", "entretien", "specs", "finitions"]
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "pitch",
+        "divider",
+        "stock",
+        "form",
+        "features",
+        "description",
+        "livraison",
+        "entretien",
+        "share"
+      ]
     },
 
-    "bundle": {
-      "type": "product-bundle",
+    "banner": {
+      "type": "image-banner",
       "settings": {
-        "heading": "Complétez votre style",
-        "text": "Ces pièces se marient parfaitement avec celle-ci.",
-        "count": 2,
-        "discount_percent": 0
+        "heading": "Pensé pour la vie de tous les jours",
+        "text": "Nos collections sont dessinées pour vous suivre partout — du bureau au dîner, de la semaine au week-end. Des pièces polyvalentes qui trouvent naturellement leur place dans votre quotidien.",
+        "veil": 35
       }
     },
 
     "avis": {
-      "type": "product-reviews",
+      "type": "testimonials",
       "blocks": {
-        "q1": {
-          "type": "quote",
+        "a1": {
+          "type": "avis",
           "settings": {
-            "stars": 5,
-            "text": "Qualité incroyable, je ne la quitte plus. Elle va avec tout !",
             "author": "Camille D.",
-            "verified": true
+            "role": "Lyon",
+            "text": "Je la porte tous les jours depuis six mois, elle n'a pas bougé d'un ton. La finition est bien plus belle qu'en photo."
           }
         },
-        "q2": {
-          "type": "quote",
+        "a2": {
+          "type": "avis",
           "settings": {
-            "stars": 5,
-            "text": "Très belle finition et agréable à porter au quotidien.",
             "author": "Julie M.",
-            "verified": true
+            "role": "Bordeaux",
+            "text": "Emballage soigné, envoi rapide. C'est devenu le bijou que je ne quitte plus, même sous la douche."
           }
         },
-        "q3": {
-          "type": "quote",
+        "a3": {
+          "type": "avis",
           "settings": {
-            "stars": 5,
-            "text": "Design minimaliste et élégant. Je recommande à 100 %.",
             "author": "Sarah L.",
-            "verified": true
+            "role": "Marseille",
+            "text": "J'avais peur que l'argent noircisse comme mes anciens bijoux. Après tout un été, rien du tout."
           }
         }
       },
-      "block_order": ["q1", "q2", "q3"],
-      "settings": {
-        "heading": "Avis clients",
-        "link": "/pages/avis",
-        "link_label": "Voir tous les avis"
-      }
+      "block_order": ["a1", "a2", "a3"],
+      "settings": { "heading": "Elles portent GEMEA au quotidien" }
     },
 
-    "faq": {
-      "type": "faq",
-      "blocks": {
-        "q1": {
-          "type": "question",
-          "settings": {
-            "question": "La bague résiste-t-elle à l'eau ?",
-            "answer": "<p>Oui. L'argent 925 massif supporte l'eau sans s'altérer. Retirez tout de même votre bijou avant la piscine ou la mer : le chlore et le sel ternissent la finition à la longue.</p>"
-          }
-        },
-        "q2": {
-          "type": "question",
-          "settings": {
-            "question": "L'argent 925 va-t-il s'oxyder avec le temps ?",
-            "answer": "<p>L'argent peut légèrement se patiner. Un passage de chiffon doux suffit à lui rendre son éclat d'origine.</p>"
-          }
-        },
-        "q3": {
-          "type": "question",
-          "settings": {
-            "question": "Puis-je retourner ou échanger mon bijou ?",
-            "answer": "<p>Vous disposez de 30 jours pour nous retourner votre commande, retour offert. Le bijou doit être non porté et dans son écrin d'origine.</p>"
-          }
-        },
-        "q4": {
-          "type": "question",
-          "settings": {
-            "question": "Comment connaître ma taille de bague ?",
-            "answer": "<p>Notre guide des tailles vous explique comment mesurer votre doigt en moins d'une minute, avec un simple bout de papier.</p>"
-          }
-        }
-      },
-      "block_order": ["q1", "q2", "q3", "q4"],
-      "settings": {
-        "heading": "FAQ",
-        "link": "/pages/faq",
-        "link_label": "Voir toutes les questions"
-      }
-    },
-
-    "recommandations": {
+    "associes": {
       "type": "product-recommendations",
-      "settings": {
-        "heading": "Vous aimerez aussi",
-        "link": "/collections/all",
-        "link_label": "Voir tout",
-        "count": 8
-      }
+      "settings": { "heading": "Produits associés", "count": 8, "quick_add": true }
     },
 
-    "gift": {
-      "type": "gift",
+    "garanties": {
+      "type": "icon-features",
       "blocks": {
-        "g1": { "type": "item", "settings": { "icon": "gift", "label": "Écrin offert" } },
-        "g2": { "type": "item", "settings": { "icon": "message", "label": "Message personnalisé" } },
-        "g3": { "type": "item", "settings": { "icon": "ribbon", "label": "Prêt à offrir" } }
+        "g1": {
+          "type": "item",
+          "settings": {
+            "icon": "globe",
+            "heading": "Livraison mondiale",
+            "text": "Recevez votre commande partout dans le monde"
+          }
+        },
+        "g2": {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "heading": "Retours faciles",
+            "text": "Sous 30 jours après réception, sans justification"
+          }
+        },
+        "g3": {
+          "type": "item",
+          "settings": {
+            "icon": "shield",
+            "heading": "Paiement sécurisé",
+            "text": "Toutes les commandes sont traitées en toute sécurité"
+          }
+        },
+        "g4": {
+          "type": "item",
+          "settings": {
+            "icon": "award",
+            "heading": "Programme fidélité",
+            "text": "Cumulez des points et profitez de nombreux avantages"
+          }
+        }
       },
-      "block_order": ["g1", "g2", "g3"],
-      "settings": {
-        "heading": "L'art d'offrir",
-        "text": "Chaque bijou est soigneusement emballé dans un écrin GEMEA."
-      }
-    },
-
-    "newsletter": {
-      "type": "newsletter",
-      "settings": {
-        "heading": "Rejoignez l'univers GEMEA",
-        "text": "Inscrivez-vous et profitez de -10 % sur votre première commande.",
-        "button_label": "S'inscrire"
-      }
+      "block_order": ["g1", "g2", "g3", "g4"]
     }
   },
-  "order": [
-    "main",
-    "reassurance",
-    "details",
-    "bundle",
-    "avis",
-    "faq",
-    "recommandations",
-    "gift",
-    "newsletter"
-  ]
+  "order": ["main", "banner", "avis", "associes", "garanties"]
 }

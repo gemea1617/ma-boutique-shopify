@@ -1,58 +1,21 @@
+{%- comment -%}
+  Fiche produit, calquée sur la structure de Vestra :
+  visuel + vignettes dessous, puis la colonne d'achat dans cet ordre —
+  marque, titre, prix, mention de taxes, accroche, filet, disponibilité,
+  quantité, guide des tailles, panier, paiement express, arguments à coche,
+  accordéons, partage.
+
+  Les couleurs et la typographie viennent de la charte GEMEA, pas de Vestra.
+{%- endcomment -%}
+
 {%- liquid
   assign current = product.selected_or_first_available_variant
   assign media_count = product.media.size
 -%}
 
 <div class="page-width">
-  <nav class="breadcrumb" aria-label="{{ 'general.breadcrumb' | t }}">
-    <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a>
-    <span aria-hidden="true">/</span>
-    {%- if collection -%}
-      <a href="{{ collection.url }}">{{ collection.title }}</a>
-      <span aria-hidden="true">/</span>
-    {%- endif -%}
-    <span>{{ product.title }}</span>
-  </nav>
-
   <div class="pdp" data-pdp data-product-id="{{ product.id }}">
-    {%- comment -%} ------------------------------------------------ Galerie {%- endcomment -%}
     <div class="gallery" data-gallery>
-      {%- if media_count > 1 -%}
-        <div class="gallery__rail">
-          <div class="gallery__thumbs" data-thumbs>
-            {%- for media in product.media -%}
-              <button
-                type="button"
-                data-thumb
-                data-index="{{ forloop.index0 }}"
-                data-full="{{ media | image_url: width: 1400 }}"
-                data-alt="{{ media.alt | escape }}"
-                aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
-                aria-label="{{ 'products.product.media_label' | t: index: forloop.index }}"
-              >
-                <img
-                  src="{{ media | image_url: width: 200 }}"
-                  alt=""
-                  width="{{ media.width }}"
-                  height="{{ media.height }}"
-                  loading="lazy"
-                >
-              </button>
-            {%- endfor -%}
-          </div>
-
-          {%- comment -%}
-            Le rail défile plutôt que de s'allonger : au-delà de cinq visuels
-            la flèche descend d'un cran, comme sur la maquette.
-          {%- endcomment -%}
-          {%- if media_count > 5 -%}
-            <button class="gallery__rail-more" type="button" data-rail-scroll aria-label="{{ 'products.product.media_next' | t }}">
-              {% render 'icon', name: 'arrow-down', size: 15 %}
-            </button>
-          {%- endif -%}
-        </div>
-      {%- endif -%}
-
       <div class="gallery__stage" data-stage>
         {%- if media_count > 0 -%}
           <img
@@ -70,15 +33,6 @@
             fetchpriority="high"
           >
 
-          {%- if media_count > 1 -%}
-            <button class="gallery__arrow gallery__arrow--prev" type="button" data-step="-1" aria-label="{{ 'products.product.media_previous' | t }}">
-              {% render 'icon', name: 'arrow-left', size: 16 %}
-            </button>
-            <button class="gallery__arrow gallery__arrow--next" type="button" data-step="1" aria-label="{{ 'products.product.media_next' | t }}">
-              {% render 'icon', name: 'arrow-right', size: 16 %}
-            </button>
-          {%- endif -%}
-
           <button class="gallery__zoom" type="button" data-zoom-open aria-label="{{ 'products.product.zoom' | t }}">
             {% render 'icon', name: 'expand', size: 16 %}
           </button>
@@ -86,68 +40,79 @@
           <span class="placeholder">{% render 'logo', width: 120, unique_id: 'product' %}</span>
         {%- endif -%}
       </div>
+
+      {%- if media_count > 1 -%}
+        <div class="gallery__thumbs" data-thumbs>
+          {%- for media in product.media -%}
+            <button
+              type="button"
+              data-thumb
+              data-index="{{ forloop.index0 }}"
+              data-full="{{ media | image_url: width: 1400 }}"
+              data-alt="{{ media.alt | escape }}"
+              aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+              aria-label="{{ 'products.product.media_label' | t: index: forloop.index }}"
+            >
+              <img
+                src="{{ media | image_url: width: 300 }}"
+                alt=""
+                width="{{ media.width }}"
+                height="{{ media.height }}"
+                loading="lazy"
+              >
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
     </div>
 
-    {%- comment -%} -------------------------------------------- Informations {%- endcomment -%}
     <div class="pdp__info">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
 
-          {%- when 'badge' -%}
-            {%- if block.settings.tag == blank or product.tags contains block.settings.tag -%}
-              <span class="pdp__badge" {{ block.shopify_attributes }}>{{ block.settings.label }}</span>
+          {%- when 'vendor' -%}
+            {%- if product.vendor != blank -%}
+              <p class="pdp__vendor" {{ block.shopify_attributes }}>{{ product.vendor }}</p>
             {%- endif -%}
 
           {%- when 'title' -%}
             <h1 class="pdp__title" {{ block.shopify_attributes }}>{{ product.title }}</h1>
 
           {%- when 'price' -%}
-            <div class="price-row" {{ block.shopify_attributes }}>
-              <span class="amount" data-variant-price>{% render 'price', target: current %}</span>
-              {%- assign saved = 0 -%}
-              {%- if current.compare_at_price > current.price -%}
-                {%- assign saved = current.compare_at_price | minus: current.price | times: 100 | divided_by: current.compare_at_price -%}
+            <div {{ block.shopify_attributes }}>
+              <div class="price-row">
+                <span class="amount" data-variant-price>{% render 'price', target: current %}</span>
+                {%- assign saved = 0 -%}
+                {%- if current.compare_at_price > current.price -%}
+                  {%- assign saved = current.compare_at_price | minus: current.price | times: 100 | divided_by: current.compare_at_price -%}
+                {%- endif -%}
+                <span class="badge-save" data-save {% if saved == 0 %}hidden{% endif %}>
+                  {{- 'products.product.save' | t: percent: saved -}}
+                </span>
+              </div>
+              {%- if block.settings.note != blank -%}
+                <p class="pdp__tax">{{ block.settings.note }}</p>
               {%- endif -%}
-              <span class="badge-save" data-save {% if saved == 0 %}hidden{% endif %}>
-                {{- 'products.product.save' | t: percent: saved -}}
-              </span>
             </div>
-
-          {%- when 'rating' -%}
-            {%- assign rating = product.metafields.reviews.rating.value -%}
-            {%- if rating != blank and rating.rating > 0 -%}
-              {%- assign filled = rating.rating | round -%}
-              {%- assign count = product.metafields.reviews.rating_count.value -%}
-              <a class="stars" href="#avis" {{ block.shopify_attributes }}>
-                <span class="stars__marks" aria-hidden="true">
-                  {%- for i in (1..5) -%}{% if i <= filled %}&#9733;{% else %}&#9734;{% endif %}{%- endfor -%}
-                </span>
-                <span class="stars__count">
-                  {{ rating.rating }}/{{ rating.scale_max }}
-                  {%- if count > 0 %} ({{ 'products.product.reviews' | t: count: count }}){% endif -%}
-                </span>
-              </a>
-            {%- endif -%}
 
           {%- when 'pitch' -%}
             {%- if block.settings.text != blank -%}
               <div class="pdp__pitch rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
             {%- endif -%}
 
-          {%- when 'arguments' -%}
-            <ul class="pdp__args" {{ block.shopify_attributes }}>
-              {%- for i in (1..3) -%}
-                {%- assign label_key = 'label_' | append: i -%}
-                {%- assign icon_key = 'icon_' | append: i -%}
-                {%- assign label = block.settings[label_key] -%}
-                {%- if label != blank -%}
-                  <li>
-                    {% render 'icon', name: block.settings[icon_key], size: 17 %}
-                    <span>{{ label }}</span>
-                  </li>
-                {%- endif -%}
-              {%- endfor -%}
-            </ul>
+          {%- when 'divider' -%}
+            <hr class="pdp__rule" {{ block.shopify_attributes }}>
+
+          {%- when 'stock' -%}
+            <p
+              class="stock{% unless current.available %} stock--out{% endunless %}"
+              data-stock
+              data-in-stock="{{ block.settings.in_stock }}"
+              data-sold-out="{{ 'products.product.sold_out' | t }}"
+              {{ block.shopify_attributes }}
+            >
+              {%- if current.available -%}{{ block.settings.in_stock }}{%- else -%}{{ 'products.product.sold_out' | t }}{%- endif -%}
+            </p>
 
           {%- when 'form' -%}
             <div {{ block.shopify_attributes }}>
@@ -188,14 +153,7 @@
                     <fieldset class="opt" data-option-index="{{ index0 }}">
                       <div class="opt__head">
                         <legend class="opt__label">{{ option.name }}</legend>
-                        {%- if block.settings.size_guide != blank and forloop.first -%}
-                          <a class="opt__guide" href="{{ block.settings.size_guide }}">
-                            {% render 'icon', name: 'ruler', size: 13 %}
-                            {{ block.settings.size_guide_label }}
-                          </a>
-                        {%- else -%}
-                          <span class="opt__chosen" data-option-chosen>{{ option.selected_value }}</span>
-                        {%- endif -%}
+                        <span class="opt__chosen" data-option-chosen>{{ option.selected_value }}</span>
                       </div>
 
                       <div class="opt__values{% if is_swatch %} opt__values--swatch{% endif %}">
@@ -245,6 +203,22 @@
 
                 <input type="hidden" name="id" value="{{ current.id }}" data-variant-id>
 
+                <div class="qty-field">
+                  <label class="opt__label" for="Quantity">{{ 'products.product.quantity' | t }}</label>
+                  <div class="qty" data-qty>
+                    <button type="button" data-qty-step="-1" aria-label="{{ 'products.product.quantity_decrease' | t }}">&minus;</button>
+                    <input id="Quantity" type="number" name="quantity" value="1" min="1" inputmode="numeric">
+                    <button type="button" data-qty-step="1" aria-label="{{ 'products.product.quantity_increase' | t }}">+</button>
+                  </div>
+                </div>
+
+                {%- if block.settings.size_guide != blank -%}
+                  <a class="size-guide" href="{{ block.settings.size_guide }}">
+                    <span class="size-guide__icon">{% render 'icon', name: 'ruler', size: 15 %}</span>
+                    {{ block.settings.size_guide_label }}
+                  </a>
+                {%- endif -%}
+
                 <div class="buy">
                   <button
                     class="btn btn--full"
@@ -262,52 +236,50 @@
                     {%- endif -%}
                   </button>
 
-                  {%- if block.settings.show_wishlist -%}
-                    {%- comment -%}
-                      Le cœur mémorise l'envie dans le navigateur du visiteur.
-                      Sans compte client, c'est tout ce qu'on peut promettre
-                      honnêtement — et ça suffit à retrouver la pièce plus tard.
-                    {%- endcomment -%}
-                    <button
-                      class="btn-icon"
-                      type="button"
-                      data-wishlist="{{ product.id }}"
-                      aria-pressed="false"
-                      aria-label="{{ 'products.product.wishlist' | t }}"
-                      title="{{ 'products.product.wishlist' | t }}"
-                    >
-                      {% render 'icon', name: 'heart', size: 18 %}
-                    </button>
+                  {%- if block.settings.show_payment_button -%}
+                    {{ form | payment_button }}
                   {%- endif -%}
                 </div>
-
-                <p
-                  class="stock{% unless current.available %} stock--out{% endunless %}"
-                  data-stock
-                  data-in-stock="{{ 'products.product.in_stock' | t }}"
-                  data-sold-out="{{ 'products.product.sold_out' | t }}"
-                >
-                  {%- if current.available -%}
-                    {{ 'products.product.in_stock' | t }}
-                  {%- else -%}
-                    {{ 'products.product.sold_out' | t }}
-                  {%- endif -%}
-                </p>
               {%- endform -%}
             </div>
 
-          {%- when 'payment' -%}
-            <div class="pdp__payment" {{ block.shopify_attributes }}>
-              {%- if block.settings.note != blank -%}
-                <p class="mention">{{ block.settings.note }}</p>
-              {%- endif -%}
-              {%- if shop.enabled_payment_types.size > 0 -%}
-                <div class="payment-icons">
-                  {%- for type in shop.enabled_payment_types -%}
-                    {{ type | payment_type_svg_tag }}
-                  {%- endfor -%}
-                </div>
-              {%- endif -%}
+          {%- when 'features' -%}
+            <ul class="features" {{ block.shopify_attributes }}>
+              {%- for i in (1..3) -%}
+                {%- assign key = 'text_' | append: i -%}
+                {%- assign line = block.settings[key] -%}
+                {%- if line != blank -%}
+                  <li>{% render 'icon', name: 'check', size: 20 %}<span>{{ line }}</span></li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+
+          {%- when 'description' -%}
+            <details class="accordion" open {{ block.shopify_attributes }}>
+              <summary>{{ block.settings.heading }}</summary>
+              <div class="accordion__body rte">{{ product.description }}</div>
+            </details>
+
+          {%- when 'accordion' -%}
+            <details class="accordion" {{ block.shopify_attributes }}>
+              <summary>{{ block.settings.heading }}</summary>
+              <div class="accordion__body rte">{{ block.settings.content }}</div>
+            </details>
+
+          {%- when 'share' -%}
+            {%- assign share_url = shop.url | append: product.url | url_encode -%}
+            {%- assign share_title = product.title | url_encode -%}
+            <div class="share" {{ block.shopify_attributes }}>
+              <span class="share__label">{{ 'products.product.share' | t }}</span>
+              <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url }}" target="_blank" rel="noopener" aria-label="Facebook">
+                {% render 'icon', name: 'facebook', size: 18 %}
+              </a>
+              <a href="https://twitter.com/intent/tweet?url={{ share_url }}&text={{ share_title }}" target="_blank" rel="noopener" aria-label="X">
+                {% render 'icon', name: 'x', size: 18 %}
+              </a>
+              <a href="https://pinterest.com/pin/create/button/?url={{ share_url }}&description={{ share_title }}" target="_blank" rel="noopener" aria-label="Pinterest">
+                {% render 'icon', name: 'pinterest', size: 18 %}
+              </a>
             </div>
 
         {%- endcase -%}
@@ -316,7 +288,6 @@
   </div>
 </div>
 
-{%- comment -%} Visionneuse plein écran, ouverte par la loupe de la galerie {%- endcomment -%}
 <dialog class="lightbox" data-lightbox>
   <button class="lightbox__close" type="button" data-lightbox-close aria-label="{{ 'general.close' | t }}">
     {% render 'icon', name: 'close', size: 20 %}
@@ -332,31 +303,18 @@
 {
   "name": "Page produit",
   "blocks": [
+    { "type": "vendor", "name": "Marque", "limit": 1 },
+    { "type": "title", "name": "Titre", "limit": 1 },
     {
-      "type": "badge",
-      "name": "Étiquette",
+      "type": "price",
+      "name": "Prix",
       "limit": 1,
       "settings": [
-        { "type": "text", "id": "label", "label": "Texte", "default": "Nouveauté" },
         {
           "type": "text",
-          "id": "tag",
-          "label": "Balise produit",
-          "info": "L'étiquette n'apparaît que sur les produits portant cette balise. Vide : sur tous.",
-          "default": "nouveaute"
-        }
-      ]
-    },
-    { "type": "title", "name": "Titre", "limit": 1 },
-    { "type": "price", "name": "Prix", "limit": 1 },
-    {
-      "type": "rating",
-      "name": "Note",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "paragraph",
-          "content": "La note vient des métachamps d'avis de la boutique. Sans avis enregistré, rien ne s'affiche."
+          "id": "note",
+          "label": "Mention sous le prix",
+          "default": "Taxes incluses. Livraison calculée au paiement."
         }
       ]
     },
@@ -369,60 +327,17 @@
           "type": "richtext",
           "id": "text",
           "label": "Texte",
-          "default": "<p>Un design organique inspiré par le mouvement des vagues. Minimaliste et intemporelle, la bague Onde se porte seule ou en accumulation.</p>"
+          "default": "<p>Des bijoux pensés pour accompagner chaque journée, du bureau au dîner, sans jamais avoir à y penser.</p>"
         }
       ]
     },
+    { "type": "divider", "name": "Filet" },
     {
-      "type": "arguments",
-      "name": "Arguments",
+      "type": "stock",
+      "name": "Disponibilité",
       "limit": 1,
       "settings": [
-        {
-          "type": "select",
-          "id": "icon_1",
-          "label": "Icône 1",
-          "options": [
-            { "value": "gem", "label": "Pierre" },
-            { "value": "water", "label": "Eau" },
-            { "value": "shield", "label": "Garantie" },
-            { "value": "truck", "label": "Livraison" },
-            { "value": "return", "label": "Retours" },
-            { "value": "leaf", "label": "Durable" }
-          ],
-          "default": "gem"
-        },
-        { "type": "text", "id": "label_1", "label": "Texte 1", "default": "Argent 925" },
-        {
-          "type": "select",
-          "id": "icon_2",
-          "label": "Icône 2",
-          "options": [
-            { "value": "gem", "label": "Pierre" },
-            { "value": "water", "label": "Eau" },
-            { "value": "shield", "label": "Garantie" },
-            { "value": "truck", "label": "Livraison" },
-            { "value": "return", "label": "Retours" },
-            { "value": "leaf", "label": "Durable" }
-          ],
-          "default": "water"
-        },
-        { "type": "text", "id": "label_2", "label": "Texte 2", "default": "Résiste à l'eau" },
-        {
-          "type": "select",
-          "id": "icon_3",
-          "label": "Icône 3",
-          "options": [
-            { "value": "gem", "label": "Pierre" },
-            { "value": "water", "label": "Eau" },
-            { "value": "shield", "label": "Garantie" },
-            { "value": "truck", "label": "Livraison" },
-            { "value": "return", "label": "Retours" },
-            { "value": "leaf", "label": "Durable" }
-          ],
-          "default": "shield"
-        },
-        { "type": "text", "id": "label_3", "label": "Texte 3", "default": "Garantie 2 ans" }
+        { "type": "text", "id": "in_stock", "label": "Texte en stock", "default": "En stock" }
       ]
     },
     {
@@ -431,41 +346,58 @@
       "limit": 1,
       "settings": [
         { "type": "url", "id": "size_guide", "label": "Lien du guide des tailles" },
-        {
-          "type": "text",
-          "id": "size_guide_label",
-          "label": "Libellé du guide",
-          "default": "Guide des tailles"
-        },
-        { "type": "checkbox", "id": "show_wishlist", "label": "Bouton favori", "default": true }
+        { "type": "text", "id": "size_guide_label", "label": "Libellé", "default": "Guide des tailles" },
+        { "type": "checkbox", "id": "show_payment_button", "label": "Paiement express", "default": true }
       ]
     },
     {
-      "type": "payment",
-      "name": "Paiement",
+      "type": "features",
+      "name": "Arguments à coche",
       "limit": 1,
       "settings": [
+        { "type": "text", "id": "text_1", "label": "Ligne 1", "default": "Argent 925 massif, hypoallergénique" },
+        { "type": "text", "id": "text_2", "label": "Ligne 2", "default": "Expédié sous 24 h depuis la France" },
+        { "type": "text", "id": "text_3", "label": "Ligne 3", "default": "Retours offerts sous 30 jours" }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Titre", "default": "Description" }
+      ]
+    },
+    {
+      "type": "accordion",
+      "name": "Bloc dépliable",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Titre", "default": "Livraison & retours" },
         {
-          "type": "text",
-          "id": "note",
-          "label": "Mention",
-          "default": "Paiement en 3x sans frais dès 50 €"
+          "type": "richtext",
+          "id": "content",
+          "label": "Contenu",
+          "default": "<p>Livraison offerte dès 100 € d'achat, expédition sous 24 h ouvrées. Retours gratuits sous 30 jours.</p>"
         }
       ]
-    }
+    },
+    { "type": "share", "name": "Partage", "limit": 1 }
   ],
   "presets": [
     {
       "name": "Page produit",
       "blocks": [
-        { "type": "badge" },
+        { "type": "vendor" },
         { "type": "title" },
         { "type": "price" },
-        { "type": "rating" },
         { "type": "pitch" },
-        { "type": "arguments" },
+        { "type": "divider" },
+        { "type": "stock" },
         { "type": "form" },
-        { "type": "payment" }
+        { "type": "features" },
+        { "type": "description" },
+        { "type": "accordion" },
+        { "type": "share" }
       ]
     }
   ]

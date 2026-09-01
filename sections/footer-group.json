@@ -5,22 +5,24 @@
     "footer": {
       "type": "footer",
       "blocks": {
-        "boutique": {
+        "liens": {
           "type": "menu",
-          "settings": { "heading": "Boutique", "menu": "main-menu" }
-        },
-        "maison": {
-          "type": "menu",
-          "settings": { "heading": "La Maison", "menu": "footer" }
+          "settings": { "heading": "Liens rapides", "menu": "main-menu" }
         },
         "aide": {
           "type": "menu",
-          "settings": { "heading": "Aide", "menu": "footer" }
+          "settings": { "heading": "Aide & support", "menu": "footer" }
+        },
+        "categories": {
+          "type": "menu",
+          "settings": { "heading": "Catégories", "menu": "main-menu" }
         }
       },
-      "block_order": ["boutique", "maison", "aide"],
+      "block_order": ["liens", "aide", "categories"],
       "settings": {
-        "tagline": "<p>Bijoux en argent 925 imaginés à Paris.<br/>Des pièces intemporelles, pour chaque moment de votre vie.</p>"
+        "newsletter_heading": "Inscrivez-vous à la lettre GEMEA.",
+        "newsletter_text": "Nouveautés, réassorts et -10 % sur votre première commande.",
+        "newsletter_button": "S'inscrire"
       }
     }
   },

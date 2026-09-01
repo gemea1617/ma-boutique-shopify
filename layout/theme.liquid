@@ -50,5 +50,9 @@
     </main>
 
     {% sections 'footer-group' %}
+
+    <button class="to-top" type="button" data-to-top data-visible="false" aria-label="{{ 'general.back_to_top' | t }}">
+      {% render 'icon', name: 'chevron-up', size: 20 %}
+    </button>
   </body>
 </html>

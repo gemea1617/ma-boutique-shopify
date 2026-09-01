@@ -56,22 +56,6 @@
       thumb.addEventListener('click', function () { show(position); });
     });
 
-    gallery.querySelectorAll('[data-step]').forEach(function (arrow) {
-      arrow.addEventListener('click', function () {
-        show(index + parseInt(arrow.dataset.step, 10));
-      });
-    });
-
-    // Le rail plus long que sa fenêtre défile d'une vignette à la fois.
-    var railScroll = gallery.querySelector('[data-rail-scroll]');
-    var track = gallery.querySelector('[data-thumbs]');
-    if (railScroll && track) {
-      railScroll.addEventListener('click', function () {
-        var step = track.firstElementChild ? track.firstElementChild.offsetHeight + 10 : 88;
-        track.scrollBy({ top: step, behavior: 'smooth' });
-      });
-    }
-
     // Une variante choisie amène son visuel au premier plan.
     var pdp = gallery.closest('[data-pdp]');
     if (pdp) {
@@ -246,59 +230,65 @@
     });
   })();
 
-  /* ------------------------------------------------------- Offre groupée */
+  /* ------------------------------------------------------- Ajout rapide
+     Le bouton posé sur la vignette envoie la variante au panier sans quitter
+     la page. Il n'est rendu que pour les produits à variante unique — sinon
+     le client n'aurait pas choisi. */
 
-  function armBundle(button) {
+  function armQuickAdd(button) {
     if (button.dataset.armed) return;
     button.dataset.armed = 'true';
 
     button.addEventListener('click', function () {
-      var items = button.dataset.ids.split(',').map(function (id) {
-        return { id: Number(id), quantity: 1 };
-      });
-
       button.disabled = true;
 
       fetch(window.Shopify.routes.root + 'cart/add.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: items }),
+        body: JSON.stringify({ items: [{ id: Number(button.dataset.quickAdd), quantity: 1 }] }),
       })
         .then(function (response) {
           if (!response.ok) throw new Error('cart');
-          // Passer par /discount applique le code puis renvoie au panier.
-          window.location.href = button.dataset.discount
-            ? window.Shopify.routes.root + 'discount/' + encodeURIComponent(button.dataset.discount) + '?redirect=/cart'
-            : window.Shopify.routes.root + 'cart';
+          return response.json();
         })
-        .catch(function () {
-          button.disabled = false;
-        });
+        .then(function () {
+          // Le compteur du panier doit refléter l'ajout immédiatement.
+          return fetch(window.Shopify.routes.root + 'cart.js')
+            .then(function (r) { return r.json(); })
+            .then(function (cart) {
+              document.querySelectorAll('.cart-count').forEach(function (node) {
+                node.textContent = cart.item_count;
+                node.hidden = cart.item_count === 0;
+              });
+            });
+        })
+        .catch(function () { /* l'ajout a échoué : on rend le bouton */ })
+        .then(function () { button.disabled = false; });
     });
   }
 
-  /* ------------------------------------------------------------ Carrousels */
+  /* ------------------------------------------------------------ Carrousels
+     Pas de flèches sur la maquette : le défilement est tactile, et une barre
+     de progression indique où l'on en est. */
 
   function armCarousel(carousel) {
     var track = carousel.querySelector('[data-carousel-track]');
     if (!track || track.dataset.armed) return;
     track.dataset.armed = 'true';
 
-    function refresh() {
-      var max = track.scrollWidth - track.clientWidth - 1;
-      carousel.querySelectorAll('[data-scroll]').forEach(function (arrow) {
-        var forward = parseInt(arrow.dataset.scroll, 10) > 0;
-        arrow.disabled = forward ? track.scrollLeft >= max : track.scrollLeft <= 0;
-      });
-    }
+    var bar = carousel.querySelector('[data-progress] span');
 
-    carousel.querySelectorAll('[data-scroll]').forEach(function (arrow) {
-      arrow.addEventListener('click', function () {
-        var first = track.firstElementChild;
-        var step = first ? first.offsetWidth + 24 : track.clientWidth * 0.8;
-        track.scrollBy({ left: step * parseInt(arrow.dataset.scroll, 10), behavior: 'smooth' });
-      });
-    });
+    function refresh() {
+      if (!bar) return;
+      var scrollable = track.scrollWidth - track.clientWidth;
+      var visible = track.clientWidth / track.scrollWidth;
+
+      bar.style.width = Math.max(12, visible * 100) + '%';
+      // La barre parcourt la piste en proportion de ce qui reste à défiler.
+      var travel = (1 - Math.max(0.12, visible)) * 100;
+      var ratio = scrollable > 0 ? track.scrollLeft / scrollable : 0;
+      bar.style.transform = 'translateX(' + ratio * travel / Math.max(0.12, visible) + '%)';
+    }
 
     track.addEventListener('scroll', refresh, { passive: true });
     window.addEventListener('resize', refresh);
@@ -306,7 +296,7 @@
   }
 
   document.querySelectorAll('[data-carousel]').forEach(armCarousel);
-  document.querySelectorAll('[data-bundle-add]').forEach(armBundle);
+  document.querySelectorAll('[data-quick-add]').forEach(armQuickAdd);
 
   /* --------------------------------------------- Recommandations et parures */
   document.querySelectorAll('[data-recommendations]').forEach(function (holder) {
@@ -322,10 +312,24 @@
 
         // Ce contenu vient d'arriver : ses comportements ne sont pas armés.
         holder.querySelectorAll('[data-carousel]').forEach(armCarousel);
-        holder.querySelectorAll('[data-bundle-add]').forEach(armBundle);
+        holder.querySelectorAll('[data-quick-add]').forEach(armQuickAdd);
       })
       .catch(function () { /* pas de suggestions : la section reste vide */ });
   });
+
+  /* --------------------------------------------------- Retour en haut de page */
+  (function () {
+    var button = document.querySelector('[data-to-top]');
+    if (!button) return;
+
+    button.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    window.addEventListener('scroll', function () {
+      button.dataset.visible = String(window.scrollY > 600);
+    }, { passive: true });
+  })();
 
   /* ------------------------------------------------------ Vus récemment */
   (function () {

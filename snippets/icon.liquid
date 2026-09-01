@@ -44,7 +44,8 @@
     {%- when 'heart' -%}
       <path d="M12 20s-7.5-4.6-7.5-9.4A4.1 4.1 0 0 1 12 8a4.1 4.1 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20Z"/>
     {%- when 'ruler' -%}
-      <path d="m3 15 6-6 12 12H3v-6Z" transform="rotate(-45 12 12)"/><path d="M8.5 12.5 10 11M11.5 15.5 13 14"/>
+      <rect x="2.5" y="8.5" width="19" height="7"/>
+      <path d="M7 8.5v3M11 8.5v4M15 8.5v3M19 8.5v4"/>
     {%- when 'shield' -%}
       <path d="M12 3.5 19 6v6c0 4.2-3 7-7 8.5C8 19 5 16.2 5 12V6l7-2.5Z"/><path d="m9 12 2 2 4-4"/>
     {%- when 'lock' -%}
@@ -57,6 +58,17 @@
       <circle cx="12" cy="9" r="5.5"/><path d="m8.5 13.5-2 7 5.5-3 5.5 3-2-7"/>
     {%- when 'check-circle' -%}
       <circle cx="12" cy="12" r="8.5"/><path d="m8.5 12.2 2.4 2.4 4.6-4.8"/>
+    {%- when 'chevron-up' -%}
+      <path d="m5 15 7-7 7 7"/>
+    {%- when 'globe' -%}
+      <circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/>
+      <path d="M12 3.5c2.2 2.4 3.4 5.3 3.4 8.5S14.2 18.1 12 20.5C9.8 18.1 8.6 15.2 8.6 12S9.8 5.9 12 3.5Z"/>
+    {%- when 'award' -%}
+      <circle cx="12" cy="9" r="5"/>
+      <path d="m12 6.6 1 2 2.2.3-1.6 1.6.4 2.2-2-1.1-2 1.1.4-2.2-1.6-1.6 2.2-.3 1-2Z"/>
+      <path d="M8.6 13.6 6.5 20.5l5.5-2.9 5.5 2.9-2.1-6.9"/>
+    {%- when 'x' -%}
+      <path d="m4.5 4.5 15 15M19.5 4.5l-15 15"/>
     {%- when 'instagram' -%}
       <rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="3.9"/><circle cx="17" cy="7" r="0.9" fill="currentColor" stroke="none"/>
     {%- when 'tiktok' -%}

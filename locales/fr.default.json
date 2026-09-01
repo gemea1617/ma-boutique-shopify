@@ -31,7 +31,9 @@
     "close": "Fermer",
     "previous": "Précédent",
     "next": "Suivant",
-    "rights": "Tous droits réservés"
+    "rights": "Tous droits réservés",
+    "payment_methods": "Moyens de paiement",
+    "back_to_top": "Retour en haut de page"
   },
   "onboarding": {
     "product_title": "Nom du produit"
@@ -86,7 +88,8 @@
         "other": "{{ count }} avis"
       },
       "wishlist": "Ajouter aux favoris",
-      "zoom": "Agrandir le visuel"
+      "zoom": "Agrandir le visuel",
+      "share": "Partager :"
     },
     "bundle": {
       "selection": "Votre sélection",
