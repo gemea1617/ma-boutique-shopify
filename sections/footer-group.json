@@ -2,40 +2,27 @@
   "name": "Pied de page",
   "type": "footer",
   "sections": {
-    "newsletter": {
-      "type": "newsletter",
-      "settings": {
-        "eyebrow": "Lettre GEMEA",
-        "heading": "-10 % sur votre première commande",
-        "text": "Les nouveautés, les réassorts et rien d'autre. Une à deux fois par mois.",
-        "button_label": "S'inscrire",
-        "mention": "Désinscription en un clic. Aucune donnée revendue."
-      }
-    },
     "footer": {
       "type": "footer",
       "blocks": {
-        "menu-boutique": {
+        "boutique": {
           "type": "menu",
           "settings": { "heading": "Boutique", "menu": "main-menu" }
         },
-        "menu-aide": {
+        "maison": {
+          "type": "menu",
+          "settings": { "heading": "La Maison", "menu": "footer" }
+        },
+        "aide": {
           "type": "menu",
           "settings": { "heading": "Aide", "menu": "footer" }
-        },
-        "contact": {
-          "type": "text",
-          "settings": {
-            "heading": "Nous écrire",
-            "text": "<p>bonjour@gemeajewels.com<br/>Réponse sous 24 h ouvrées.</p>"
-          }
         }
       },
-      "block_order": ["menu-boutique", "menu-aide", "contact"],
+      "block_order": ["boutique", "maison", "aide"],
       "settings": {
-        "tagline": "Bijoux plaqué or 18 carats, résistants à l'eau, pensés pour le quotidien."
+        "tagline": "<p>Bijoux en argent 925 imaginés à Paris.<br/>Des pièces intemporelles, pour chaque moment de votre vie.</p>"
       }
     }
   },
-  "order": ["newsletter", "footer"]
+  "order": ["footer"]
 }

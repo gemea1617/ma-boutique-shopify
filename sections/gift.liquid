@@ -1,0 +1,75 @@
+<section class="gift">
+  <div class="page-width gift__grid">
+    <div class="gift__media">
+      {%- if section.settings.image != blank -%}
+        <img
+          src="{{ section.settings.image | image_url: width: 900 }}"
+          alt="{{ section.settings.image.alt | escape }}"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+          loading="lazy"
+        >
+      {%- else -%}
+        <span class="placeholder">{% render 'logo', width: 80, unique_id: 'gift' %}</span>
+      {%- endif -%}
+    </div>
+
+    <div class="gift__copy">
+      <h2>{{ section.settings.heading }}</h2>
+      <p>{{ section.settings.text }}</p>
+    </div>
+
+    <div class="gift__items">
+      {%- for block in section.blocks -%}
+        <div class="gift__item" {{ block.shopify_attributes }}>
+          {% render 'icon', name: block.settings.icon, size: 22 %}
+          <span>{{ block.settings.label }}</span>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "L'art d'offrir",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Photo" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "L'art d'offrir" },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Texte",
+      "default": "Chaque bijou est soigneusement emballé dans un écrin GEMEA."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Argument",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icône",
+          "options": [
+            { "value": "gift", "label": "Écrin" },
+            { "value": "message", "label": "Message" },
+            { "value": "heart", "label": "Cœur" },
+            { "value": "ribbon", "label": "Ruban" }
+          ],
+          "default": "gift"
+        },
+        { "type": "text", "id": "label", "label": "Texte", "default": "Écrin offert" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "L'art d'offrir",
+      "blocks": [{ "type": "item" }, { "type": "item" }, { "type": "item" }]
+    }
+  ]
+}
+{% endschema %}

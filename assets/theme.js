@@ -32,10 +32,8 @@
 
   /* ------------------------------------------------------ Galerie produit */
   document.querySelectorAll('[data-gallery]').forEach(function (gallery) {
-    var stage = gallery.querySelector('[data-stage]');
     var image = gallery.querySelector('[data-stage-image]');
     var thumbs = Array.prototype.slice.call(gallery.querySelectorAll('[data-thumb]'));
-    var counter = gallery.querySelector('[data-counter]');
     if (!image) return;
 
     var index = 0;
@@ -52,8 +50,6 @@
       thumbs.forEach(function (other) { other.setAttribute('aria-current', 'false'); });
       thumb.setAttribute('aria-current', 'true');
       thumb.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-
-      if (counter) counter.textContent = String(index + 1);
     }
 
     thumbs.forEach(function (thumb, position) {
@@ -66,7 +62,17 @@
       });
     });
 
-    // Une couleur choisie amène son visuel au premier plan.
+    // Le rail plus long que sa fenêtre défile d'une vignette à la fois.
+    var railScroll = gallery.querySelector('[data-rail-scroll]');
+    var track = gallery.querySelector('[data-thumbs]');
+    if (railScroll && track) {
+      railScroll.addEventListener('click', function () {
+        var step = track.firstElementChild ? track.firstElementChild.offsetHeight + 10 : 88;
+        track.scrollBy({ top: step, behavior: 'smooth' });
+      });
+    }
+
+    // Une variante choisie amène son visuel au premier plan.
     var pdp = gallery.closest('[data-pdp]');
     if (pdp) {
       pdp.addEventListener('gemea:variant', function (event) {
@@ -75,18 +81,25 @@
       });
     }
 
-    /* Zoom au survol : l'origine de la transformation suit le curseur. */
-    if (stage && window.matchMedia('(hover: hover)').matches) {
-      stage.addEventListener('mouseenter', function () { stage.classList.add('is-zoomed'); });
-      stage.addEventListener('mouseleave', function () {
-        stage.classList.remove('is-zoomed');
-        image.style.transformOrigin = '';
+    /* Visionneuse plein écran */
+    var dialog = document.querySelector('[data-lightbox]');
+    var opener = gallery.querySelector('[data-zoom-open]');
+    if (dialog && opener && typeof dialog.showModal === 'function') {
+      var large = dialog.querySelector('[data-lightbox-image]');
+
+      opener.addEventListener('click', function () {
+        large.src = image.src;
+        large.alt = image.alt;
+        dialog.showModal();
       });
-      stage.addEventListener('mousemove', function (event) {
-        var box = stage.getBoundingClientRect();
-        var x = ((event.clientX - box.left) / box.width) * 100;
-        var y = ((event.clientY - box.top) / box.height) * 100;
-        image.style.transformOrigin = x + '% ' + y + '%';
+
+      dialog.querySelector('[data-lightbox-close]').addEventListener('click', function () {
+        dialog.close();
+      });
+
+      // Un clic sur le fond ferme aussi, comme on s'y attend d'une visionneuse.
+      dialog.addEventListener('click', function (event) {
+        if (event.target === dialog) dialog.close();
       });
     }
   });
@@ -106,15 +119,8 @@
     var groups = Array.prototype.slice.call(form.querySelectorAll('[data-option-index]'));
     var stock = form.querySelector('[data-stock]');
     var saveBadge = scope.querySelector('[data-save]');
-
-    // Le bouton principal et celui de la barre collante suivent le même état.
-    var buttons = Array.prototype.slice.call(
-      document.querySelectorAll('[data-add-button], [data-sticky-add]')
-    );
-    // Le prix est affiché à deux endroits : la colonne et la barre collante.
-    var priceNodes = Array.prototype.slice.call(
-      document.querySelectorAll('[data-variant-price]')
-    );
+    var button = form.querySelector('[data-add-button]');
+    var priceNodes = Array.prototype.slice.call(scope.querySelectorAll('[data-variant-price]'));
 
     function chosen() {
       return groups.map(function (group) {
@@ -123,16 +129,8 @@
       });
     }
 
-    function matches(values) {
-      return variants.find(function (variant) {
-        return values.every(function (value, i) {
-          return value === null || variant.options[i] === value;
-        });
-      });
-    }
-
-    /* Grise les valeurs qui, combinées aux autres choix, n'existent pas
-       ou sont épuisées — sans jamais les masquer. */
+    /* Grise les valeurs qui, combinées aux autres choix, n'existent pas ou
+       sont épuisées — sans jamais les masquer. */
     function refreshAvailability(values) {
       groups.forEach(function (group, groupIndex) {
         group.querySelectorAll('input').forEach(function (input) {
@@ -150,15 +148,19 @@
 
           var label = input.closest('[data-value-label]');
           if (!label) return;
-          label.classList.toggle('pill--out', !reachable && label.classList.contains('pill'));
-          label.classList.toggle('swatch--out', !reachable && label.classList.contains('swatch'));
+          if (label.classList.contains('pill')) label.classList.toggle('pill--out', !reachable);
+          if (label.classList.contains('swatch')) label.classList.toggle('swatch--out', !reachable);
         });
       });
     }
 
     function update() {
       var values = chosen();
-      var match = matches(values);
+      var match = variants.find(function (variant) {
+        return values.every(function (value, i) {
+          return value === null || variant.options[i] === value;
+        });
+      });
 
       refreshAvailability(values);
 
@@ -183,10 +185,10 @@
         if (match.compare_html) saveBadge.textContent = '-' + match.save_percent + ' %';
       }
 
-      buttons.forEach(function (button) {
+      if (button) {
         button.disabled = !match.available;
         button.textContent = match.available ? button.dataset.add : button.dataset.soldOut;
-      });
+      }
 
       if (stock) {
         stock.classList.toggle('stock--out', !match.available);
@@ -211,26 +213,102 @@
     refreshAvailability(chosen());
   });
 
-  /* --------------------------------------------------- Barre d'achat collante */
+  /* ------------------------------------------------------------- Favoris
+     Sans compte client, une envie ne peut être gardée que dans le navigateur
+     du visiteur. C'est ce que le cœur promet, rien de plus. */
   (function () {
-    var bar = document.querySelector('[data-sticky-buy]');
-    var anchor = document.querySelector('[data-add-button]');
-    if (!bar || !anchor || !('IntersectionObserver' in window)) return;
+    var KEY = 'gemea:wishlist';
 
-    bar.querySelector('[data-sticky-add]').addEventListener('click', function () {
-      var form = anchor.closest('form');
-      if (form) form.requestSubmit(anchor);
+    function read() {
+      try {
+        return JSON.parse(localStorage.getItem(KEY)) || [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    document.querySelectorAll('[data-wishlist]').forEach(function (button) {
+      var id = button.dataset.wishlist;
+      button.setAttribute('aria-pressed', String(read().indexOf(id) !== -1));
+
+      button.addEventListener('click', function () {
+        var kept = read();
+        var position = kept.indexOf(id);
+        if (position === -1) kept.push(id);
+        else kept.splice(position, 1);
+
+        try {
+          localStorage.setItem(KEY, JSON.stringify(kept));
+        } catch (error) { /* stockage indisponible : on n'insiste pas */ }
+
+        button.setAttribute('aria-pressed', String(position === -1));
+      });
     });
-
-    new IntersectionObserver(
-      function (entries) {
-        bar.dataset.visible = String(!entries[0].isIntersecting && entries[0].boundingClientRect.top < 0);
-      },
-      { threshold: 0 }
-    ).observe(anchor);
   })();
 
-  /* --------------------------------------------- Produits recommandés */
+  /* ------------------------------------------------------- Offre groupée */
+
+  function armBundle(button) {
+    if (button.dataset.armed) return;
+    button.dataset.armed = 'true';
+
+    button.addEventListener('click', function () {
+      var items = button.dataset.ids.split(',').map(function (id) {
+        return { id: Number(id), quantity: 1 };
+      });
+
+      button.disabled = true;
+
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: items }),
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error('cart');
+          // Passer par /discount applique le code puis renvoie au panier.
+          window.location.href = button.dataset.discount
+            ? window.Shopify.routes.root + 'discount/' + encodeURIComponent(button.dataset.discount) + '?redirect=/cart'
+            : window.Shopify.routes.root + 'cart';
+        })
+        .catch(function () {
+          button.disabled = false;
+        });
+    });
+  }
+
+  /* ------------------------------------------------------------ Carrousels */
+
+  function armCarousel(carousel) {
+    var track = carousel.querySelector('[data-carousel-track]');
+    if (!track || track.dataset.armed) return;
+    track.dataset.armed = 'true';
+
+    function refresh() {
+      var max = track.scrollWidth - track.clientWidth - 1;
+      carousel.querySelectorAll('[data-scroll]').forEach(function (arrow) {
+        var forward = parseInt(arrow.dataset.scroll, 10) > 0;
+        arrow.disabled = forward ? track.scrollLeft >= max : track.scrollLeft <= 0;
+      });
+    }
+
+    carousel.querySelectorAll('[data-scroll]').forEach(function (arrow) {
+      arrow.addEventListener('click', function () {
+        var first = track.firstElementChild;
+        var step = first ? first.offsetWidth + 24 : track.clientWidth * 0.8;
+        track.scrollBy({ left: step * parseInt(arrow.dataset.scroll, 10), behavior: 'smooth' });
+      });
+    });
+
+    track.addEventListener('scroll', refresh, { passive: true });
+    window.addEventListener('resize', refresh);
+    refresh();
+  }
+
+  document.querySelectorAll('[data-carousel]').forEach(armCarousel);
+  document.querySelectorAll('[data-bundle-add]').forEach(armBundle);
+
+  /* --------------------------------------------- Recommandations et parures */
   document.querySelectorAll('[data-recommendations]').forEach(function (holder) {
     fetch(holder.dataset.url)
       .then(function (response) { return response.text(); })
@@ -238,7 +316,13 @@
         var fresh = new DOMParser()
           .parseFromString(html, 'text/html')
           .querySelector('[data-recommendations]');
-        if (fresh) holder.innerHTML = fresh.innerHTML;
+        if (!fresh) return;
+
+        holder.innerHTML = fresh.innerHTML;
+
+        // Ce contenu vient d'arriver : ses comportements ne sont pas armés.
+        holder.querySelectorAll('[data-carousel]').forEach(armCarousel);
+        holder.querySelectorAll('[data-bundle-add]').forEach(armBundle);
       })
       .catch(function () { /* pas de suggestions : la section reste vide */ });
   });
@@ -256,7 +340,6 @@
       }
     }
 
-    // Mémorise le produit affiché, en tête de liste et sans doublon.
     var current = document.querySelector('[data-product-id]');
     if (current) {
       var id = current.dataset.productId;

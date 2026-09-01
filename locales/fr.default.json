@@ -27,7 +27,11 @@
     "password_page": {
       "password": "Mot de passe",
       "enter": "Entrer"
-    }
+    },
+    "close": "Fermer",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "rights": "Tous droits réservés"
   },
   "onboarding": {
     "product_title": "Nom du produit"
@@ -80,7 +84,22 @@
       "reviews": {
         "one": "{{ count }} avis",
         "other": "{{ count }} avis"
-      }
+      },
+      "wishlist": "Ajouter aux favoris",
+      "zoom": "Agrandir le visuel"
+    },
+    "bundle": {
+      "selection": "Votre sélection",
+      "add": "Ajouter les {{ count }} au panier",
+      "saving": "Économisez {{ amount }}"
+    },
+    "reviews": {
+      "based_on": {
+        "one": "Basé sur {{ count }} avis",
+        "other": "Basé sur {{ count }} avis"
+      },
+      "none": "Aucun avis pour le moment.",
+      "verified": "Achat vérifié"
     }
   },
   "sections": {

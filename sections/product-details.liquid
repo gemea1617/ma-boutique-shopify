@@ -1,0 +1,145 @@
+{%- comment -%}
+  Description en accordéons, tableau des matériaux, et une photo d'ambiance.
+{%- endcomment -%}
+<section class="section section--tight">
+  <div class="page-width details">
+    <div class="details__panel">
+      <details class="accordion" open>
+        <summary>{{ 'products.product.description' | t }}</summary>
+        <div class="accordion__body rte">
+          {{ product.description | default: section.settings.fallback_description }}
+        </div>
+      </details>
+
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'accordion' -%}
+          <details class="accordion" {{ block.shopify_attributes }}>
+            <summary>{{ block.settings.heading }}</summary>
+            <div class="accordion__body rte">{{ block.settings.content }}</div>
+          </details>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="details__panel details__panel--specs">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'specs' -%}
+            <div {{ block.shopify_attributes }}>
+              <h3 class="details__label">{{ block.settings.heading }}</h3>
+              <div class="rte details__list">{{ block.settings.content }}</div>
+            </div>
+
+          {%- when 'finitions' -%}
+            <div class="details__finitions" {{ block.shopify_attributes }}>
+              <h3 class="details__label">{{ block.settings.heading }}</h3>
+              <div class="finitions">
+                {%- for i in (1..3) -%}
+                  {%- assign name_key = 'name_' | append: i -%}
+                  {%- assign color_key = 'color_' | append: i -%}
+                  {%- assign name = block.settings[name_key] -%}
+                  {%- if name != blank -%}
+                    <div class="finition">
+                      <span class="finition__dot" style="background: {{ block.settings[color_key] }}"></span>
+                      <span class="finition__name">{{ name }}</span>
+                    </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="details__media">
+      {%- if section.settings.image != blank -%}
+        <img
+          src="{{ section.settings.image | image_url: width: 900 }}"
+          alt="{{ section.settings.image.alt | escape }}"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+          loading="lazy"
+        >
+      {%- elsif product.media[4] -%}
+        {%- comment -%} À défaut d'image choisie, le cinquième visuel du produit — souvent la photo portée. {%- endcomment -%}
+        <img
+          src="{{ product.media[4] | image_url: width: 900 }}"
+          alt="{{ product.media[4].alt | escape }}"
+          width="{{ product.media[4].width }}"
+          height="{{ product.media[4].height }}"
+          loading="lazy"
+        >
+      {%- else -%}
+        <span class="placeholder">{% render 'logo', width: 90, unique_id: 'details' %}</span>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Description et matériaux",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Photo d'ambiance" },
+    {
+      "type": "richtext",
+      "id": "fallback_description",
+      "label": "Description de secours",
+      "info": "Utilisée quand le produit n'a pas encore de description."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "accordion",
+      "name": "Bloc dépliable",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Titre", "default": "Livraison & retours" },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Contenu",
+          "default": "<p>Livraison offerte dès 100 € d'achat, expédition sous 24 h ouvrées. Retours gratuits sous 30 jours, bijou non porté et dans son écrin d'origine.</p>"
+        }
+      ]
+    },
+    {
+      "type": "specs",
+      "name": "Matériaux",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Titre", "default": "Matériaux" },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Contenu",
+          "default": "<p>Argent 925 massif<br/>Hypoallergénique<br/>Résiste à l'eau et ne ternit pas</p>"
+        }
+      ]
+    },
+    {
+      "type": "finitions",
+      "name": "Finitions",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Titre", "default": "Finitions disponibles" },
+        { "type": "text", "id": "name_1", "label": "Finition 1", "default": "Argent" },
+        { "type": "color", "id": "color_1", "label": "Teinte 1", "default": "#D9D9D9" },
+        { "type": "text", "id": "name_2", "label": "Finition 2", "default": "Plaqué or 18k" },
+        { "type": "color", "id": "color_2", "label": "Teinte 2", "default": "#E5C88F" },
+        { "type": "text", "id": "name_3", "label": "Finition 3" },
+        { "type": "color", "id": "color_3", "label": "Teinte 3", "default": "#E8E6E3" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Description et matériaux",
+      "blocks": [
+        { "type": "accordion" },
+        { "type": "specs" },
+        { "type": "finitions" }
+      ]
+    }
+  ]
+}
+{% endschema %}

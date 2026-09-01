@@ -1,14 +1,14 @@
-<section class="section band">
-  <div class="page-width page-width--narrow">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
-    {%- endif -%}
-    <h2>{{ section.settings.heading }}</h2>
-    {%- if section.settings.text != blank -%}
-      <p style="margin-top:12px">{{ section.settings.text }}</p>
-    {%- endif -%}
+<section class="newsletter">
+  <div class="page-width newsletter__grid">
+    <div class="newsletter__copy">
+      {% render 'icon', name: 'message', size: 24 %}
+      <div>
+        <h2>{{ section.settings.heading }}</h2>
+        <p>{{ section.settings.text }}</p>
+      </div>
+    </div>
 
-    {%- form 'customer', class: 'newsletter-form' -%}
+    {%- form 'customer', class: 'newsletter__form' -%}
       <input type="hidden" name="contact[tags]" value="newsletter">
       <label class="visually-hidden" for="NewsletterEmail">{{ 'newsletter.label' | t }}</label>
       <input
@@ -19,18 +19,16 @@
         autocomplete="email"
         required
       >
-      <button class="btn" type="submit">{{ section.settings.button_label }}</button>
+      <button class="btn-icon btn-icon--solid" type="submit" aria-label="{{ section.settings.button_label }}">
+        {% render 'icon', name: 'arrow-right', size: 16 %}
+      </button>
 
       {%- if form.posted_successfully? -%}
-        <p style="flex:1 1 100%; margin-top:14px">{{ 'newsletter.success' | t }}</p>
+        <p class="newsletter__message">{{ 'newsletter.success' | t }}</p>
       {%- elsif form.errors -%}
-        <p style="flex:1 1 100%; margin-top:14px">{{ form.errors.messages.email }}</p>
+        <p class="newsletter__message">{{ form.errors.messages.email }}</p>
       {%- endif -%}
     {%- endform -%}
-
-    {%- if section.settings.mention != blank -%}
-      <p class="mention" style="margin-top:20px">{{ section.settings.mention }}</p>
-    {%- endif -%}
   </div>
 </section>
 
@@ -38,21 +36,14 @@
 {
   "name": "Newsletter",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Lettre GEMEA" },
-    { "type": "text", "id": "heading", "label": "Titre", "default": "-10 % sur votre première commande" },
-    {
-      "type": "textarea",
-      "id": "text",
-      "label": "Texte",
-      "default": "Les nouveautés, les réassorts et rien d'autre. Une à deux fois par mois."
-    },
-    { "type": "text", "id": "button_label", "label": "Bouton", "default": "S'inscrire" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Rejoignez l'univers GEMEA" },
     {
       "type": "text",
-      "id": "mention",
-      "label": "Mention",
-      "default": "Désinscription en un clic. Aucune donnée revendue."
-    }
+      "id": "text",
+      "label": "Texte",
+      "default": "Inscrivez-vous et profitez de -10 % sur votre première commande."
+    },
+    { "type": "text", "id": "button_label", "label": "Bouton", "default": "S'inscrire" }
   ],
   "presets": [{ "name": "Newsletter" }]
 }

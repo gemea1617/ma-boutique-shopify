@@ -3,105 +3,238 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "vendor": {
-          "type": "vendor"
+        "badge": {
+          "type": "badge",
+          "settings": { "label": "Nouveauté", "tag": "nouveaute" }
         },
-        "title": {
-          "type": "title"
-        },
-        "price": {
-          "type": "price",
+        "title": { "type": "title" },
+        "price": { "type": "price" },
+        "rating": { "type": "rating" },
+        "pitch": {
+          "type": "pitch",
           "settings": {
-            "mention": "Taxes incluses. Livraison calculée au paiement."
+            "text": "<p>Un design organique inspiré par le mouvement des vagues. Minimaliste et intemporelle, la bague Onde se porte seule ou en accumulation.</p>"
+          }
+        },
+        "arguments": {
+          "type": "arguments",
+          "settings": {
+            "icon_1": "gem",
+            "label_1": "Argent 925",
+            "icon_2": "water",
+            "label_2": "Résiste à l'eau",
+            "icon_3": "shield",
+            "label_3": "Garantie 2 ans"
           }
         },
         "form": {
           "type": "form",
           "settings": {
-            "show_payment_button": true
+            "size_guide": "/pages/guide-des-tailles",
+            "size_guide_label": "Guide des tailles",
+            "show_wishlist": true
           }
         },
-        "reassurance": {
-          "type": "reassurance",
-          "settings": {
-            "lines": "Plaqué or 18 carats, 3 microns\nRésistant à l'eau et au quotidien\nExpédié sous 24 h depuis la France\nRetours gratuits sous 30 jours"
-          }
+        "payment": {
+          "type": "payment",
+          "settings": { "note": "Paiement en 3x sans frais dès 50 €" }
+        }
+      },
+      "block_order": ["badge", "title", "price", "rating", "pitch", "arguments", "form", "payment"]
+    },
+
+    "reassurance": {
+      "type": "reassurance-bar",
+      "blocks": {
+        "r1": {
+          "type": "item",
+          "settings": { "icon": "truck", "heading": "Livraison offerte", "text": "dès 100 € d'achat" }
         },
-        "description": {
-          "type": "description"
+        "r2": {
+          "type": "item",
+          "settings": { "icon": "return", "heading": "Retours offerts", "text": "sous 30 jours" }
         },
+        "r3": {
+          "type": "item",
+          "settings": { "icon": "lock", "heading": "Paiement sécurisé", "text": "CB, PayPal, 3x sans frais" }
+        },
+        "r4": {
+          "type": "item",
+          "settings": { "icon": "gift", "heading": "Emballage cadeau", "text": "offert avec chaque commande" }
+        }
+      },
+      "block_order": ["r1", "r2", "r3", "r4"]
+    },
+
+    "details": {
+      "type": "product-details",
+      "blocks": {
         "livraison": {
           "type": "accordion",
           "settings": {
-            "heading": "Livraison et retours",
-            "content": "<p>Expédition sous 24 h ouvrées. Livraison offerte dès 50 €. Retours gratuits sous 30 jours.</p>"
+            "heading": "Livraison & retours",
+            "content": "<p>Livraison offerte dès 100 € d'achat, expédition sous 24 h ouvrées. Retours gratuits sous 30 jours, bijou non porté et dans son écrin d'origine.</p>"
           }
         },
         "entretien": {
           "type": "accordion",
           "settings": {
             "heading": "Entretien",
-            "content": "<p>Évitez le contact direct avec les parfums et les crèmes. Un chiffon doux et sec suffit à lui rendre son éclat.</p>"
+            "content": "<p>Nettoyez votre bijou avec un chiffon doux et sec. Évitez le contact avec les parfums et les produits ménagers. Rangez-le dans son écrin, à l'abri de l'humidité.</p>"
           }
         },
-        "rating": {
-          "type": "rating"
-        },
-        "pitch": {
-          "type": "pitch",
+        "specs": {
+          "type": "specs",
           "settings": {
-            "text": "<p>Plaqué or 18 carats, résistant à l'eau. Pensé pour ne plus le retirer.</p>"
+            "heading": "Matériaux",
+            "content": "<p>Argent 925 massif<br/>Hypoallergénique<br/>Résiste à l'eau et ne ternit pas</p>"
           }
         },
-        "payment": {
-          "type": "payment_icons"
+        "finitions": {
+          "type": "finitions",
+          "settings": {
+            "heading": "Finitions disponibles",
+            "name_1": "Argent",
+            "color_1": "#D9D9D9",
+            "name_2": "Plaqué or 18k",
+            "color_2": "#E5C88F"
+          }
         }
       },
-      "block_order": [
-        "vendor",
-        "title",
-        "rating",
-        "price",
-        "pitch",
-        "form",
-        "reassurance",
-        "payment",
-        "description",
-        "livraison",
-        "entretien"
-      ],
+      "block_order": ["livraison", "entretien", "specs", "finitions"]
+    },
+
+    "bundle": {
+      "type": "product-bundle",
       "settings": {
-        "sticky_buy": true
+        "heading": "Complétez votre style",
+        "text": "Ces pièces se marient parfaitement avec celle-ci.",
+        "count": 2,
+        "discount_percent": 0
       }
     },
+
+    "avis": {
+      "type": "product-reviews",
+      "blocks": {
+        "q1": {
+          "type": "quote",
+          "settings": {
+            "stars": 5,
+            "text": "Qualité incroyable, je ne la quitte plus. Elle va avec tout !",
+            "author": "Camille D.",
+            "verified": true
+          }
+        },
+        "q2": {
+          "type": "quote",
+          "settings": {
+            "stars": 5,
+            "text": "Très belle finition et agréable à porter au quotidien.",
+            "author": "Julie M.",
+            "verified": true
+          }
+        },
+        "q3": {
+          "type": "quote",
+          "settings": {
+            "stars": 5,
+            "text": "Design minimaliste et élégant. Je recommande à 100 %.",
+            "author": "Sarah L.",
+            "verified": true
+          }
+        }
+      },
+      "block_order": ["q1", "q2", "q3"],
+      "settings": {
+        "heading": "Avis clients",
+        "link": "/pages/avis",
+        "link_label": "Voir tous les avis"
+      }
+    },
+
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "La bague résiste-t-elle à l'eau ?",
+            "answer": "<p>Oui. L'argent 925 massif supporte l'eau sans s'altérer. Retirez tout de même votre bijou avant la piscine ou la mer : le chlore et le sel ternissent la finition à la longue.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "L'argent 925 va-t-il s'oxyder avec le temps ?",
+            "answer": "<p>L'argent peut légèrement se patiner. Un passage de chiffon doux suffit à lui rendre son éclat d'origine.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "Puis-je retourner ou échanger mon bijou ?",
+            "answer": "<p>Vous disposez de 30 jours pour nous retourner votre commande, retour offert. Le bijou doit être non porté et dans son écrin d'origine.</p>"
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "Comment connaître ma taille de bague ?",
+            "answer": "<p>Notre guide des tailles vous explique comment mesurer votre doigt en moins d'une minute, avec un simple bout de papier.</p>"
+          }
+        }
+      },
+      "block_order": ["q1", "q2", "q3", "q4"],
+      "settings": {
+        "heading": "FAQ",
+        "link": "/pages/faq",
+        "link_label": "Voir toutes les questions"
+      }
+    },
+
     "recommandations": {
       "type": "product-recommendations",
       "settings": {
-        "eyebrow": "Il ira bien avec",
-        "heading": "À porter ensemble",
-        "count": 4
+        "heading": "Vous aimerez aussi",
+        "link": "/collections/all",
+        "link_label": "Voir tout",
+        "count": 8
       }
     },
-    "complementaires": {
-      "type": "complementary-products",
+
+    "gift": {
+      "type": "gift",
+      "blocks": {
+        "g1": { "type": "item", "settings": { "icon": "gift", "label": "Écrin offert" } },
+        "g2": { "type": "item", "settings": { "icon": "message", "label": "Message personnalisé" } },
+        "g3": { "type": "item", "settings": { "icon": "ribbon", "label": "Prêt à offrir" } }
+      },
+      "block_order": ["g1", "g2", "g3"],
       "settings": {
-        "eyebrow": "Portés ensemble",
-        "heading": "Complétez la parure",
-        "count": 4
+        "heading": "L'art d'offrir",
+        "text": "Chaque bijou est soigneusement emballé dans un écrin GEMEA."
       }
     },
-    "vus": {
-      "type": "recently-viewed",
+
+    "newsletter": {
+      "type": "newsletter",
       "settings": {
-        "heading": "Vus récemment",
-        "count": 4
+        "heading": "Rejoignez l'univers GEMEA",
+        "text": "Inscrivez-vous et profitez de -10 % sur votre première commande.",
+        "button_label": "S'inscrire"
       }
     }
   },
   "order": [
     "main",
-    "complementaires",
+    "reassurance",
+    "details",
+    "bundle",
+    "avis",
+    "faq",
     "recommandations",
-    "vus"
+    "gift",
+    "newsletter"
   ]
 }

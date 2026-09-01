@@ -1,0 +1,141 @@
+{%- comment -%}
+  « Complétez votre style » — le produit courant et ses produits
+  complémentaires, ajoutés au panier en une fois.
+
+  Les associations viennent de l'application Shopify « Search & Discovery »,
+  produit par produit : c'est la seule façon de tenir un catalogue de plusieurs
+  centaines de références sans configurer chaque parure à la main.
+
+  Comme les recommandations, elles ne sont calculées que sur la requête dédiée :
+  la section est vide au premier rendu et le script la remplit.
+{%- endcomment -%}
+
+<div
+  data-recommendations
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.count }}&intent=complementary"
+>
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    {%- liquid
+      assign total = product.selected_or_first_available_variant.price
+      assign ids = product.selected_or_first_available_variant.id | append: ''
+      for item in recommendations.products
+        assign variant = item.selected_or_first_available_variant
+        if variant.available
+          assign total = total | plus: variant.price
+          assign ids = ids | append: ',' | append: variant.id
+        endif
+      endfor
+
+      assign final = total
+      assign cut = 0
+      if section.settings.discount_percent > 0
+        assign cut = total | times: section.settings.discount_percent | divided_by: 100
+        assign final = total | minus: cut
+      endif
+
+      assign bundle_count = recommendations.products_count | plus: 1
+      assign saved_money = cut | money
+    -%}
+
+    <section class="section section--tight bundle-section">
+      <div class="page-width bundle">
+        <div class="bundle__intro">
+          <h2>{{ section.settings.heading }}</h2>
+          <p>{{ section.settings.text }}</p>
+        </div>
+
+        <div class="bundle__items">
+          <div class="bundle__item">
+            {%- if product.featured_media -%}
+              <img src="{{ product.featured_media | image_url: width: 400 }}" alt="" width="200" height="200" loading="lazy">
+            {%- endif -%}
+            <div class="bundle__name">{{ product.title }}</div>
+            <div class="bundle__price">{{ product.selected_or_first_available_variant.price | money }}</div>
+          </div>
+
+          {%- for item in recommendations.products -%}
+            <span class="bundle__plus" aria-hidden="true">+</span>
+            <a class="bundle__item" href="{{ item.url }}">
+              {%- if item.featured_media -%}
+                <img src="{{ item.featured_media | image_url: width: 400 }}" alt="" width="200" height="200" loading="lazy">
+              {%- endif -%}
+              <div class="bundle__name">{{ item.title }}</div>
+              <div class="bundle__price">{{ item.price | money }}</div>
+            </a>
+          {%- endfor -%}
+
+          <span class="bundle__plus" aria-hidden="true">=</span>
+
+          <div class="bundle__total">
+            <div class="eyebrow">{{ 'products.bundle.selection' | t }}</div>
+            <div class="bundle__amounts">
+              {%- if section.settings.discount_percent > 0 -%}
+                <s>{{ total | money }}</s>
+                <strong>{{ final | money }}</strong>
+              {%- else -%}
+                <strong>{{ total | money }}</strong>
+              {%- endif -%}
+            </div>
+            <button
+              class="btn btn--full"
+              type="button"
+              data-bundle-add
+              data-ids="{{ ids }}"
+              {% if section.settings.discount_code != blank %}data-discount="{{ section.settings.discount_code }}"{% endif %}
+            >
+              {{ 'products.bundle.add' | t: count: bundle_count }}
+            </button>
+            {%- if section.settings.discount_percent > 0 -%}
+              <p class="mention">{{ 'products.bundle.saving' | t: amount: saved_money }}</p>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </section>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Offre groupée",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Les pièces associées se définissent produit par produit dans l'application Shopify « Search & Discovery », onglet Recommandations › Produits complémentaires."
+    },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Complétez votre style" },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Texte",
+      "default": "Ces pièces se marient parfaitement avec celle-ci."
+    },
+    {
+      "type": "range",
+      "id": "count",
+      "label": "Pièces associées",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "text",
+      "id": "discount_code",
+      "label": "Code de réduction",
+      "info": "Le code doit exister dans Réductions. Laissé vide, le total affiché est la simple somme des prix."
+    },
+    {
+      "type": "range",
+      "id": "discount_percent",
+      "label": "Remise affichée",
+      "info": "À faire correspondre au code ci-dessus, sinon le total annoncé ne sera pas celui du paiement.",
+      "min": 0,
+      "max": 40,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}
