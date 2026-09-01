@@ -1,0 +1,13 @@
+{{ 'overflow-list.css' | asset_url | preload_tag: as: 'style' }}
+{{ 'base.css' | asset_url | stylesheet_tag: preload: true }}
+
+{%- comment -%}
+  Charte GEMEA — Tenor Sans pour les titres, Jost pour le texte.
+  La feuille qui suit ne remplace rien : elle se superpose à base.css et aux
+  variables du thème par la spécificité de ses sélecteurs. Retirer ces cinq
+  lignes suffit à rendre Balance à son apparence d'origine.
+{%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Jost:wght@200;300;400;500&display=swap">
+{{ 'gemea-charte.css' | asset_url | stylesheet_tag }}

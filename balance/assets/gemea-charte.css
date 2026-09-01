@@ -1,0 +1,218 @@
+/* ============================================================================
+   GEMEA — charte graphique appliquée au thème Balance
+   ----------------------------------------------------------------------------
+   Balance déclare ses variables dans deux blocs {% style %} placés en fin de
+   <head> : theme-styles-variables (polices, rayons) puis color-schemes
+   (couleurs). Cette feuille est chargée avant eux, donc l'ordre de cascade ne
+   suffit pas. Les sélecteurs sont volontairement doublés (:root:root,
+   .color-scheme-1.color-scheme-1) pour l'emporter par la spécificité plutôt
+   que par l'ordre — c'est ce qui rend ce fichier indépendant de sa position.
+
+   Rien n'est écrasé dans les fichiers du thème : supprimez ce fichier et les
+   quatre lignes ajoutées à snippets/stylesheets.liquid, Balance redevient
+   exactement ce qu'il était.
+   ========================================================================== */
+
+:root:root {
+  /* --- Palette de la charte -------------------------------------------- */
+  --gemea-noir: #0F0F0F;
+  --gemea-gris-fonce: #3D3D3D;
+  --gemea-gris: #8A8A8A;
+  --gemea-gris-clair: #E8E6E3;
+  --gemea-ivoire: #FAF9F7;
+  --gemea-blanc: #FFFFFF;
+
+  --gemea-noir-rgb: 15 15 15;
+  --gemea-gris-fonce-rgb: 61 61 61;
+  --gemea-gris-rgb: 138 138 138;
+  --gemea-gris-clair-rgb: 232 230 227;
+  --gemea-ivoire-rgb: 250 249 247;
+  --gemea-blanc-rgb: 255 255 255;
+
+  /* --- Typographie ------------------------------------------------------
+     Tenor Sans pour les titres, Jost pour le texte. Les polices sont
+     chargées depuis Google Fonts par snippets/stylesheets.liquid.
+     `--font-primary--*` n'est pas déclaré par Balance alors que ses réglages
+     h2/h3 le référencent : on le définit ici, sinon ces titres retombent sur
+     la police héritée.                                                     */
+  --font-body--family: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body--style: normal;
+  --font-body--weight: 300;
+
+  --font-subheading--family: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-subheading--style: normal;
+  --font-subheading--weight: 400;
+
+  --font-heading--family: 'Tenor Sans', 'Times New Roman', serif;
+  --font-heading--style: normal;
+  --font-heading--weight: 400;
+
+  --font-accent--family: 'Tenor Sans', 'Times New Roman', serif;
+  --font-accent--style: normal;
+  --font-accent--weight: 400;
+
+  --font-primary--family: 'Tenor Sans', 'Times New Roman', serif;
+  --font-primary--style: normal;
+  --font-primary--weight: 400;
+
+  /* Tenor Sans se pose avec un interlettrage ouvert, jamais resserré. */
+  --letter-spacing--display-tight: 0.02em;
+  --letter-spacing--display-normal: 0.03em;
+  --letter-spacing--heading-tight: 0.02em;
+  --letter-spacing--heading-normal: 0.04em;
+  --letter-spacing--heading-loose: 0.06em;
+
+  /* --- Angles droits ----------------------------------------------------
+     La charte ne comporte aucune forme arrondie : ni pilules, ni cartes
+     adoucies. Seules les pastilles de couleur restent rondes.              */
+  --style-border-radius-buttons-primary: 0px;
+  --style-border-radius-buttons-secondary: 0px;
+  --style-border-radius-inputs: 0px;
+  --style-border-radius-popover: 0px;
+  --style-border-radius-pills: 0px;
+  --style-border-radius-xs: 0px;
+  --style-border-radius-sm: 0px;
+  --style-border-radius-md: 0px;
+  --style-border-radius-lg: 0px;
+  --border-radius-sm: 0px;
+  --checkbox-border-radius: 0px;
+}
+
+/* ==========================================================================
+   Schémas de couleurs
+   Balance en génère quatre. On les remappe sur la charte en gardant leur
+   rôle : 1 = fond dominant, 2 = fond sombre, 3 = cartes, 4 = fond secondaire.
+   ========================================================================== */
+
+/* --- Encre commune à tous les fonds clairs ------------------------------ */
+.color-scheme-1.color-scheme-1,
+.color-scheme-3.color-scheme-3,
+.color-scheme-4.color-scheme-4 {
+  --color-foreground: var(--gemea-gris-fonce);
+  --color-foreground-rgb: var(--gemea-gris-fonce-rgb);
+  --color-foreground-heading: var(--gemea-noir);
+  --color-foreground-heading-rgb: var(--gemea-noir-rgb);
+  --color-primary: var(--gemea-noir);
+  --color-primary-rgb: var(--gemea-noir-rgb);
+  --color-primary-hover: var(--gemea-gris-fonce);
+  --color-primary-hover-rgb: var(--gemea-gris-fonce-rgb);
+  --color-border: var(--gemea-gris-clair);
+  --color-border-rgb: var(--gemea-gris-clair-rgb);
+
+  /* Bouton principal : noir plein, qui se vide au survol. */
+  --color-primary-button-background: var(--gemea-noir);
+  --color-primary-button-text: var(--gemea-ivoire);
+  --color-primary-button-border: var(--gemea-noir);
+  --color-primary-button-hover-background: rgb(0 0 0 / 0);
+  --color-primary-button-hover-text: var(--gemea-noir);
+  --color-primary-button-hover-border: var(--gemea-noir);
+
+  /* Bouton secondaire : l'inverse exact. */
+  --color-secondary-button-background: rgb(0 0 0 / 0);
+  --color-secondary-button-text: var(--gemea-noir);
+  --color-secondary-button-border: var(--gemea-noir);
+  --color-secondary-button-hover-background: var(--gemea-noir);
+  --color-secondary-button-hover-text: var(--gemea-ivoire);
+  --color-secondary-button-hover-border: var(--gemea-noir);
+
+  --color-input-background: var(--gemea-blanc);
+  --color-input-text: var(--gemea-noir);
+  --color-input-text-rgb: var(--gemea-noir-rgb);
+  --color-input-border: var(--gemea-gris-clair);
+  --color-input-hover-background: var(--gemea-ivoire);
+
+  --color-variant-background: var(--gemea-blanc);
+  --color-variant-text: var(--gemea-noir);
+  --color-variant-text-rgb: var(--gemea-noir-rgb);
+  --color-variant-border: var(--gemea-gris-clair);
+  --color-variant-hover-background: var(--gemea-ivoire);
+  --color-variant-hover-text: var(--gemea-noir);
+  --color-variant-hover-border: var(--gemea-gris);
+
+  --color-selected-variant-background: var(--gemea-noir);
+  --color-selected-variant-text: var(--gemea-ivoire);
+  --color-selected-variant-border: var(--gemea-noir);
+  --color-selected-variant-hover-background: var(--gemea-gris-fonce);
+  --color-selected-variant-hover-text: var(--gemea-ivoire);
+  --color-selected-variant-hover-border: var(--gemea-gris-fonce);
+}
+
+/* Fond principal : l'ivoire domine, c'est la règle des 60 % de la charte. */
+.color-scheme-1.color-scheme-1 {
+  --color-background: var(--gemea-ivoire);
+  --color-background-rgb: var(--gemea-ivoire-rgb);
+}
+
+/* Cartes produit et surfaces posées sur l'ivoire. */
+.color-scheme-3.color-scheme-3 {
+  --color-background: var(--gemea-blanc);
+  --color-background-rgb: var(--gemea-blanc-rgb);
+}
+
+/* Fond secondaire, pour détacher une section sans passer au noir. */
+.color-scheme-4.color-scheme-4 {
+  --color-background: var(--gemea-gris-clair);
+  --color-background-rgb: var(--gemea-gris-clair-rgb);
+}
+
+/* --- Fond noir : bandeaux, pied de page, étiquettes promo --------------- */
+.color-scheme-2.color-scheme-2,
+.color-scheme-5.color-scheme-5 {
+  --color-background: var(--gemea-noir);
+  --color-background-rgb: var(--gemea-noir-rgb);
+  --color-foreground: var(--gemea-gris-clair);
+  --color-foreground-rgb: var(--gemea-gris-clair-rgb);
+  --color-foreground-heading: var(--gemea-ivoire);
+  --color-foreground-heading-rgb: var(--gemea-ivoire-rgb);
+  --color-primary: var(--gemea-ivoire);
+  --color-primary-rgb: var(--gemea-ivoire-rgb);
+  --color-primary-hover: var(--gemea-blanc);
+  --color-border: var(--gemea-gris-fonce);
+  --color-border-rgb: var(--gemea-gris-fonce-rgb);
+
+  --color-primary-button-background: var(--gemea-ivoire);
+  --color-primary-button-text: var(--gemea-noir);
+  --color-primary-button-border: var(--gemea-ivoire);
+  --color-primary-button-hover-background: rgb(0 0 0 / 0);
+  --color-primary-button-hover-text: var(--gemea-ivoire);
+  --color-primary-button-hover-border: var(--gemea-ivoire);
+
+  --color-secondary-button-background: rgb(0 0 0 / 0);
+  --color-secondary-button-text: var(--gemea-ivoire);
+  --color-secondary-button-border: var(--gemea-ivoire);
+  --color-secondary-button-hover-background: var(--gemea-ivoire);
+  --color-secondary-button-hover-text: var(--gemea-noir);
+  --color-secondary-button-hover-border: var(--gemea-ivoire);
+
+  --color-input-background: rgb(0 0 0 / 0);
+  --color-input-text: var(--gemea-ivoire);
+  --color-input-text-rgb: var(--gemea-ivoire-rgb);
+  --color-input-border: var(--gemea-gris);
+  --color-input-hover-background: rgb(255 255 255 / 0.04);
+}
+
+/* ==========================================================================
+   Détails typographiques de la charte
+   ========================================================================== */
+
+/* Boutons et menus : Jost Regular 11 px, majuscules, interlettrage 0.18em. */
+.button.button,
+.button-secondary.button-secondary,
+button.button,
+a.button {
+  font-family: var(--font-body--family);
+  font-weight: 400;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Le texte courant est en Jost Light, comme le prescrit la charte. */
+body {
+  font-weight: 300;
+}
+
+/* Les pastilles de couleur restent les seules formes rondes. */
+:root:root {
+  --variant-picker-swatch-radius: 50%;
+}
