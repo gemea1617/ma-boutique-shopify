@@ -2,17 +2,104 @@
 (function () {
   'use strict';
 
-  /* ------------------------------------------------------- Menu mobile */
-  document.querySelectorAll('[data-menu-toggle]').forEach(function (button) {
-    var panel = document.getElementById(button.getAttribute('aria-controls'));
-    if (!panel) return;
+  /* -------------------------------------------------- Tiroir de navigation */
+  (function () {
+    var drawer = document.querySelector('[data-drawer]');
+    var toggle = document.querySelector('[data-drawer-toggle]');
+    if (!drawer || !toggle) return;
 
-    button.addEventListener('click', function () {
-      var open = button.getAttribute('aria-expanded') === 'true';
-      button.setAttribute('aria-expanded', String(!open));
-      panel.hidden = open;
+    var views = Array.prototype.slice.call(drawer.querySelectorAll('[data-view]'));
+
+    function montrerVue(nom) {
+      views.forEach(function (view) { view.hidden = view.dataset.view !== nom; });
+    }
+
+    /* Le bandeau d'annonce peut avoir défilé : on mesure la position réelle
+       du bas de l'en-tête plutôt que de supposer une hauteur fixe. */
+    function placer() {
+      var header = document.querySelector('.header');
+      var bas = header ? Math.max(0, header.getBoundingClientRect().bottom) : 0;
+      drawer.style.setProperty('--drawer-top', bas + 'px');
+    }
+
+    function ouvrir() {
+      placer();
+      drawer.hidden = false;
+      // Un frame d'écart, sinon la transition n'a pas d'état de départ.
+      requestAnimationFrame(function () { drawer.setAttribute('data-open', ''); });
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      montrerVue('root');
+    }
+
+    function fermer() {
+      drawer.removeAttribute('data-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      // On attend la fin du glissement pour retirer le tiroir du flux.
+      window.setTimeout(function () { drawer.hidden = true; }, 260);
+    }
+
+    toggle.addEventListener('click', function () {
+      if (toggle.getAttribute('aria-expanded') === 'true') fermer();
+      else ouvrir();
     });
-  });
+
+    drawer.querySelectorAll('[data-drawer-close]').forEach(function (node) {
+      node.addEventListener('click', fermer);
+    });
+
+    drawer.querySelectorAll('[data-open-view]').forEach(function (button) {
+      button.addEventListener('click', function () { montrerVue(button.dataset.openView); });
+    });
+
+    drawer.querySelectorAll('[data-close-view]').forEach(function (button) {
+      button.addEventListener('click', function () { montrerVue('root'); });
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !drawer.hidden) fermer();
+    });
+
+    window.addEventListener('resize', function () {
+      if (!drawer.hidden) placer();
+    });
+
+    // Langue et devise s'appliquent au changement, sans bouton de validation.
+    drawer.querySelectorAll('[data-auto-submit]').forEach(function (select) {
+      select.addEventListener('change', function () { select.form.submit(); });
+    });
+  })();
+
+  /* ------------------------------------------------- Bandeau d'annonce
+     Le message écarté ne revient pas — sauf s'il change, puisque la clé
+     est calculée sur son texte. */
+  (function () {
+    var bar = document.querySelector('[data-announcement]');
+    if (!bar) return;
+
+    var CLE = 'gemea:annonce';
+
+    function ecarte() {
+      try {
+        return localStorage.getItem(CLE) === bar.dataset.key;
+      } catch (error) {
+        return false;
+      }
+    }
+
+    if (!ecarte()) bar.hidden = false;
+
+    var bouton = bar.querySelector('[data-announcement-close]');
+    if (bouton) {
+      bouton.addEventListener('click', function () {
+        bar.hidden = true;
+        try {
+          localStorage.setItem(CLE, bar.dataset.key);
+        } catch (error) { /* stockage indisponible : le bandeau reviendra */ }
+      });
+    }
+  })();
 
   /* ------------------------------------------------- Sélecteur de quantité */
   document.querySelectorAll('[data-qty]').forEach(function (wrapper) {

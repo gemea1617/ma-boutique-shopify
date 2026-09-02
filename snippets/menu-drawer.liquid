@@ -1,0 +1,139 @@
+{%- comment -%}
+  Tiroir de navigation mobile.
+
+  Le premier niveau liste le menu principal ; une entrée qui a des enfants
+  ouvre un second panneau glissant plutôt que de déplier la liste sur place —
+  au téléphone, une liste dépliée fait perdre le fil dès qu'elle dépasse
+  l'écran.
+
+  Attend : menu (link_list), section (pour les blocs)
+{%- endcomment -%}
+
+<div class="drawer" data-drawer hidden>
+  <div class="drawer__scrim" data-drawer-close></div>
+
+  <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="{{ 'general.menu' | t }}">
+    <div class="drawer__views">
+      <nav class="drawer__view" data-view="root">
+        <ul class="drawer__list">
+          {%- for link in menu.links -%}
+            <li>
+              {%- if link.links.size > 0 -%}
+                <button type="button" data-open-view="niveau-{{ forloop.index }}">
+                  <span>{{ link.title }}</span>
+                  {% render 'icon', name: 'chevron-right', size: 16 %}
+                </button>
+              {%- else -%}
+                <a href="{{ link.url }}">
+                  <span>{{ link.title }}</span>
+                  {% render 'icon', name: 'chevron-right', size: 16 %}
+                </a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if section.blocks.size > 0 -%}
+          <ul class="drawer__utils">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'utility' and block.settings.label != blank -%}
+                <li {{ block.shopify_attributes }}>
+                  <a href="{{ block.settings.link | default: '#' }}">
+                    {% render 'icon', name: block.settings.icon, size: 19 %}
+                    <span>{{ block.settings.label }}</span>
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- comment -%}
+          Langue et devise ne s'affichent que si la boutique en propose
+          réellement plusieurs — sinon le sélecteur ne sert à rien.
+        {%- endcomment -%}
+        {%- if localization.available_languages.size > 1 or localization.available_countries.size > 1 -%}
+          <div class="drawer__locale">
+            {%- if localization.available_languages.size > 1 -%}
+              {%- form 'localization', class: 'drawer__locale-form' -%}
+                <label class="visually-hidden" for="DrawerLanguage">{{ 'general.language' | t }}</label>
+                <select id="DrawerLanguage" name="locale_code" data-auto-submit>
+                  {%- for language in localization.available_languages -%}
+                    <option
+                      value="{{ language.iso_code }}"
+                      {% if language.iso_code == localization.language.iso_code %}selected{% endif %}
+                    >{{ language.endonym_name | upcase }}</option>
+                  {%- endfor -%}
+                </select>
+              {%- endform -%}
+            {%- endif -%}
+
+            {%- if localization.available_countries.size > 1 -%}
+              {%- form 'localization', class: 'drawer__locale-form' -%}
+                <label class="visually-hidden" for="DrawerCountry">{{ 'general.currency' | t }}</label>
+                <select id="DrawerCountry" name="country_code" data-auto-submit>
+                  {%- for country in localization.available_countries -%}
+                    <option
+                      value="{{ country.iso_code }}"
+                      {% if country.iso_code == localization.country.iso_code %}selected{% endif %}
+                    >{{ country.currency.iso_code }} {{ country.currency.symbol }}</option>
+                  {%- endfor -%}
+                </select>
+              {%- endform -%}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- assign has_reassurance = false -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'reassurance' -%}{%- assign has_reassurance = true -%}{%- endif -%}
+        {%- endfor -%}
+
+        {%- if has_reassurance -%}
+          <ul class="drawer__reassure">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'reassurance' -%}
+                <li {{ block.shopify_attributes }}>
+                  {% render 'icon', name: block.settings.icon, size: 26 %}
+                  <div>
+                    <div class="drawer__reassure-title">{{ block.settings.heading }}</div>
+                    <div class="drawer__reassure-text">{{ block.settings.text }}</div>
+                  </div>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </nav>
+
+      {%- comment -%} Un panneau par entrée ayant des enfants {%- endcomment -%}
+      {%- for link in menu.links -%}
+        {%- if link.links.size > 0 -%}
+          <nav class="drawer__view" data-view="niveau-{{ forloop.index }}" hidden>
+            <button class="drawer__back" type="button" data-close-view>
+              {% render 'icon', name: 'arrow-left', size: 16 %}
+              <span>{{ link.title }}</span>
+            </button>
+
+            <ul class="drawer__list">
+              <li>
+                <a href="{{ link.url }}">
+                  <span>{{ 'general.see_all' | t }}</span>
+                  {% render 'icon', name: 'chevron-right', size: 16 %}
+                </a>
+              </li>
+              {%- for child in link.links -%}
+                <li>
+                  <a href="{{ child.url }}">
+                    <span>{{ child.title }}</span>
+                    {% render 'icon', name: 'chevron-right', size: 16 %}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </nav>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>

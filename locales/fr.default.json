@@ -33,7 +33,10 @@
     "next": "Suivant",
     "rights": "Tous droits réservés",
     "payment_methods": "Moyens de paiement",
-    "back_to_top": "Retour en haut de page"
+    "back_to_top": "Retour en haut de page",
+    "language": "Langue",
+    "currency": "Devise",
+    "see_all": "Tout voir"
   },
   "onboarding": {
     "product_title": "Nom du produit"

@@ -230,20 +230,6 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
   .menu-toggle { display: none; }
 }
 
-/* Menu mobile */
-.menu-panel {
-  border-top: 1px solid var(--gris-clair);
-  background: var(--ivoire);
-  padding: 8px var(--gouttiere) 28px;
-}
-.menu-panel a {
-  display: block;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--gris-clair);
-  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-}
-.menu-panel a:last-child { border-bottom: 0; }
-
 /* ------------------------------------------------------------------- Hero */
 
 .hero { display: grid; grid-template-columns: 1fr; background: var(--blanc); }
@@ -1111,3 +1097,149 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
 
 /* Sur grand écran la colonne d'achat reste visible : la barre n'a pas lieu d'être. */
 @media (min-width: 750px) { .sticky-buy { display: none; } }
+
+/* ==========================================================================
+   Bandeau d'annonce refermable
+   ========================================================================== */
+
+.announcement { position: relative; }
+.announcement__text { padding-inline: 32px; }
+.announcement__close {
+  position: absolute; top: 50%; right: 8px;
+  transform: translateY(-50%);
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border: 0; background: none; color: var(--ivoire);
+  cursor: pointer; opacity: 0.7;
+  transition: opacity var(--transition);
+}
+.announcement__close:hover { opacity: 1; }
+
+/* ==========================================================================
+   Tiroir de navigation
+   Ouvert, il occupe l'essentiel de l'écran mais laisse voir la page
+   derrière : le visiteur garde le fil de là d'où il vient.
+   ========================================================================== */
+
+/* Le tiroir s'ouvre SOUS l'en-tête, qui reste accessible : le visiteur
+   garde la croix, la recherche et le panier sous la main. La hauteur à
+   laisser est mesurée à l'ouverture, car le bandeau d'annonce peut avoir
+   défilé — d'où la variable posée par le script. */
+.drawer {
+  position: fixed;
+  inset: var(--drawer-top, 0) 0 0 0;
+  z-index: 18;
+}
+.drawer[hidden] { display: none; }
+
+.drawer__scrim {
+  position: absolute; inset: 0;
+  background: rgb(15 15 15 / 0.08);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.drawer[data-open] .drawer__scrim { opacity: 1; }
+
+.drawer__panel {
+  position: absolute; inset: 0 auto 0 0;
+  width: min(76vw, 420px);
+  background: var(--ivoire);
+  border-right: 1px solid var(--gris-clair);
+  transform: translateX(-100%);
+  transition: transform var(--transition);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.drawer[data-open] .drawer__panel { transform: none; }
+
+/* Les panneaux sont empilés au même endroit ; seul l'actif est rendu. */
+.drawer__views { position: relative; flex: 1; overflow: hidden; }
+
+.drawer__view {
+  position: absolute; inset: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex; flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.drawer__view[hidden] { display: none; }
+
+/* Le second niveau entre par la droite, d'où le doigt l'a appelé. */
+@keyframes drawer-in {
+  from { transform: translateX(28px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.drawer__view[data-view]:not([data-view='root']) { animation: drawer-in 200ms var(--transition); }
+
+.drawer__list { list-style: none; margin: 0; padding: 0; }
+.drawer__list li + li { border-top: 1px solid var(--gris-clair); }
+
+.drawer__list a,
+.drawer__list button {
+  width: 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 22px var(--gouttiere);
+  border: 0; background: none; cursor: pointer;
+  font-family: var(--texte); font-size: 14px; font-weight: 400;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--noir); text-align: left;
+}
+.drawer__list a:active, .drawer__list button:active { background: var(--gris-clair); }
+.drawer__list svg { color: var(--gris); flex: none; }
+
+.drawer__back {
+  width: 100%;
+  display: flex; align-items: center; gap: 14px;
+  padding: 20px var(--gouttiere);
+  border: 0; border-bottom: 1px solid var(--gris-clair);
+  background: none; cursor: pointer;
+  font-family: var(--texte); font-size: 13px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--noir);
+}
+.drawer__back svg { color: var(--gris); flex: none; }
+
+/* Liens pratiques : mêmes rangées, sans chevron, avec l'icône en tête. */
+.drawer__utils {
+  list-style: none; margin: 0; padding: 12px 0;
+  border-top: 1px solid var(--gris-clair);
+}
+.drawer__utils a {
+  display: flex; align-items: center; gap: 16px;
+  padding: 13px var(--gouttiere);
+  font-size: 12.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--noir);
+}
+.drawer__utils svg { color: var(--noir); flex: none; }
+.drawer__utils a:active { background: var(--gris-clair); }
+
+.drawer__locale {
+  display: flex; align-items: center; gap: 0;
+  padding: 6px var(--gouttiere) 18px;
+  border-top: 1px solid var(--gris-clair);
+}
+.drawer__locale-form + .drawer__locale-form { border-left: 1px solid var(--gris-clair); padding-left: 18px; margin-left: 18px; }
+.drawer__locale select {
+  border: 0; background: none; cursor: pointer;
+  font-family: var(--texte); font-size: 12.5px; letter-spacing: 0.1em;
+  color: var(--noir); padding: 10px 0;
+}
+
+/* Le pied du tiroir : ce qui rassure, sur un fond légèrement détaché. */
+.drawer__reassure {
+  list-style: none; margin: auto 0 0; padding: 22px var(--gouttiere) 26px;
+  background: var(--gris-clair);
+  display: grid; gap: 18px;
+}
+.drawer__reassure li { display: flex; align-items: center; gap: 16px; }
+.drawer__reassure svg { color: var(--noir); flex: none; }
+.drawer__reassure-title { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--noir); }
+.drawer__reassure-text { font-size: 12.5px; color: var(--gris-fonce); margin-top: 3px; line-height: 1.5; }
+
+/* La bascule du bouton : hamburger fermé, croix ouvert. */
+.menu-toggle__close { display: none; }
+.menu-toggle[aria-expanded='true'] .menu-toggle__open { display: none; }
+.menu-toggle[aria-expanded='true'] .menu-toggle__close { display: inline-flex; }
+
+/* Le tiroir ne concerne que les écrans sans menu horizontal. */
+@media (min-width: 990px) { .drawer { display: none; } }

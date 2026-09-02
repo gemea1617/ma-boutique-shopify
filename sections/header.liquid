@@ -4,12 +4,12 @@
       <button
         class="header__icon menu-toggle"
         type="button"
-        data-menu-toggle
-        aria-controls="MobileMenu"
+        data-drawer-toggle
         aria-expanded="false"
         aria-label="{{ 'general.menu' | t }}"
       >
-        {% render 'icon', name: 'menu', size: 20 %}
+        <span class="menu-toggle__open">{% render 'icon', name: 'menu', size: 20 %}</span>
+        <span class="menu-toggle__close">{% render 'icon', name: 'close', size: 20 %}</span>
       </button>
 
       <nav class="header__nav">
@@ -53,18 +53,19 @@
     </div>
   </div>
 
-  <nav class="menu-panel" id="MobileMenu" hidden>
-    {%- for link in section.settings.menu.links -%}
-      <a href="{{ link.url }}">{{ link.title }}</a>
-    {%- endfor -%}
-  </nav>
 </header>
+
+{% render 'menu-drawer', menu: section.settings.menu, section: section %}
 
 {% schema %}
 {
   "name": "En-tête",
   "settings": [
-    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
     {
       "type": "range",
       "id": "logo_height",
@@ -75,8 +76,144 @@
       "unit": "px",
       "default": 40
     },
-    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" }
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    }
   ],
-  "enabled_on": { "groups": ["header"] }
+  "enabled_on": {
+    "groups": [
+      "header"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "utility",
+      "name": "Lien pratique",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icône",
+          "options": [
+            {
+              "value": "account",
+              "label": "Compte"
+            },
+            {
+              "value": "heart",
+              "label": "Favoris"
+            },
+            {
+              "value": "ruler",
+              "label": "Guide des tailles"
+            },
+            {
+              "value": "message",
+              "label": "Contact"
+            },
+            {
+              "value": "truck",
+              "label": "Livraison"
+            },
+            {
+              "value": "return",
+              "label": "Retours"
+            },
+            {
+              "value": "shield",
+              "label": "Garantie"
+            },
+            {
+              "value": "gem",
+              "label": "Matière"
+            },
+            {
+              "value": "gift",
+              "label": "Cadeau"
+            }
+          ],
+          "default": "account"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Libellé",
+          "default": "Mon compte"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien"
+        }
+      ]
+    },
+    {
+      "type": "reassurance",
+      "name": "Réassurance",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icône",
+          "options": [
+            {
+              "value": "account",
+              "label": "Compte"
+            },
+            {
+              "value": "heart",
+              "label": "Favoris"
+            },
+            {
+              "value": "ruler",
+              "label": "Guide des tailles"
+            },
+            {
+              "value": "message",
+              "label": "Contact"
+            },
+            {
+              "value": "truck",
+              "label": "Livraison"
+            },
+            {
+              "value": "return",
+              "label": "Retours"
+            },
+            {
+              "value": "shield",
+              "label": "Garantie"
+            },
+            {
+              "value": "gem",
+              "label": "Matière"
+            },
+            {
+              "value": "gift",
+              "label": "Cadeau"
+            }
+          ],
+          "default": "gem"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Titre",
+          "default": "Argent 925"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Des matériaux nobles et durables"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}
