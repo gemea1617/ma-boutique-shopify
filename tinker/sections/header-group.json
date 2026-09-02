@@ -1,0 +1,82 @@
+/*
+ * Groupe d'en-tête pour le thème Tinker.
+ *
+ * On garde son bandeau d'annonce et ses réglages tels quels ; seule la
+ * section `header` de Tinker est remplacée par la nôtre, car c'est elle qui
+ * porte le bouton d'ouverture du tiroir de menu.
+ *
+ * gemea-header charge aussi la feuille, la police et le script de la charte :
+ * il n'y a rien à ajouter dans layout/theme.liquid.
+ */
+{
+  "type": "header",
+  "name": "t:names.header",
+  "sections": {
+    "header_announcements_WbCTVz": {
+      "type": "header-announcements",
+      "blocks": {
+        "announcement_mxxhta": {
+          "type": "_announcement",
+          "settings": {
+            "text": "Livraison offerte à partir de 100 € d'achat",
+            "link": "shopify://collections/all",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none",
+            "text_color": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": ["announcement_mxxhta"],
+      "name": "t:names.announcement_bar",
+      "settings": {
+        "speed": 5,
+        "section_width": "full-width",
+        "background_color": "{{ settings.color_palette.color3 }}",
+        "divider_width": 0,
+        "divider_color": "",
+        "padding-block-start": 15,
+        "padding-block-end": 15
+      }
+    },
+    "header_section": {
+      "type": "gemea-header",
+      "blocks": {
+        "compte": {
+          "type": "utility",
+          "settings": { "icon": "account", "label": "Mon compte", "link": "/account" }
+        },
+        "favoris": {
+          "type": "utility",
+          "settings": { "icon": "heart", "label": "Mes favoris", "link": "/pages/favoris" }
+        },
+        "tailles": {
+          "type": "utility",
+          "settings": { "icon": "ruler", "label": "Guide des tailles", "link": "/pages/guide-des-tailles" }
+        },
+        "contact": {
+          "type": "utility",
+          "settings": { "icon": "message", "label": "Contact", "link": "/pages/contact" }
+        },
+        "argent": {
+          "type": "reassurance",
+          "settings": { "icon": "gem", "heading": "Argent 925", "text": "Des matériaux nobles et durables" }
+        },
+        "garantie": {
+          "type": "reassurance",
+          "settings": { "icon": "shield", "heading": "Garantie 2 ans", "text": "Tous nos bijoux sont garantis" }
+        },
+        "retours": {
+          "type": "reassurance",
+          "settings": { "icon": "return", "heading": "Retours offerts", "text": "Vous disposez de 30 jours" }
+        }
+      },
+      "block_order": ["compte", "favoris", "tailles", "contact", "argent", "garantie", "retours"],
+      "settings": { "logo_height": 40, "menu": "main-menu" }
+    }
+  },
+  "order": ["header_announcements_WbCTVz", "header_section"]
+}
