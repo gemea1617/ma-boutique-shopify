@@ -1,0 +1,120 @@
+<footer class="footer">
+  <div class="page-width">
+    <div class="footer__links">
+      {%- for block in section.blocks -%}
+        <div {{ block.shopify_attributes }}>
+          <h4>{{ block.settings.heading }}</h4>
+          <ul>
+            {%- for link in block.settings.menu.links -%}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="footer__signup">
+      <h3>{{ section.settings.newsletter_heading }}</h3>
+      {%- if section.settings.newsletter_text != blank -%}
+        <p>{{ section.settings.newsletter_text }}</p>
+      {%- endif -%}
+
+      {%- form 'customer', class: 'footer__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <label class="visually-hidden" for="FooterEmail">Adresse e-mail</label>
+        <input
+          id="FooterEmail"
+          type="email"
+          name="contact[email]"
+          placeholder="Votre adresse e-mail"
+          autocomplete="email"
+          required
+        >
+        <button class="btn btn--light btn--full" type="submit">{{ section.settings.newsletter_button }}</button>
+
+        {%- if form.posted_successfully? -%}
+          <p class="footer__message">Merci, votre inscription est enregistrée.</p>
+        {%- elsif form.errors -%}
+          <p class="footer__message">{{ form.errors.messages.email }}</p>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+
+    <hr class="footer__rule">
+
+    <div class="footer__bottom">
+      <div>
+        <div class="footer__wordmark">{{ shop.name | upcase | strip }}</div>
+        <div class="social">
+          {%- if settings.social_instagram != blank -%}
+            <a href="{{ settings.social_instagram }}" aria-label="Instagram">{% render 'gemea-icon', name: 'instagram' %}</a>
+          {%- endif -%}
+          {%- if settings.social_tiktok != blank -%}
+            <a href="{{ settings.social_tiktok }}" aria-label="TikTok">{% render 'gemea-icon', name: 'tiktok' %}</a>
+          {%- endif -%}
+          {%- if settings.social_pinterest != blank -%}
+            <a href="{{ settings.social_pinterest }}" aria-label="Pinterest">{% render 'gemea-icon', name: 'pinterest' %}</a>
+          {%- endif -%}
+          {%- if settings.social_facebook != blank -%}
+            <a href="{{ settings.social_facebook }}" aria-label="Facebook">{% render 'gemea-icon', name: 'facebook' %}</a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- if shop.enabled_payment_types.size > 0 -%}
+        <div class="footer__payments">
+          <h4>Moyens de paiement</h4>
+          <div class="payment-icons">
+            {%- for type in shop.enabled_payment_types -%}
+              {{ type | payment_type_svg_tag }}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="footer__legal">
+      <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name | strip }} — Tous droits réservés</span>
+      <nav>
+        {%- for link in section.settings.legal_menu.links -%}
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        {%- endfor -%}
+      </nav>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Pied de page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Titre de la newsletter",
+      "default": "Inscrivez-vous à la lettre GEMEA."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Texte",
+      "default": "Nouveautés, réassorts et -10 % sur votre première commande."
+    },
+    { "type": "text", "id": "newsletter_button", "label": "Bouton", "default": "S'inscrire" },
+    { "type": "link_list", "id": "legal_menu", "label": "Menu légal" }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Colonne de liens",
+      "limit": 3,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Titre", "default": "Boutique" },
+        { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" }
+      ]
+    }
+  ],
+  "enabled_on": { "groups": ["footer"] },
+  "presets": [{ "name": "Pied de page" }]
+}
+{% endschema %}

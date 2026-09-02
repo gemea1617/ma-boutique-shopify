@@ -1,0 +1,1238 @@
+/* ==========================================================================
+   GEMEA — feuille de style de base
+   Charte : Tenor Sans (titres) · Jost (texte) · ivoire dominant, noir en accent
+   ========================================================================== */
+
+:root{
+  /* Palette */
+  --noir: #0F0F0F;
+  --gris-fonce: #3D3D3D;
+  --gris: #8A8A8A;
+  --gris-clair: #E8E6E3;
+  --ivoire: #FAF9F7;
+  --blanc: #FFFFFF;
+
+  /* Typographie */
+  --titre: 'Tenor Sans', 'Times New Roman', serif;
+  --texte: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Rythme */
+  --page: 1360px;
+  --gouttiere: 24px;
+  --section-y: 88px;
+  --transition: 260ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (min-width: 750px) {
+  :root{ --gouttiere: 48px; --section-y: 116px; }
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+
+body.gemea{
+  margin: 0;
+  background: var(--ivoire);
+  color: var(--noir);
+  font-family: var(--texte);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.gemea img, .gemea svg, .gemea video{ display: block; max-width: 100%; height: auto; }
+
+.gemea a{ color: inherit; text-decoration: none; }
+.gemea a:hover{ color: var(--noir); }
+
+/* --------------------------------------------------------- Titres & texte */
+
+.gemea h1, .gemea h2, .gemea h3, .gemea h4{
+  font-family: var(--titre);
+  font-weight: 400;
+  margin: 0;
+  color: var(--noir);
+}
+
+.gemea h1, .gemea .t-h1{ font-size: clamp(30px, 5vw, 42px); line-height: 1.15; letter-spacing: 0.02em; }
+.gemea h2, .gemea .t-h2{ font-size: clamp(23px, 3.4vw, 27px); line-height: 1.25; letter-spacing: 0.06em; }
+.gemea h3, .gemea .t-h3{ font-size: 20px; line-height: 1.3; letter-spacing: 0.04em; }
+
+.gemea p{ margin: 0 0 1.2em; color: var(--gris-fonce); }
+.gemea p:last-child{ margin-bottom: 0; }
+
+/* Surtitre : le petit label espacé qui structure toutes les sections */
+.gemea .eyebrow{
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gris);
+  margin: 0 0 14px;
+}
+
+.gemea .mention{ font-size: 11.5px; color: var(--gris); letter-spacing: 0.04em; line-height: 1.7; }
+
+.gemea .rte > *:last-child{ margin-bottom: 0; }
+.gemea .rte a{ text-decoration: underline; text-underline-offset: 3px; }
+.gemea .rte ul, .gemea .rte ol{ color: var(--gris-fonce); padding-left: 20px; }
+.gemea .rte img{ margin: 24px 0; }
+
+.gemea .visually-hidden{
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+.gemea .skip-to-content:focus{
+  position: fixed; top: 12px; left: 12px; z-index: 100;
+  width: auto; height: auto; clip: auto;
+  background: var(--noir); color: var(--ivoire);
+  padding: 12px 20px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+}
+
+.gemea :focus-visible{ outline: 1px solid var(--noir); outline-offset: 3px; }
+
+/* ------------------------------------------------------------ Mise en page */
+
+.gemea .page-width{
+  max-width: var(--page);
+  margin: 0 auto;
+  padding-inline: var(--gouttiere);
+}
+
+.gemea .page-width--narrow{ max-width: 760px; }
+
+.gemea .section{ padding-block: var(--section-y); }
+.gemea .section--tight{ padding-block: calc(var(--section-y) * 0.6); }
+
+.gemea .section-head{ margin-bottom: 44px; }
+.gemea .section-head--center{ text-align: center; }
+.gemea .section-head p{ max-width: 56ch; margin-top: 12px; }
+.gemea .section-head--center p{ margin-inline: auto; }
+
+.gemea hr.rule{ border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
+
+/* ---------------------------------------------------------------- Boutons */
+
+.gemea .btn{
+  display: inline-block;
+  font-family: var(--texte);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 15px 30px;
+  border: 1px solid var(--noir);
+  background: var(--noir);
+  color: var(--ivoire);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.gemea .btn:hover{ background: transparent; color: var(--noir); }
+
+.gemea .btn--ghost{ background: transparent; color: var(--noir); }
+.gemea .btn--ghost:hover{ background: var(--noir); color: var(--ivoire); }
+
+.gemea .btn--full{ width: 100%; text-align: center; }
+
+.gemea .btn[disabled], .gemea .btn[aria-disabled='true']{
+  background: var(--gris-clair);
+  border-color: var(--gris-clair);
+  color: var(--gris);
+  cursor: not-allowed;
+}
+
+/* Lien souligné animé — pour les « Découvrir » discrets */
+.gemea .link-line{
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--noir);
+}
+.gemea .link-line:hover{ border-color: var(--gris); }
+
+/* --------------------------------------------------------------- Barre haute */
+
+.gemea .announcement{
+  background: var(--noir);
+  color: var(--ivoire);
+  text-align: center;
+  font-size: 9.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  padding: 11px var(--gouttiere);
+}
+.gemea .announcement a{ text-decoration: underline; text-underline-offset: 2px; }
+
+/* ---------------------------------------------------------------- En-tête */
+
+.gemea .header{
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--ivoire);
+  border-bottom: 1px solid var(--gris-clair);
+}
+
+.gemea .header__inner{
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  padding-block: 18px;
+}
+
+.gemea .header__left{ display: flex; align-items: center; gap: 22px; }
+
+.gemea .header__logo{ justify-self: center; display: inline-flex; align-items: center; gap: 12px; }
+.gemea .header__logo .wordmark{ font-family: var(--titre); font-size: 18px; letter-spacing: 0.26em; text-indent: 0.26em; line-height: 1; }
+.gemea .header__logo img{ max-height: 44px; width: auto; }
+
+.gemea .header__nav{ display: none; gap: 26px; align-items: center; }
+.gemea .header__actions{ display: flex; gap: 20px; align-items: center; justify-content: flex-end; }
+
+.gemea .nav-link{
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gris-fonce);
+  padding-block: 4px;
+  border-bottom: 1px solid transparent;
+}
+.gemea .nav-link:hover, .gemea .nav-link[aria-current='page']{ color: var(--noir); border-color: var(--noir); }
+
+.gemea .header__icon{
+  background: none; border: 0; padding: 0; cursor: pointer;
+  color: var(--noir); display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--texte); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+}
+.gemea .header__icon svg{ width: 18px; height: 18px; }
+.gemea .header__cart{ position: relative; }
+.gemea .header__cart .cart-count{ position: absolute; top: -6px; right: -9px; }
+
+.gemea .cart-count{
+  min-width: 17px; height: 17px; padding: 0 4px;
+  border-radius: 999px; background: var(--noir); color: var(--ivoire);
+  font-size: 9px; letter-spacing: 0; line-height: 17px; text-align: center;
+}
+.gemea .cart-count:empty, .gemea .cart-count[hidden]{ display: none; }
+
+@media (min-width: 990px) {
+  .gemea .header__nav{ display: flex; }
+  .gemea .header__inner{ padding-block: 22px; }
+  .gemea .header__logo .wordmark{ font-size: 21px; }
+  .gemea .menu-toggle{ display: none; }
+}
+
+/* ------------------------------------------------------------------- Hero */
+
+.gemea .hero{ display: grid; grid-template-columns: 1fr; background: var(--blanc); }
+
+.gemea .hero__media{ position: relative; background: var(--gris-clair); min-height: 62vw; }
+.gemea .hero__media img{ width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+
+.gemea .hero__copy{ padding: 56px var(--gouttiere); display: flex; flex-direction: column; justify-content: center; }
+.gemea .hero__copy h1{ margin-bottom: 16px; }
+.gemea .hero__copy p{ max-width: 44ch; margin-bottom: 30px; }
+.gemea .hero__cta{ display: flex; flex-wrap: wrap; gap: 14px; }
+
+@media (min-width: 900px) {
+  .gemea .hero{ grid-template-columns: 1.15fr 1fr; }
+  .gemea .hero__media{ min-height: 640px; }
+  .gemea .hero__copy{ padding: 72px clamp(40px, 5vw, 76px); }
+}
+
+.gemea .hero--reverse .hero__media{ order: 2; }
+
+/* Placeholder quand aucune image n'est encore chargée */
+.gemea .placeholder{
+  display: flex; align-items: center; justify-content: center;
+  background: var(--gris-clair); color: var(--gris);
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  width: 100%; height: 100%; min-height: inherit;
+}
+.gemea .placeholder svg{ width: 42%; max-width: 180px; opacity: 0.45; }
+
+/* --------------------------------------------------------- Grille produits */
+
+.gemea .product-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px 20px;
+  list-style: none;
+  margin: 0; padding: 0;
+}
+
+@media (min-width: 750px) { .gemea .product-grid{ grid-template-columns: repeat(3, 1fr); gap: 48px 28px; } }
+@media (min-width: 1200px) { .gemea .product-grid--4{ grid-template-columns: repeat(4, 1fr); } }
+
+.gemea .card__media{
+  position: relative;
+  display: block;
+  background: var(--blanc);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+.gemea .card__media img{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity var(--transition);
+}
+.gemea .card__media img.card__img--hover{ opacity: 0; }
+.gemea .card:hover .card__media img.card__img--main{ opacity: 0; }
+.gemea .card:hover .card__media img.card__img--hover{ opacity: 1; }
+.gemea .card:hover .card__media img{ transform: scale(1.04); }
+
+.gemea .card__badge{
+  position: absolute; top: 12px; left: 12px; z-index: 1;
+  background: var(--noir); color: var(--ivoire);
+  font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 6px 10px;
+}
+.gemea .card__badge--sold{ background: var(--blanc); color: var(--noir); border: 1px solid var(--gris-clair); }
+
+.gemea .card__info{ padding-top: 16px; text-align: center; }
+.gemea .card__title{ font-family: var(--titre); font-size: 15px; letter-spacing: 0.04em; line-height: 1.4; color: var(--noir); }
+.gemea .card__price{ margin-top: 6px; font-size: 13px; letter-spacing: 0.06em; color: var(--gris-fonce); }
+.gemea .card__price s{ color: var(--gris); margin-right: 8px; }
+.gemea .card__price .price--sale{ color: var(--noir); }
+
+/* ---------------------------------------------------------- Page produit */
+
+/* Vestra arrondit tout : cadres, boutons, vignettes. La charte GEMEA est
+   entièrement anguleuse. On garde donc la mise en page de Vestra et les
+   angles droits de la charte — un seul jeton à changer pour basculer. */
+:root{ --rayon: 0px; }
+
+.gemea .pdp{ display: grid; gap: 36px; grid-template-columns: minmax(0, 1fr); padding-block: 34px 64px; }
+
+@media (min-width: 990px) {
+  .gemea .pdp{ grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr); gap: 60px; align-items: start; }
+  .gemea .pdp__info{ position: sticky; top: 104px; }
+}
+
+/* --- Galerie : grand visuel, vignettes en dessous --- */
+
+.gemea .gallery{ display: grid; gap: 14px; min-width: 0; }
+
+.gemea .gallery__stage{
+  position: relative;
+  background: var(--blanc);
+  border: 1px solid var(--gris-clair);
+  border-radius: var(--rayon);
+  overflow: hidden;
+}
+
+/* Une piste à défilement plutôt qu'une image unique : le doigt fait glisser
+   les visuels, et les vignettes n'ont plus qu'à amener la bonne diapositive. */
+.gemea .gallery__track{
+  display: flex;
+  min-width: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.gemea .gallery__track::-webkit-scrollbar{ display: none; }
+
+.gemea .gallery__slide{ flex: 0 0 100%; scroll-snap-align: center; aspect-ratio: 1; }
+.gemea .gallery__slide img{ width: 100%; height: 100%; object-fit: cover; }
+
+/* Les points ne servent qu'au tactile. */
+.gemea .gallery__dots{
+  position: absolute; left: 0; right: 0; bottom: 14px; z-index: 2;
+  display: flex; justify-content: center; gap: 7px;
+  pointer-events: none;
+}
+.gemea .gallery__dots span{
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gris-clair);
+  border: 1px solid var(--gris);
+  transition: background var(--transition);
+}
+.gemea .gallery__dots span[data-active]{ background: var(--noir); border-color: var(--noir); }
+
+@media (min-width: 750px) { .gemea .gallery__dots{ display: none; } }
+
+.gemea .gallery__zoom{
+  position: absolute; right: 14px; bottom: 14px; z-index: 2;
+  width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--gris-clair); border-radius: var(--rayon);
+  background: var(--blanc); color: var(--noir);
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+.gemea .gallery__zoom:hover{ border-color: var(--noir); }
+
+.gemea .gallery__thumbs{ display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; }
+.gemea .gallery__thumbs::-webkit-scrollbar{ display: none; }
+.gemea .gallery__thumbs button{
+  flex: none;
+  width: 68px;
+  padding: 0;
+  border: 1px solid var(--gris-clair);
+  border-radius: var(--rayon);
+  background: var(--blanc);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+.gemea .gallery__thumbs button:hover{ border-color: var(--gris); }
+.gemea .gallery__thumbs button[aria-current='true']{ border-color: var(--noir); }
+.gemea .gallery__thumbs img{ width: 100%; aspect-ratio: 1; object-fit: cover; }
+
+@media (min-width: 750px) { .gemea .gallery__thumbs button{ width: 92px; } }
+
+/* Visionneuse plein écran */
+.gemea .lightbox{
+  width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh;
+  margin: 0; padding: 0; border: 0;
+  background: var(--ivoire);
+}
+.gemea .lightbox::backdrop{ background: rgb(15 15 15 / 0.9); }
+.gemea .lightbox img{ width: 100%; height: 100%; object-fit: contain; }
+.gemea .lightbox__close{
+  position: absolute; top: 20px; right: 20px; z-index: 2;
+  width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--gris-clair); border-radius: var(--rayon);
+  background: var(--blanc); color: var(--noir); cursor: pointer;
+}
+
+/* --- Colonne d'achat --- */
+
+.gemea .pdp__vendor{
+  font-size: 12px; letter-spacing: 0.1em; color: var(--gris);
+  margin: 0 0 10px;
+}
+
+.gemea .pdp__title{
+  font-size: clamp(28px, 3.6vw, 40px);
+  line-height: 1.12;
+  letter-spacing: 0.04em;
+  margin-bottom: 16px;
+}
+
+.gemea .price-row{ display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.gemea .price-row .amount{ font-size: 24px; letter-spacing: 0.04em; color: var(--noir); font-variant-numeric: tabular-nums; }
+.gemea .price-row s{ font-size: 16px; color: var(--gris); }
+.gemea .badge-save{
+  border: 1px solid var(--noir); border-radius: var(--rayon);
+  font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 4px 9px;
+}
+.gemea .badge-save[hidden]{ display: none; }
+
+.gemea .pdp__tax{ font-size: 12.5px; color: var(--gris); margin: 8px 0 0; }
+.gemea .pdp__pitch{ margin-top: 20px; font-size: 14px; max-width: 48ch; }
+.gemea .pdp__rule{ border: 0; border-top: 1px solid var(--gris-clair); margin: 28px 0; }
+
+.gemea .stock{
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; letter-spacing: 0.02em; color: var(--noir);
+  margin: 0 0 24px;
+}
+/* Vestra signale le stock par un carré plein. On garde la forme, la couleur
+   vient de la charte : noir plein en stock, contour gris épuisé. */
+.gemea .stock::before{ content: ''; width: 9px; height: 9px; background: var(--noir); flex: none; }
+.gemea .stock--out{ color: var(--gris); }
+.gemea .stock--out::before{ background: transparent; border: 1px solid var(--gris); }
+
+.gemea .pdp__form{ display: grid; gap: 22px; }
+
+/* --- Sélecteurs de variante --- */
+
+.gemea .opt{ display: grid; gap: 12px; border: 0; padding: 0; margin: 0; }
+.gemea .opt__head{ display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.gemea .opt__label{ font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gris-fonce); padding: 0; }
+.gemea .opt__chosen{ font-size: 12.5px; letter-spacing: 0.04em; color: var(--noir); }
+.gemea .opt__values{ display: flex; flex-wrap: wrap; gap: 8px; }
+.gemea .opt__values input{ position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+.gemea .pill{
+  position: relative;
+  min-width: 62px;
+  padding: 13px 16px;
+  border: 1px solid var(--gris-clair); border-radius: var(--rayon);
+  background: var(--blanc);
+  cursor: pointer;
+  font-family: var(--texte); font-size: 12px; letter-spacing: 0.08em;
+  color: var(--gris-fonce);
+  text-align: center;
+  transition: border-color var(--transition), color var(--transition);
+}
+.gemea .pill:hover{ border-color: var(--gris); }
+.gemea .pill:has(input:checked){ border-color: var(--noir); color: var(--noir); }
+.gemea .pill--out{ opacity: 0.4; text-decoration: line-through; }
+
+.gemea .opt__values--swatch{ gap: 16px; }
+.gemea .swatch{ display: grid; justify-items: center; gap: 7px; padding: 0; border: 0; background: none; cursor: pointer; }
+.gemea .swatch img{
+  width: 46px; height: 46px;
+  border-radius: 50%; object-fit: cover;
+  border: 1px solid var(--gris-clair);
+  outline: 1px solid transparent; outline-offset: 3px;
+  transition: outline-color var(--transition);
+}
+.gemea .swatch:has(input:checked) img{ outline-color: var(--noir); }
+.gemea .swatch__name{ font-size: 10px; letter-spacing: 0.1em; color: var(--gris-fonce); }
+.gemea .swatch--out{ opacity: 0.4; }
+
+/* --- Quantité, guide des tailles, achat --- */
+
+.gemea .qty-field{ display: grid; gap: 12px; }
+
+.gemea .qty{
+  display: inline-flex;
+  background: var(--gris-clair);
+  border-radius: var(--rayon);
+  width: fit-content;
+}
+.gemea .qty button{
+  width: 52px; height: 52px; border: 0; background: none; cursor: pointer;
+  font-family: var(--texte); font-size: 17px; color: var(--noir);
+}
+.gemea .qty input{
+  width: 56px; border: 0; background: none; text-align: center;
+  font-family: var(--texte); font-size: 14px; color: var(--noir);
+  -moz-appearance: textfield;
+}
+.gemea .qty input::-webkit-outer-spin-button, .gemea .qty input::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0; }
+
+.gemea .size-guide{
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 13px; color: var(--noir);
+  width: fit-content;
+}
+.gemea .size-guide:hover{ color: var(--gris-fonce); }
+.gemea .size-guide__icon{
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px;
+  border: 1px solid var(--noir); border-radius: var(--rayon);
+}
+
+.gemea .buy{ display: grid; gap: 12px; }
+.gemea .buy .btn{ padding: 19px 30px; }
+
+/* Bouton de paiement express rendu par Shopify : Vestra le laisse bleu,
+   la charte n'admet pas de couleur hors palette — on le repasse en noir. */
+.gemea .shopify-payment-button__button--unbranded{
+  background: transparent !important;
+  border: 1px solid var(--noir) !important;
+  border-radius: var(--rayon) !important;
+  color: var(--noir) !important;
+  font-family: var(--texte) !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  padding: 19px 30px !important;
+  min-height: 0 !important;
+  transition: background var(--transition), color var(--transition);
+}
+.gemea .shopify-payment-button__button--unbranded:hover:not([disabled]){
+  background: var(--noir) !important;
+  color: var(--ivoire) !important;
+}
+.gemea .shopify-payment-button__more-options{ display: none !important; }
+
+/* --- Arguments à coche --- */
+
+.gemea .features{ list-style: none; margin: 34px 0 0; padding: 0; display: grid; gap: 16px; }
+.gemea .features li{ display: flex; align-items: center; gap: 14px; }
+.gemea .features svg{ color: var(--noir); flex: none; }
+.gemea .features span{ font-size: 14px; color: var(--gris-fonce); }
+
+/* --- Partage --- */
+
+.gemea .share{ display: flex; align-items: center; gap: 18px; margin-top: 30px; }
+.gemea .share__label{ font-size: 12px; letter-spacing: 0.06em; color: var(--gris-fonce); }
+.gemea .share a{ color: var(--noir); display: inline-flex; }
+.gemea .share a:hover{ color: var(--gris); }
+
+/* ------------------------------------------------------------ Bandeau image */
+
+.gemea .banner{ position: relative; min-height: 62vw; display: grid; }
+@media (min-width: 750px) { .gemea .banner{ min-height: 480px; } }
+
+.gemea .banner__image, .gemea .banner__veil{ position: absolute; inset: 0; width: 100%; height: 100%; }
+.gemea .banner__image{ object-fit: cover; }
+/* Repli : la section pose sa propre valeur en ligne depuis le réglage. */
+.gemea .banner__veil{ background: rgb(15 15 15 / 0.55); }
+
+.gemea .banner__copy{
+  position: relative; z-index: 1;
+  align-self: center;
+  text-align: center;
+  padding-block: 64px;
+  color: var(--ivoire);
+}
+.gemea .banner__copy h2{ color: var(--ivoire); font-size: clamp(26px, 3.4vw, 36px); letter-spacing: 0.04em; }
+.gemea .banner__copy p{ color: var(--ivoire); margin-top: 16px; font-size: 14.5px; }
+.gemea .banner__copy .btn{ margin-top: 26px; }
+
+.gemea .btn--light{
+  background: var(--ivoire); border-color: var(--ivoire); color: var(--noir);
+}
+.gemea .btn--light:hover{ background: transparent; color: var(--ivoire); }
+
+/* ---------------------------------------------------------------- Sections */
+
+.gemea .section-title{
+  text-align: center;
+  font-size: clamp(24px, 3vw, 32px);
+  letter-spacing: 0.04em;
+  margin-bottom: 40px;
+}
+
+/* --- Carrousels, avec barre de progression comme sur la maquette --- */
+
+.gemea .carousel{ position: relative; }
+
+.gemea .rail{
+  display: grid;
+  min-width: 0;
+  grid-auto-flow: column;
+  grid-auto-columns: 46%;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  list-style: none; margin: 0; padding: 0;
+  scrollbar-width: none;
+}
+.gemea .rail::-webkit-scrollbar{ display: none; }
+.gemea .rail > *{ scroll-snap-align: start; }
+
+@media (min-width: 750px) { .gemea .rail{ grid-auto-columns: 30%; gap: 24px; } }
+@media (min-width: 1200px) { .gemea .rail{ grid-auto-columns: calc((100% - 3 * 24px) / 4); } }
+
+.gemea .rail--wide{ grid-auto-columns: 84%; }
+@media (min-width: 750px) { .gemea .rail--wide{ grid-auto-columns: 46%; } }
+@media (min-width: 1200px) { .gemea .rail--wide{ grid-auto-columns: calc((100% - 2 * 24px) / 3); } }
+
+.gemea .carousel__progress{
+  height: 2px;
+  background: var(--gris-clair);
+  margin-top: 34px;
+  max-width: 420px;
+  margin-inline: auto;
+}
+.gemea .carousel__progress span{
+  display: block; height: 100%; width: 30%;
+  background: var(--noir);
+  transition: width 160ms linear, transform 160ms linear;
+}
+
+/* --- Cartes produit --- */
+
+.gemea .card__media{
+  position: relative;
+  display: block;
+  background: var(--blanc);
+  border: 1px solid var(--gris-clair);
+  border-radius: var(--rayon);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+.gemea .card__media img{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity var(--transition);
+}
+.gemea .card__media img.card__img--hover{ opacity: 0; }
+.gemea .card:hover .card__media img.card__img--main{ opacity: 0; }
+.gemea .card:hover .card__media img.card__img--hover{ opacity: 1; }
+.gemea .card:hover .card__media img{ transform: scale(1.04); }
+
+.gemea .card__badge{
+  position: absolute; top: 12px; left: 12px; z-index: 1;
+  background: var(--noir); color: var(--ivoire);
+  border-radius: var(--rayon);
+  font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 6px 10px;
+}
+.gemea .card__badge--sold{ background: var(--blanc); color: var(--noir); border: 1px solid var(--gris-clair); }
+
+/* L'ajout rapide, carré noir posé en haut à droite du visuel. */
+.gemea .card__add{
+  position: absolute; top: 12px; right: 12px; z-index: 2;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border: 0; border-radius: var(--rayon);
+  background: var(--noir); color: var(--ivoire);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.gemea .card__add:hover{ background: var(--gris-fonce); }
+.gemea .card__add[disabled]{ opacity: 0.5; cursor: default; }
+
+.gemea .card__info{ padding-top: 18px; text-align: center; }
+.gemea .card__vendor{ font-size: 11px; letter-spacing: 0.08em; color: var(--gris); margin-bottom: 6px; }
+.gemea .card__title{ font-size: 14px; letter-spacing: 0.02em; line-height: 1.45; color: var(--noir); }
+.gemea .card__price{ margin-top: 8px; font-size: 14px; letter-spacing: 0.04em; color: var(--gris-fonce); font-variant-numeric: tabular-nums; }
+.gemea .card__price s{ color: var(--gris); margin-right: 8px; }
+
+/* --- Avis clients --- */
+
+.gemea .testimonials{ background: var(--blanc); }
+
+.gemea .tcard{
+  background: var(--ivoire);
+  border: 1px solid var(--gris-clair);
+  border-radius: var(--rayon);
+  padding: 30px 28px;
+  display: grid;
+  align-content: start;
+  gap: 20px;
+}
+
+.gemea .tcard__head{ display: flex; align-items: center; gap: 14px; }
+.gemea .tcard__avatar{ width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex: none; }
+.gemea .tcard__avatar--empty{
+  display: flex; align-items: center; justify-content: center;
+  background: var(--gris-clair); color: var(--gris-fonce);
+  font-family: var(--titre); font-size: 20px;
+}
+.gemea .tcard__author{ font-size: 15px; letter-spacing: 0.03em; color: var(--noir); }
+.gemea .tcard__role{ font-size: 12px; color: var(--gris); margin-top: 2px; }
+
+.gemea .tcard__quote{ margin: 0; }
+.gemea .tcard__quote p{ font-size: 14px; line-height: 1.85; }
+
+.gemea .tcard__product{
+  display: flex; align-items: center; gap: 16px;
+  background: var(--blanc);
+  border: 1px solid var(--gris-clair);
+  border-radius: var(--rayon);
+  padding: 12px;
+}
+.gemea .tcard__product img{ width: 64px; aspect-ratio: 4 / 5; object-fit: cover; flex: none; }
+.gemea .tcard__vendor{ font-size: 11px; color: var(--gris); letter-spacing: 0.06em; }
+.gemea .tcard__name{ font-size: 13.5px; color: var(--noir); margin-top: 3px; }
+.gemea .tcard__price{ font-size: 13px; color: var(--gris-fonce); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.gemea .tcard__price s{ color: var(--gris); margin-right: 8px; }
+
+/* --- Garanties --- */
+
+.gemea .guarantees__grid{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 48px 24px; }
+@media (min-width: 990px) { .gemea .guarantees__grid{ grid-template-columns: repeat(4, 1fr); } }
+
+.gemea .guarantee{ text-align: center; display: grid; justify-items: center; gap: 14px; }
+.gemea .guarantee svg{ color: var(--noir); }
+.gemea .guarantee h3{ font-size: 17px; letter-spacing: 0.03em; }
+.gemea .guarantee p{ font-size: 13px; max-width: 22ch; margin: 0; }
+
+/* Accordéon — titre en Tenor Sans, ouvert par + et fermé par −, comme la
+   maquette. Le signe est un caractère, pas un chevron dessiné : il se lit
+   à toutes les tailles et suit la couleur du texte. */
+.gemea .accordion{ border-bottom: 1px solid var(--gris-clair); }
+.gemea .accordion summary{
+  list-style: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 20px 0;
+  font-family: var(--titre); font-size: 16px; letter-spacing: 0.02em;
+  color: var(--noir);
+}
+.gemea .accordion summary::-webkit-details-marker{ display: none; }
+.gemea .accordion summary::after{
+  content: '+';
+  flex: none;
+  font-family: var(--texte); font-size: 20px; line-height: 1;
+  color: var(--gris-fonce);
+}
+.gemea .accordion[open] summary::after{ content: '\2013'; }
+.gemea .accordion__body{ padding-bottom: 22px; font-size: 14px; }
+
+/* Sur la fiche produit le premier accordéon porte le filet du haut. */
+.gemea .pdp__info .accordion:first-of-type{ border-top: 1px solid var(--gris-clair); margin-top: 34px; }
+
+/* Réassurance sous le bouton d'achat */
+.gemea .reassurance{ display: grid; gap: 10px; margin-top: 26px; }
+.gemea .reassurance li{ display: flex; align-items: center; gap: 10px; list-style: none; font-size: 12px; color: var(--gris-fonce); letter-spacing: 0.02em; }
+.gemea .reassurance svg{ width: 15px; height: 15px; flex: none; color: var(--gris); }
+.gemea .reassurance ul{ margin: 0; padding: 0; display: grid; gap: 10px; }
+
+/* ------------------------------------------------------- Blocs de contenu */
+
+.gemea .split{ display: grid; gap: 0; grid-template-columns: 1fr; background: var(--blanc); }
+.gemea .split__media{ min-height: 60vw; background: var(--gris-clair); position: relative; }
+.gemea .split__media img{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.gemea .split__copy{ padding: 52px var(--gouttiere); display: flex; flex-direction: column; justify-content: center; }
+.gemea .split__copy p{ max-width: 48ch; }
+
+@media (min-width: 900px) {
+  .gemea .split{ grid-template-columns: 1fr 1fr; }
+  .gemea .split__media{ min-height: 560px; }
+  .gemea .split__copy{ padding: 64px clamp(40px, 5vw, 72px); }
+  .gemea .split--reverse .split__media{ order: 2; }
+}
+
+/* Colonnes d'arguments */
+.gemea .columns{ display: grid; gap: 40px; grid-template-columns: 1fr; text-align: center; }
+@media (min-width: 750px) {
+  .gemea .columns--2{ grid-template-columns: repeat(2, 1fr); }
+  .gemea .columns--3{ grid-template-columns: repeat(3, 1fr); }
+  .gemea .columns--4{ grid-template-columns: repeat(4, 1fr); }
+}
+.gemea .columns .col__icon{ color: var(--noir); margin: 0 auto 18px; width: 26px; height: 26px; }
+.gemea .columns h3{ font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; font-family: var(--texte); font-weight: 400; margin-bottom: 8px; }
+.gemea .columns p{ font-size: 13px; }
+
+/* Avis clients */
+.gemea .quotes{ display: grid; gap: 34px; grid-template-columns: 1fr; }
+@media (min-width: 750px) { .gemea .quotes--3{ grid-template-columns: repeat(3, 1fr); } }
+.gemea .quote{ background: var(--blanc); padding: 34px 30px; border: 1px solid var(--gris-clair); }
+.gemea .quote__stars{ color: var(--noir); letter-spacing: 0.28em; font-size: 11px; margin-bottom: 14px; }
+.gemea .quote p{ font-size: 14px; line-height: 1.85; }
+.gemea .quote__author{ font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gris); margin-top: 16px; }
+
+/* Bandeau noir (newsletter, citation) */
+.gemea .band{ background: var(--noir); color: var(--ivoire); text-align: center; }
+.gemea .band h2, .gemea .band h1{ color: var(--ivoire); }
+.gemea .band p{ color: var(--gris-clair); }
+.gemea .band .eyebrow{ color: var(--gris); }
+
+.gemea .newsletter-form{ display: flex; gap: 10px; max-width: 470px; margin: 26px auto 0; flex-wrap: wrap; }
+.gemea .newsletter-form input[type='email']{
+  flex: 1 1 220px;
+  background: transparent;
+  border: 0; border-bottom: 1px solid var(--gris);
+  color: var(--ivoire);
+  font-family: var(--texte); font-size: 13px; font-weight: 300;
+  padding: 12px 2px;
+}
+.gemea .newsletter-form input::placeholder{ color: var(--gris); }
+.gemea .newsletter-form .btn{ background: var(--ivoire); border-color: var(--ivoire); color: var(--noir); }
+.gemea .newsletter-form .btn:hover{ background: transparent; color: var(--ivoire); }
+
+/* ---------------------------------------------------------------- Collection */
+
+.gemea .collection-header{ text-align: center; padding-block: 56px 40px; }
+.gemea .collection-header p{ max-width: 60ch; margin-inline: auto; }
+
+.gemea .collection-toolbar{
+  display: flex; justify-content: space-between; align-items: center; gap: 20px;
+  padding-block: 18px; border-block: 1px solid var(--gris-clair);
+  margin-bottom: 44px; flex-wrap: wrap;
+}
+.gemea .collection-toolbar .count{ font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gris); }
+.gemea .collection-toolbar select{
+  border: 0; background: none; color: var(--noir); cursor: pointer;
+  font-family: var(--texte); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+}
+
+/* Vignette de collection */
+.gemea .collection-tile{ position: relative; display: block; background: var(--gris-clair); aspect-ratio: 3 / 4; overflow: hidden; }
+.gemea .collection-tile img{ position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 700ms cubic-bezier(0.22,0.61,0.36,1); }
+.gemea .collection-tile:hover img{ transform: scale(1.04); }
+.gemea .collection-tile__label{
+  position: absolute; inset: auto 0 0 0;
+  padding: 22px; text-align: center;
+  background: linear-gradient(to top, rgba(15,15,15,0.55), transparent);
+  color: var(--blanc);
+  font-family: var(--titre); font-size: 17px; letter-spacing: 0.14em;
+}
+
+.gemea .pagination{ display: flex; justify-content: center; gap: 8px; margin-top: 64px; }
+.gemea .pagination a, .gemea .pagination span{
+  min-width: 38px; padding: 9px 6px; text-align: center;
+  font-size: 11px; letter-spacing: 0.1em;
+  border: 1px solid transparent; color: var(--gris);
+}
+.gemea .pagination a:hover{ color: var(--noir); }
+.gemea .pagination [aria-current='page']{ border-color: var(--noir); color: var(--noir); }
+
+/* --------------------------------------------------------------- Panier */
+
+.gemea .cart-item{ display: grid; grid-template-columns: 88px 1fr; gap: 20px; padding-block: 26px; border-bottom: 1px solid var(--gris-clair); }
+.gemea .cart-item img{ background: var(--blanc); }
+.gemea .cart-item__title{ font-family: var(--titre); font-size: 16px; letter-spacing: 0.03em; }
+.gemea .cart-item__variant{ font-size: 11.5px; color: var(--gris); letter-spacing: 0.04em; margin-top: 4px; }
+.gemea .cart-item__row{ display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
+.gemea .cart-item__remove{ font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gris); text-decoration: underline; text-underline-offset: 3px; }
+.gemea .cart-item__remove:hover{ color: var(--noir); }
+
+.gemea .cart-summary{ margin-top: 34px; display: grid; gap: 16px; justify-items: end; text-align: right; }
+.gemea .cart-total{ font-size: 16px; letter-spacing: 0.06em; }
+.gemea .cart-total span{ font-family: var(--titre); }
+
+.gemea .empty-state{ text-align: center; padding-block: 96px; }
+.gemea .empty-state h1{ margin-bottom: 14px; }
+.gemea .empty-state p{ margin-bottom: 30px; }
+
+/* Formulaires */
+.gemea .field{ display: grid; gap: 8px; margin-bottom: 20px; }
+.gemea .field label{ font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gris); }
+.gemea .field input, .gemea .field textarea, .gemea .field select{
+  background: var(--blanc);
+  border: 1px solid var(--gris-clair);
+  padding: 13px 14px;
+  font-family: var(--texte); font-weight: 300; font-size: 14px; color: var(--noir);
+}
+.gemea .field input:focus, .gemea .field textarea:focus{ outline: 0; border-color: var(--noir); }
+.gemea .field textarea{ min-height: 150px; resize: vertical; }
+
+.gemea .form-message{ border: 1px solid var(--gris-clair); background: var(--blanc); padding: 16px 18px; font-size: 13px; margin-bottom: 24px; }
+.gemea .form-message--error{ border-color: var(--noir); }
+
+/* ----------------------------------------------------------------- Pied */
+
+.gemea .footer{ background: var(--noir); color: var(--gris-clair); padding-block: 64px 34px; }
+
+.gemea .footer h4{
+  font-family: var(--texte); font-weight: 400;
+  font-size: 15px; letter-spacing: 0.04em;
+  color: var(--ivoire);
+  margin-bottom: 20px;
+}
+.gemea .footer ul{ list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.gemea .footer a{ color: var(--gris-clair); font-size: 14px; }
+.gemea .footer a:hover{ color: var(--blanc); }
+.gemea .footer p{ color: var(--gris-clair); font-size: 14px; }
+
+.gemea .footer__links{ display: grid; gap: 36px; grid-template-columns: 1fr; }
+@media (min-width: 600px) { .gemea .footer__links{ grid-template-columns: repeat(3, 1fr); } }
+
+.gemea .footer__signup{ margin-top: 52px; max-width: 620px; }
+.gemea .footer__signup h3{
+  font-family: var(--texte); font-weight: 400;
+  font-size: clamp(19px, 2.4vw, 24px);
+  line-height: 1.35; letter-spacing: 0.01em;
+  color: var(--ivoire);
+}
+.gemea .footer__signup p{ margin-top: 12px; }
+
+.gemea .footer__form{ display: grid; gap: 14px; margin-top: 26px; }
+.gemea .footer__form input[type='email']{
+  background: rgb(255 255 255 / 0.07);
+  border: 1px solid rgb(232 230 227 / 0.18);
+  border-radius: var(--rayon);
+  color: var(--ivoire);
+  font-family: var(--texte); font-weight: 300; font-size: 14px;
+  padding: 17px 18px;
+}
+.gemea .footer__form input::placeholder{ color: var(--gris); }
+.gemea .footer__form input:focus{ outline: 0; border-color: var(--gris-clair); }
+.gemea .footer__message{ font-size: 13px; color: var(--gris-clair); }
+
+.gemea .footer__rule{ border: 0; border-top: 1px solid rgb(232 230 227 / 0.18); margin: 52px 0 40px; }
+
+.gemea .footer__bottom{
+  display: grid; gap: 34px; grid-template-columns: 1fr;
+  align-items: end;
+}
+@media (min-width: 750px) { .gemea .footer__bottom{ grid-template-columns: 1fr auto; } }
+
+.gemea .footer__wordmark{
+  font-family: var(--titre);
+  font-size: clamp(34px, 6vw, 60px);
+  letter-spacing: 0.22em; text-indent: 0.22em;
+  color: var(--gris-clair);
+  line-height: 1;
+}
+
+.gemea .social{ display: flex; gap: 18px; margin-top: 24px; }
+.gemea .social a{ display: inline-flex; color: var(--gris-clair); }
+.gemea .social svg{ width: 19px; height: 19px; }
+
+.gemea .footer__payments h4{ font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gris); margin-bottom: 12px; }
+.gemea .footer__payments .payment-icons{ display: flex; flex-wrap: wrap; gap: 7px; }
+.gemea .footer__payments .payment-icons svg{ height: 26px; width: auto; }
+
+.gemea .footer__legal{
+  margin-top: 44px; padding-top: 24px;
+  border-top: 1px solid rgb(232 230 227 / 0.18);
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  font-size: 11px; letter-spacing: 0.08em; color: var(--gris);
+}
+.gemea .footer__legal nav{ display: flex; gap: 24px; flex-wrap: wrap; }
+.gemea .footer__legal a{ font-size: 11px; letter-spacing: 0.08em; color: var(--gris); }
+.gemea .footer__legal a:hover{ color: var(--gris-clair); }
+
+/* ------------------------------------------------------- Retour en haut */
+
+.gemea .to-top{
+  position: fixed; right: 20px; bottom: 20px; z-index: 25;
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--gris-clair); border-radius: 50%;
+  background: var(--blanc); color: var(--noir);
+  cursor: pointer;
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--transition), border-color var(--transition);
+}
+.gemea .to-top[data-visible='true']{ opacity: 1; pointer-events: auto; }
+.gemea .to-top:hover{ border-color: var(--noir); }
+
+/* --------------------------------------------------------------- Divers */
+
+.gemea .breadcrumb{ font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gris); padding-block: 22px; }
+.gemea .breadcrumb a:hover{ color: var(--noir); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ==========================================================================
+   Téléphone
+   Le reste de la feuille est écrit pour le mobile d'abord ; ce bloc règle ce
+   qui ne peut se décider qu'au petit écran : place disponible, doigt, encoche.
+   ========================================================================== */
+
+@media (max-width: 749px) {
+  /* Le bandeau doit tenir : moins d'interlettrage, retour à la ligne permis. */
+  .gemea .announcement{
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    padding: 10px 16px;
+    line-height: 1.6;
+  }
+
+  /* La marque rétrécit pour laisser la place aux icônes du panier. */
+  .gemea .header__inner{ gap: 8px; padding-block: 14px; }
+  .gemea .header__logo .wordmark{ font-size: 17px; letter-spacing: 0.2em; text-indent: 0.2em; }
+  .gemea .header__actions{ gap: 16px; }
+  .gemea .header__left{ gap: 0; }
+
+  /* Toute cible tactile fait au moins 44 px — le pouce n'est pas une souris. */
+  .gemea .header__icon, .gemea .menu-toggle{ min-width: 44px; min-height: 44px; justify-content: center; }
+  .gemea .header__left .menu-toggle{ margin-inline-start: -12px; }
+  .gemea .header__actions .header__icon{ justify-content: center; }
+  .gemea .accordion summary{ min-height: 52px; }
+  .gemea .share a{ min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
+
+  /* iOS agrandit la page dès qu'un champ passe sous 16 px : on ne descend pas. */
+  .gemea input[type='email'], .gemea input[type='text'], .gemea input[type='search'], .gemea input[type='password'], .gemea input[type='number'], .gemea textarea, .gemea select{ font-size: 16px; }
+
+  .gemea .pdp{ padding-block: 20px 40px; gap: 26px; }
+  .gemea .pdp__title{ font-size: 27px; letter-spacing: 0.03em; }
+  .gemea .price-row .amount{ font-size: 22px; }
+
+  /* Les pastilles de taille tiennent sur deux rangs plutôt que de déborder. */
+  .gemea .pill{ min-width: 54px; padding: 13px 12px; }
+
+  .gemea .features{ margin-top: 28px; gap: 14px; }
+
+  /* Les rangées débordent volontairement de la gouttière : la carte suivante
+     dépasse du bord, ce qui signale qu'on peut faire glisser. */
+  .gemea .rail{
+    grid-auto-columns: 62%;
+    padding-inline: var(--gouttiere);
+    margin-inline: calc(var(--gouttiere) * -1);
+    -webkit-overflow-scrolling: touch;
+  }
+  .gemea .rail--wide{ grid-auto-columns: 86%; }
+
+  .gemea .carousel__progress{ margin-top: 24px; }
+
+  .gemea .section{ padding-block: 48px; }
+  .gemea .section-title{ margin-bottom: 28px; font-size: 23px; }
+
+  .gemea .banner__copy{ padding-block: 48px; }
+  .gemea .guarantees__grid{ gap: 38px 20px; }
+  .gemea .guarantee svg{ width: 42px; height: 42px; }
+  .gemea .guarantee h3{ font-size: 15px; }
+
+  /* Le pied de page garde ses trois colonnes, comme sur la maquette. */
+  .gemea .footer{ padding-block: 44px 28px; }
+  .gemea .footer__links{ grid-template-columns: repeat(3, 1fr); gap: 24px 14px; }
+  .gemea .footer h4{ font-size: 13px; margin-bottom: 14px; }
+  .gemea .footer a{ font-size: 12.5px; }
+  .gemea .footer ul{ gap: 11px; }
+  .gemea .footer__signup{ margin-top: 40px; }
+  .gemea .footer__wordmark{ letter-spacing: 0.16em; text-indent: 0.16em; }
+  .gemea .footer__legal{ flex-direction: column; gap: 12px; }
+
+  /* Le bouton de retour en haut se décale pour ne pas couvrir la barre d'achat. */
+  .gemea .to-top{ right: 14px; bottom: calc(84px + env(safe-area-inset-bottom)); width: 44px; height: 44px; }
+}
+
+/* Sur écran tactile, l'image de survol des cartes ne se déclenchera jamais :
+   on évite qu'elle reste bloquée après un appui. */
+@media (hover: none) {
+  .gemea .card__media img.card__img--hover{ display: none; }
+}
+
+/* --------------------------------------------------- Barre d'achat collante */
+
+.gemea .sticky-buy{
+  position: fixed; inset: auto 0 0 0; z-index: 30;
+  background: var(--ivoire);
+  border-top: 1px solid var(--gris-clair);
+  transform: translateY(101%);
+  transition: transform var(--transition);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.gemea .sticky-buy[data-visible='true']{ transform: none; }
+
+.gemea .sticky-buy__inner{
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px var(--gouttiere);
+}
+.gemea .sticky-buy__text{ flex: 1; min-width: 0; }
+.gemea .sticky-buy__title{
+  font-family: var(--titre); font-size: 14px; letter-spacing: 0.02em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.gemea .sticky-buy__price{ font-size: 13px; color: var(--gris-fonce); letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
+.gemea .sticky-buy .btn{ flex: none; padding: 15px 22px; }
+
+/* Sur grand écran la colonne d'achat reste visible : la barre n'a pas lieu d'être. */
+@media (min-width: 750px) { .gemea .sticky-buy{ display: none; } }
+
+/* ==========================================================================
+   Bandeau d'annonce refermable
+   ========================================================================== */
+
+.gemea .announcement{ position: relative; }
+.gemea .announcement__text{ padding-inline: 32px; }
+.gemea .announcement__close{
+  position: absolute; top: 50%; right: 8px;
+  transform: translateY(-50%);
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border: 0; background: none; color: var(--ivoire);
+  cursor: pointer; opacity: 0.7;
+  transition: opacity var(--transition);
+}
+.gemea .announcement__close:hover{ opacity: 1; }
+
+/* ==========================================================================
+   Tiroir de navigation
+   Ouvert, il occupe l'essentiel de l'écran mais laisse voir la page
+   derrière : le visiteur garde le fil de là d'où il vient.
+   ========================================================================== */
+
+/* Le tiroir s'ouvre SOUS l'en-tête, qui reste accessible : le visiteur
+   garde la croix, la recherche et le panier sous la main. La hauteur à
+   laisser est mesurée à l'ouverture, car le bandeau d'annonce peut avoir
+   défilé — d'où la variable posée par le script. */
+.gemea .drawer{
+  position: fixed;
+  inset: var(--drawer-top, 0) 0 0 0;
+  z-index: 18;
+}
+.gemea .drawer[hidden]{ display: none; }
+
+.gemea .drawer__scrim{
+  position: absolute; inset: 0;
+  background: rgb(15 15 15 / 0.08);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.gemea .drawer[data-open] .drawer__scrim{ opacity: 1; }
+
+.gemea .drawer__panel{
+  position: absolute; inset: 0 auto 0 0;
+  width: min(76vw, 420px);
+  background: var(--ivoire);
+  border-right: 1px solid var(--gris-clair);
+  transform: translateX(-100%);
+  transition: transform var(--transition);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.gemea .drawer[data-open] .drawer__panel{ transform: none; }
+
+/* Les panneaux sont empilés au même endroit ; seul l'actif est rendu. */
+.gemea .drawer__views{ position: relative; flex: 1; overflow: hidden; }
+
+.gemea .drawer__view{
+  position: absolute; inset: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex; flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.gemea .drawer__view[hidden]{ display: none; }
+
+/* Le second niveau entre par la droite, d'où le doigt l'a appelé. */
+@keyframes drawer-in {
+  from { transform: translateX(28px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.gemea .drawer__view[data-view]:not([data-view='root']){ animation: drawer-in 200ms var(--transition); }
+
+.gemea .drawer__list{ list-style: none; margin: 0; padding: 0; }
+.gemea .drawer__list li + li{ border-top: 1px solid var(--gris-clair); }
+
+.gemea .drawer__list a, .gemea .drawer__list button{
+  width: 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 22px var(--gouttiere);
+  border: 0; background: none; cursor: pointer;
+  font-family: var(--texte); font-size: 14px; font-weight: 400;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--noir); text-align: left;
+}
+.gemea .drawer__list a:active, .gemea .drawer__list button:active{ background: var(--gris-clair); }
+.gemea .drawer__list svg{ color: var(--gris); flex: none; }
+
+.gemea .drawer__back{
+  width: 100%;
+  display: flex; align-items: center; gap: 14px;
+  padding: 20px var(--gouttiere);
+  border: 0; border-bottom: 1px solid var(--gris-clair);
+  background: none; cursor: pointer;
+  font-family: var(--texte); font-size: 13px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--noir);
+}
+.gemea .drawer__back svg{ color: var(--gris); flex: none; }
+
+/* Liens pratiques : mêmes rangées, sans chevron, avec l'icône en tête. */
+.gemea .drawer__utils{
+  list-style: none; margin: 0; padding: 12px 0;
+  border-top: 1px solid var(--gris-clair);
+}
+.gemea .drawer__utils a{
+  display: flex; align-items: center; gap: 16px;
+  padding: 13px var(--gouttiere);
+  font-size: 12.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--noir);
+}
+.gemea .drawer__utils svg{ color: var(--noir); flex: none; }
+.gemea .drawer__utils a:active{ background: var(--gris-clair); }
+
+.gemea .drawer__locale{
+  display: flex; align-items: center; gap: 0;
+  padding: 6px var(--gouttiere) 18px;
+  border-top: 1px solid var(--gris-clair);
+}
+.gemea .drawer__locale-form + .drawer__locale-form{ border-left: 1px solid var(--gris-clair); padding-left: 18px; margin-left: 18px; }
+.gemea .drawer__locale select{
+  border: 0; background: none; cursor: pointer;
+  font-family: var(--texte); font-size: 12.5px; letter-spacing: 0.1em;
+  color: var(--noir); padding: 10px 0;
+}
+
+/* Le pied du tiroir : ce qui rassure, sur un fond légèrement détaché. */
+.gemea .drawer__reassure{
+  list-style: none; margin: auto 0 0; padding: 22px var(--gouttiere) 26px;
+  background: var(--gris-clair);
+  display: grid; gap: 18px;
+}
+.gemea .drawer__reassure li{ display: flex; align-items: center; gap: 16px; }
+.gemea .drawer__reassure svg{ color: var(--noir); flex: none; }
+.gemea .drawer__reassure-title{ font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--noir); }
+.gemea .drawer__reassure-text{ font-size: 12.5px; color: var(--gris-fonce); margin-top: 3px; line-height: 1.5; }
+
+/* La bascule du bouton : hamburger fermé, croix ouvert. */
+.gemea .menu-toggle__close{ display: none; }
+.gemea .menu-toggle[aria-expanded='true'] .menu-toggle__open{ display: none; }
+.gemea .menu-toggle[aria-expanded='true'] .menu-toggle__close{ display: inline-flex; }
+
+/* Le tiroir ne concerne que les écrans sans menu horizontal. */
+@media (min-width: 990px) { .gemea .drawer{ display: none; } }

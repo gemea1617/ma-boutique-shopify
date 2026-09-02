@@ -1,0 +1,192 @@
+{
+  "sections": {
+    "main": {
+      "type": "gemea-main-product",
+      "blocks": {
+        "vendor": {
+          "type": "vendor"
+        },
+        "title": {
+          "type": "title"
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "note": "Taxes incluses. Livraison calculée au paiement."
+          }
+        },
+        "pitch": {
+          "type": "pitch",
+          "settings": {
+            "text": "<p>Des bijoux pensés pour accompagner chaque journée, du bureau au dîner, sans jamais avoir à y penser.</p>"
+          }
+        },
+        "divider": {
+          "type": "divider"
+        },
+        "stock": {
+          "type": "stock",
+          "settings": {
+            "in_stock": "En stock"
+          }
+        },
+        "form": {
+          "type": "form",
+          "settings": {
+            "size_guide": "/pages/guide-des-tailles",
+            "size_guide_label": "Guide des tailles",
+            "show_payment_button": true
+          }
+        },
+        "features": {
+          "type": "features",
+          "settings": {
+            "text_1": "Argent 925 massif, hypoallergénique",
+            "text_2": "Expédié sous 24 h depuis la France",
+            "text_3": "Retours offerts sous 30 jours"
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "heading": "Description"
+          }
+        },
+        "livraison": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Livraison & retours",
+            "content": "<p>Livraison offerte dès 100 € d'achat, expédition sous 24 h ouvrées. Retours gratuits sous 30 jours, bijou non porté et dans son écrin d'origine.</p>"
+          }
+        },
+        "entretien": {
+          "type": "accordion",
+          "settings": {
+            "heading": "Entretien",
+            "content": "<p>Nettoyez votre bijou avec un chiffon doux et sec. Évitez le contact avec les parfums et les produits ménagers. Rangez-le dans son écrin, à l'abri de l'humidité.</p>"
+          }
+        },
+        "share": {
+          "type": "share"
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "pitch",
+        "divider",
+        "stock",
+        "form",
+        "features",
+        "description",
+        "livraison",
+        "entretien",
+        "share"
+      ]
+    },
+    "banner": {
+      "type": "gemea-image-banner",
+      "settings": {
+        "heading": "Pensé pour la vie de tous les jours",
+        "text": "Nos collections sont dessinées pour vous suivre partout — du bureau au dîner, de la semaine au week-end. Des pièces polyvalentes qui trouvent naturellement leur place dans votre quotidien.",
+        "veil": 35
+      }
+    },
+    "avis": {
+      "type": "gemea-testimonials",
+      "blocks": {
+        "a1": {
+          "type": "avis",
+          "settings": {
+            "author": "Camille D.",
+            "role": "Lyon",
+            "text": "Je la porte tous les jours depuis six mois, elle n'a pas bougé d'un ton. La finition est bien plus belle qu'en photo."
+          }
+        },
+        "a2": {
+          "type": "avis",
+          "settings": {
+            "author": "Julie M.",
+            "role": "Bordeaux",
+            "text": "Emballage soigné, envoi rapide. C'est devenu le bijou que je ne quitte plus, même sous la douche."
+          }
+        },
+        "a3": {
+          "type": "avis",
+          "settings": {
+            "author": "Sarah L.",
+            "role": "Marseille",
+            "text": "J'avais peur que l'argent noircisse comme mes anciens bijoux. Après tout un été, rien du tout."
+          }
+        }
+      },
+      "block_order": [
+        "a1",
+        "a2",
+        "a3"
+      ],
+      "settings": {
+        "heading": "Elles portent GEMEA au quotidien"
+      }
+    },
+    "associes": {
+      "type": "gemea-product-recommendations",
+      "settings": {
+        "heading": "Produits associés",
+        "count": 8,
+        "quick_add": true
+      }
+    },
+    "garanties": {
+      "type": "gemea-icon-features",
+      "blocks": {
+        "g1": {
+          "type": "item",
+          "settings": {
+            "icon": "globe",
+            "heading": "Livraison mondiale",
+            "text": "Recevez votre commande partout dans le monde"
+          }
+        },
+        "g2": {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "heading": "Retours faciles",
+            "text": "Sous 30 jours après réception, sans justification"
+          }
+        },
+        "g3": {
+          "type": "item",
+          "settings": {
+            "icon": "shield",
+            "heading": "Paiement sécurisé",
+            "text": "Toutes les commandes sont traitées en toute sécurité"
+          }
+        },
+        "g4": {
+          "type": "item",
+          "settings": {
+            "icon": "award",
+            "heading": "Programme fidélité",
+            "text": "Cumulez des points et profitez de nombreux avantages"
+          }
+        }
+      },
+      "block_order": [
+        "g1",
+        "g2",
+        "g3",
+        "g4"
+      ]
+    }
+  },
+  "order": [
+    "main",
+    "banner",
+    "avis",
+    "associes",
+    "garanties"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "name": "Pied de page",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "gemea-footer",
+      "blocks": {
+        "liens": {
+          "type": "menu",
+          "settings": {
+            "heading": "Liens rapides",
+            "menu": "main-menu"
+          }
+        },
+        "aide": {
+          "type": "menu",
+          "settings": {
+            "heading": "Aide & support",
+            "menu": "footer"
+          }
+        },
+        "categories": {
+          "type": "menu",
+          "settings": {
+            "heading": "Catégories",
+            "menu": "main-menu"
+          }
+        }
+      },
+      "block_order": [
+        "liens",
+        "aide",
+        "categories"
+      ],
+      "settings": {
+        "newsletter_heading": "Inscrivez-vous à la lettre GEMEA.",
+        "newsletter_text": "Nouveautés, réassorts et -10 % sur votre première commande.",
+        "newsletter_button": "S'inscrire"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

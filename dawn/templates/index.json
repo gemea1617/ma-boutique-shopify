@@ -1,0 +1,158 @@
+{
+  "sections": {
+    "hero": {
+      "type": "gemea-hero",
+      "settings": {
+        "eyebrow": "Collection signature",
+        "heading": "Le bijou qu'on ne retire plus",
+        "text": "Argent 925 massif, résistant à l'eau, imaginé à Paris. Pensé pour être porté tous les jours, pas rangé dans un tiroir.",
+        "button_label": "Découvrir",
+        "button_label_2": "Nos collections"
+      }
+    },
+    "promesses": {
+      "type": "gemea-promesses",
+      "blocks": {
+        "p1": {
+          "type": "promesse",
+          "settings": {
+            "icon": "gem",
+            "heading": "Argent 925 massif",
+            "text": "Hypoallergénique, sans nickel ni plomb."
+          }
+        },
+        "p2": {
+          "type": "promesse",
+          "settings": {
+            "icon": "water",
+            "heading": "Résiste à l'eau",
+            "text": "Douche, piscine, mer : gardez-le sur vous."
+          }
+        },
+        "p3": {
+          "type": "promesse",
+          "settings": {
+            "icon": "truck",
+            "heading": "Expédié sous 24 h",
+            "text": "Depuis la France, livraison offerte dès 100 €."
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "settings": {
+        "background": "#FFFFFF"
+      }
+    },
+    "featured": {
+      "type": "gemea-featured-collection",
+      "settings": {
+        "eyebrow": "La sélection",
+        "heading": "Nos pièces les plus portées",
+        "count": 8,
+        "columns": "4"
+      }
+    },
+    "matiere": {
+      "type": "gemea-image-with-text",
+      "settings": {
+        "eyebrow": "Notre matière",
+        "heading": "Fait pour être porté tous les jours",
+        "text": "<p>L'argent 925 massif ne se contente pas d'un placage : la matière est la même à cœur qu'en surface. Il se patine avec le temps, et un chiffon doux suffit à lui rendre son éclat.</p>",
+        "button_label": "Notre histoire",
+        "reverse": true
+      }
+    },
+    "avis": {
+      "type": "gemea-testimonials",
+      "blocks": {
+        "a1": {
+          "type": "avis",
+          "settings": {
+            "author": "Camille D.",
+            "role": "Lyon",
+            "text": "Je la porte tous les jours depuis six mois, elle n'a pas bougé d'un ton. La finition est bien plus belle qu'en photo."
+          }
+        },
+        "a2": {
+          "type": "avis",
+          "settings": {
+            "author": "Julie M.",
+            "role": "Bordeaux",
+            "text": "Emballage soigné, envoi rapide. C'est devenu le bijou que je ne quitte plus, même sous la douche."
+          }
+        },
+        "a3": {
+          "type": "avis",
+          "settings": {
+            "author": "Sarah L.",
+            "role": "Marseille",
+            "text": "J'avais peur que l'argent noircisse comme mes anciens bijoux. Après tout un été, rien du tout."
+          }
+        }
+      },
+      "block_order": [
+        "a1",
+        "a2",
+        "a3"
+      ],
+      "settings": {
+        "heading": "Elles portent GEMEA au quotidien"
+      }
+    },
+    "garanties": {
+      "type": "gemea-icon-features",
+      "blocks": {
+        "g1": {
+          "type": "item",
+          "settings": {
+            "icon": "globe",
+            "heading": "Livraison mondiale",
+            "text": "Recevez votre commande partout dans le monde"
+          }
+        },
+        "g2": {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "heading": "Retours faciles",
+            "text": "Sous 30 jours après réception, sans justification"
+          }
+        },
+        "g3": {
+          "type": "item",
+          "settings": {
+            "icon": "shield",
+            "heading": "Paiement sécurisé",
+            "text": "Toutes les commandes sont traitées en toute sécurité"
+          }
+        },
+        "g4": {
+          "type": "item",
+          "settings": {
+            "icon": "award",
+            "heading": "Programme fidélité",
+            "text": "Cumulez des points et profitez de nombreux avantages"
+          }
+        }
+      },
+      "block_order": [
+        "g1",
+        "g2",
+        "g3",
+        "g4"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "promesses",
+    "featured",
+    "matiere",
+    "avis",
+    "garanties"
+  ]
+}

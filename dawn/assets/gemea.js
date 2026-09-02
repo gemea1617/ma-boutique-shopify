@@ -1,0 +1,517 @@
+/* GEMEA — comportements de la vitrine. Pas de dépendance, pas de framework. */
+(function () {
+  'use strict';
+
+  /* -------------------------------------------------- Tiroir de navigation */
+  (function () {
+    var drawer = document.querySelector('[data-drawer]');
+    var toggle = document.querySelector('[data-drawer-toggle]');
+    if (!drawer || !toggle) return;
+
+    var views = Array.prototype.slice.call(drawer.querySelectorAll('[data-view]'));
+
+    function montrerVue(nom) {
+      views.forEach(function (view) { view.hidden = view.dataset.view !== nom; });
+    }
+
+    /* Le bandeau d'annonce peut avoir défilé : on mesure la position réelle
+       du bas de l'en-tête plutôt que de supposer une hauteur fixe. */
+    function placer() {
+      var header = document.querySelector('.header');
+      var bas = header ? Math.max(0, header.getBoundingClientRect().bottom) : 0;
+      drawer.style.setProperty('--drawer-top', bas + 'px');
+    }
+
+    function ouvrir() {
+      placer();
+      drawer.hidden = false;
+      // Un frame d'écart, sinon la transition n'a pas d'état de départ.
+      requestAnimationFrame(function () { drawer.setAttribute('data-open', ''); });
+      toggle.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      montrerVue('root');
+    }
+
+    function fermer() {
+      drawer.removeAttribute('data-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      // On attend la fin du glissement pour retirer le tiroir du flux.
+      window.setTimeout(function () { drawer.hidden = true; }, 260);
+    }
+
+    toggle.addEventListener('click', function () {
+      if (toggle.getAttribute('aria-expanded') === 'true') fermer();
+      else ouvrir();
+    });
+
+    drawer.querySelectorAll('[data-drawer-close]').forEach(function (node) {
+      node.addEventListener('click', fermer);
+    });
+
+    drawer.querySelectorAll('[data-open-view]').forEach(function (button) {
+      button.addEventListener('click', function () { montrerVue(button.dataset.openView); });
+    });
+
+    drawer.querySelectorAll('[data-close-view]').forEach(function (button) {
+      button.addEventListener('click', function () { montrerVue('root'); });
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !drawer.hidden) fermer();
+    });
+
+    window.addEventListener('resize', function () {
+      if (!drawer.hidden) placer();
+    });
+
+    // Langue et devise s'appliquent au changement, sans bouton de validation.
+    drawer.querySelectorAll('[data-auto-submit]').forEach(function (select) {
+      select.addEventListener('change', function () { select.form.submit(); });
+    });
+  })();
+
+  /* ------------------------------------------------- Bandeau d'annonce
+     Le message écarté ne revient pas — sauf s'il change, puisque la clé
+     est calculée sur son texte. */
+  (function () {
+    var bar = document.querySelector('[data-announcement]');
+    if (!bar) return;
+
+    var CLE = 'gemea:annonce';
+
+    function ecarte() {
+      try {
+        return localStorage.getItem(CLE) === bar.dataset.key;
+      } catch (error) {
+        return false;
+      }
+    }
+
+    if (!ecarte()) bar.hidden = false;
+
+    var bouton = bar.querySelector('[data-announcement-close]');
+    if (bouton) {
+      bouton.addEventListener('click', function () {
+        bar.hidden = true;
+        try {
+          localStorage.setItem(CLE, bar.dataset.key);
+        } catch (error) { /* stockage indisponible : le bandeau reviendra */ }
+      });
+    }
+  })();
+
+  /* ------------------------------------------------- Sélecteur de quantité */
+  document.querySelectorAll('[data-qty]').forEach(function (wrapper) {
+    var input = wrapper.querySelector('input');
+    if (!input) return;
+
+    wrapper.querySelectorAll('button[data-qty-step]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var step = parseInt(button.dataset.qtyStep, 10);
+        var min = parseInt(input.min, 10) || 1;
+        var next = (parseInt(input.value, 10) || min) + step;
+        input.value = String(Math.max(min, next));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    });
+  });
+
+  /* ------------------------------------------------------ Galerie produit */
+  document.querySelectorAll('[data-gallery]').forEach(function (gallery) {
+    var track = gallery.querySelector('[data-track]');
+    if (!track) return;
+
+    var slides = Array.prototype.slice.call(track.querySelectorAll('[data-slide]'));
+    var thumbs = Array.prototype.slice.call(gallery.querySelectorAll('[data-thumb]'));
+    var dots = Array.prototype.slice.call(gallery.querySelectorAll('[data-dots] span'));
+    var index = 0;
+
+    function goTo(next) {
+      index = Math.max(0, Math.min(next, slides.length - 1));
+      track.scrollTo({ left: slides[index].offsetLeft - track.offsetLeft, behavior: 'smooth' });
+    }
+
+    function mark(active) {
+      index = active;
+      thumbs.forEach(function (thumb, i) { thumb.setAttribute('aria-current', String(i === active)); });
+      dots.forEach(function (dot, i) {
+        if (i === active) dot.setAttribute('data-active', '');
+        else dot.removeAttribute('data-active');
+      });
+      if (thumbs[active]) thumbs[active].scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
+
+    thumbs.forEach(function (thumb, position) {
+      thumb.addEventListener('click', function () { goTo(position); });
+    });
+
+    /* Le doigt fait défiler la piste : c'est elle qui dit où l'on en est,
+       pas l'inverse. On lit la position plutôt que de la deviner. */
+    var pending;
+    track.addEventListener('scroll', function () {
+      window.clearTimeout(pending);
+      pending = window.setTimeout(function () {
+        var width = track.clientWidth || 1;
+        mark(Math.round(track.scrollLeft / width));
+      }, 80);
+    }, { passive: true });
+
+    // Une variante choisie amène son visuel au premier plan.
+    var pdp = gallery.closest('[data-pdp]');
+    if (pdp) {
+      pdp.addEventListener('gemea:variant', function (event) {
+        var target = event.detail.mediaIndex;
+        if (target >= 0 && target < slides.length && target !== index) goTo(target);
+      });
+    }
+
+    /* Visionneuse plein écran, sur le visuel affiché. */
+    var dialog = document.querySelector('[data-lightbox]');
+    var opener = gallery.querySelector('[data-zoom-open]');
+    if (dialog && opener && typeof dialog.showModal === 'function') {
+      var large = dialog.querySelector('[data-lightbox-image]');
+
+      opener.addEventListener('click', function () {
+        var shown = slides[index] && slides[index].querySelector('img');
+        if (!shown) return;
+        large.src = shown.currentSrc || shown.src;
+        large.alt = shown.alt;
+        dialog.showModal();
+      });
+
+      dialog.querySelector('[data-lightbox-close]').addEventListener('click', function () {
+        dialog.close();
+      });
+
+      // Un appui hors de l'image ferme aussi, comme on s'y attend.
+      dialog.addEventListener('click', function (event) {
+        if (event.target === dialog) dialog.close();
+      });
+    }
+  });
+
+  /* ------------------------------------------------ Variantes du produit */
+  document.querySelectorAll('[data-variants]').forEach(function (form) {
+    var holder = form.querySelector('[data-variants-json]');
+    var variants;
+    try {
+      variants = JSON.parse(holder.textContent);
+    } catch (error) {
+      return;
+    }
+
+    var scope = form.closest('[data-pdp]') || document;
+    var idInput = form.querySelector('[data-variant-id]');
+    var groups = Array.prototype.slice.call(form.querySelectorAll('[data-option-index]'));
+    var stock = form.querySelector('[data-stock]');
+    var saveBadge = scope.querySelector('[data-save]');
+    // Le bouton principal et celui de la barre collante partagent leur état.
+    var buttons = Array.prototype.slice.call(
+      document.querySelectorAll('[data-add-button], [data-sticky-add]')
+    );
+    var priceNodes = Array.prototype.slice.call(scope.querySelectorAll('[data-variant-price]'));
+
+    function chosen() {
+      return groups.map(function (group) {
+        var checked = group.querySelector('input:checked');
+        return checked ? checked.value : null;
+      });
+    }
+
+    /* Grise les valeurs qui, combinées aux autres choix, n'existent pas ou
+       sont épuisées — sans jamais les masquer. */
+    function refreshAvailability(values) {
+      groups.forEach(function (group, groupIndex) {
+        group.querySelectorAll('input').forEach(function (input) {
+          var probe = values.slice();
+          probe[groupIndex] = input.value;
+
+          var reachable = variants.some(function (variant) {
+            return (
+              variant.available &&
+              probe.every(function (value, i) {
+                return value === null || variant.options[i] === value;
+              })
+            );
+          });
+
+          var label = input.closest('[data-value-label]');
+          if (!label) return;
+          if (label.classList.contains('pill')) label.classList.toggle('pill--out', !reachable);
+          if (label.classList.contains('swatch')) label.classList.toggle('swatch--out', !reachable);
+        });
+      });
+    }
+
+    function update() {
+      var values = chosen();
+      var match = variants.find(function (variant) {
+        return values.every(function (value, i) {
+          return value === null || variant.options[i] === value;
+        });
+      });
+
+      refreshAvailability(values);
+
+      groups.forEach(function (group) {
+        var checked = group.querySelector('input:checked');
+        var readout = group.querySelector('[data-option-chosen]');
+        if (checked && readout) readout.textContent = checked.value;
+      });
+
+      if (!match) return;
+
+      if (idInput) idInput.value = match.id;
+
+      priceNodes.forEach(function (node) {
+        node.innerHTML = match.compare_html
+          ? '<s>' + match.compare_html + '</s> ' + match.price_html
+          : match.price_html;
+      });
+
+      if (saveBadge) {
+        saveBadge.hidden = !match.compare_html;
+        if (match.compare_html) saveBadge.textContent = '-' + match.save_percent + ' %';
+      }
+
+      buttons.forEach(function (node) {
+        node.disabled = !match.available;
+        node.textContent = match.available ? node.dataset.add : node.dataset.soldOut;
+      });
+
+      if (stock) {
+        stock.classList.toggle('stock--out', !match.available);
+        stock.textContent = match.available ? stock.dataset.inStock : stock.dataset.soldOut;
+      }
+
+      scope.dispatchEvent(
+        new CustomEvent('gemea:variant', { detail: { mediaIndex: match.media_index } })
+      );
+
+      var url = new URL(window.location.href);
+      url.searchParams.set('variant', match.id);
+      window.history.replaceState({}, '', url);
+    }
+
+    groups.forEach(function (group) {
+      group.querySelectorAll('input').forEach(function (input) {
+        input.addEventListener('change', update);
+      });
+    });
+
+    refreshAvailability(chosen());
+  });
+
+  /* ------------------------------------------------------------- Favoris
+     Sans compte client, une envie ne peut être gardée que dans le navigateur
+     du visiteur. C'est ce que le cœur promet, rien de plus. */
+  (function () {
+    var KEY = 'gemea:wishlist';
+
+    function read() {
+      try {
+        return JSON.parse(localStorage.getItem(KEY)) || [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    document.querySelectorAll('[data-wishlist]').forEach(function (button) {
+      var id = button.dataset.wishlist;
+      button.setAttribute('aria-pressed', String(read().indexOf(id) !== -1));
+
+      button.addEventListener('click', function () {
+        var kept = read();
+        var position = kept.indexOf(id);
+        if (position === -1) kept.push(id);
+        else kept.splice(position, 1);
+
+        try {
+          localStorage.setItem(KEY, JSON.stringify(kept));
+        } catch (error) { /* stockage indisponible : on n'insiste pas */ }
+
+        button.setAttribute('aria-pressed', String(position === -1));
+      });
+    });
+  })();
+
+  /* ------------------------------------------------------- Ajout rapide
+     Le bouton posé sur la vignette envoie la variante au panier sans quitter
+     la page. Il n'est rendu que pour les produits à variante unique — sinon
+     le client n'aurait pas choisi. */
+
+  function armQuickAdd(button) {
+    if (button.dataset.armed) return;
+    button.dataset.armed = 'true';
+
+    button.addEventListener('click', function () {
+      button.disabled = true;
+
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: [{ id: Number(button.dataset.quickAdd), quantity: 1 }] }),
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error('cart');
+          return response.json();
+        })
+        .then(function () {
+          // Le compteur du panier doit refléter l'ajout immédiatement.
+          return fetch(window.Shopify.routes.root + 'cart.js')
+            .then(function (r) { return r.json(); })
+            .then(function (cart) {
+              document.querySelectorAll('.cart-count').forEach(function (node) {
+                node.textContent = cart.item_count;
+                node.hidden = cart.item_count === 0;
+              });
+            });
+        })
+        .catch(function () { /* l'ajout a échoué : on rend le bouton */ })
+        .then(function () { button.disabled = false; });
+    });
+  }
+
+  /* ------------------------------------------------------------ Carrousels
+     Pas de flèches sur la maquette : le défilement est tactile, et une barre
+     de progression indique où l'on en est. */
+
+  function armCarousel(carousel) {
+    var track = carousel.querySelector('[data-carousel-track]');
+    if (!track || track.dataset.armed) return;
+    track.dataset.armed = 'true';
+
+    var bar = carousel.querySelector('[data-progress] span');
+
+    function refresh() {
+      if (!bar) return;
+      var scrollable = track.scrollWidth - track.clientWidth;
+      var visible = track.clientWidth / track.scrollWidth;
+
+      bar.style.width = Math.max(12, visible * 100) + '%';
+      // La barre parcourt la piste en proportion de ce qui reste à défiler.
+      var travel = (1 - Math.max(0.12, visible)) * 100;
+      var ratio = scrollable > 0 ? track.scrollLeft / scrollable : 0;
+      bar.style.transform = 'translateX(' + ratio * travel / Math.max(0.12, visible) + '%)';
+    }
+
+    track.addEventListener('scroll', refresh, { passive: true });
+    window.addEventListener('resize', refresh);
+    refresh();
+  }
+
+  document.querySelectorAll('[data-carousel]').forEach(armCarousel);
+  document.querySelectorAll('[data-quick-add]').forEach(armQuickAdd);
+
+  /* --------------------------------------------- Recommandations et parures */
+  document.querySelectorAll('[data-recommendations]').forEach(function (holder) {
+    fetch(holder.dataset.url)
+      .then(function (response) { return response.text(); })
+      .then(function (html) {
+        var fresh = new DOMParser()
+          .parseFromString(html, 'text/html')
+          .querySelector('[data-recommendations]');
+        if (!fresh) return;
+
+        holder.innerHTML = fresh.innerHTML;
+
+        // Ce contenu vient d'arriver : ses comportements ne sont pas armés.
+        holder.querySelectorAll('[data-carousel]').forEach(armCarousel);
+        holder.querySelectorAll('[data-quick-add]').forEach(armQuickAdd);
+      })
+      .catch(function () { /* pas de suggestions : la section reste vide */ });
+  });
+
+  /* --------------------------------------------- Barre d'achat collante
+     Elle apparaît quand le bouton principal a quitté l'écran par le haut.
+     Elle ne porte pas de formulaire : elle soumet celui de la page. */
+  (function () {
+    var bar = document.querySelector('[data-sticky-buy]');
+    var anchorButton = document.querySelector('[data-add-button]');
+    if (!bar || !anchorButton || !('IntersectionObserver' in window)) return;
+
+    bar.querySelector('[data-sticky-add]').addEventListener('click', function () {
+      var form = anchorButton.closest('form');
+      if (form) form.requestSubmit(anchorButton);
+    });
+
+    new IntersectionObserver(
+      function (entries) {
+        var entry = entries[0];
+        bar.dataset.visible = String(!entry.isIntersecting && entry.boundingClientRect.top < 0);
+      },
+      { threshold: 0 }
+    ).observe(anchorButton);
+  })();
+
+  /* --------------------------------------------------- Retour en haut de page */
+  (function () {
+    var button = document.querySelector('[data-to-top]');
+    if (!button) return;
+
+    button.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    window.addEventListener('scroll', function () {
+      button.dataset.visible = String(window.scrollY > 600);
+    }, { passive: true });
+  })();
+
+  /* ------------------------------------------------------ Vus récemment */
+  (function () {
+    var KEY = 'gemea:recently-viewed';
+    var MAX = 8;
+
+    function read() {
+      try {
+        return JSON.parse(localStorage.getItem(KEY)) || [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    var current = document.querySelector('[data-product-id]');
+    if (current) {
+      var id = current.dataset.productId;
+      var kept = read().filter(function (other) { return other !== id; });
+      kept.unshift(id);
+      try {
+        localStorage.setItem(KEY, JSON.stringify(kept.slice(0, MAX)));
+      } catch (error) { /* stockage indisponible : on s'en passe */ }
+    }
+
+    var holder = document.querySelector('[data-recently-viewed]');
+    if (!holder) return;
+
+    var ids = read().filter(function (other) {
+      return !current || other !== current.dataset.productId;
+    });
+    if (!ids.length) return;
+
+    var query = ids.slice(0, parseInt(holder.dataset.count, 10) || 4)
+      .map(function (other) { return 'id:' + other; })
+      .join(' OR ');
+
+    fetch(holder.dataset.url + '&q=' + encodeURIComponent(query))
+      .then(function (response) { return response.text(); })
+      .then(function (html) {
+        var fresh = new DOMParser()
+          .parseFromString(html, 'text/html')
+          .querySelector('[data-recently-viewed]');
+        if (fresh) holder.innerHTML = fresh.innerHTML;
+      })
+      .catch(function () { /* silencieux : la section reste vide */ });
+  })();
+
+  /* ------------------------------------------- Tri d'une page collection */
+  document.querySelectorAll('[data-sort]').forEach(function (select) {
+    select.addEventListener('change', function () {
+      var url = new URL(window.location.href);
+      url.searchParams.set('sort_by', select.value);
+      url.searchParams.delete('page');
+      window.location.href = url.toString();
+    });
+  });
+})();

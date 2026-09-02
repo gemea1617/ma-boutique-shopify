@@ -1,0 +1,91 @@
+{
+  "name": "En-tête",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "gemea-announcement-bar",
+      "settings": {
+        "text": "Livraison offerte à partir de 100 € d'achat",
+        "dismissible": true
+      }
+    },
+    "header": {
+      "type": "gemea-header",
+      "blocks": {
+        "compte": {
+          "type": "utility",
+          "settings": {
+            "icon": "account",
+            "label": "Mon compte",
+            "link": "/account"
+          }
+        },
+        "favoris": {
+          "type": "utility",
+          "settings": {
+            "icon": "heart",
+            "label": "Mes favoris",
+            "link": "/pages/favoris"
+          }
+        },
+        "tailles": {
+          "type": "utility",
+          "settings": {
+            "icon": "ruler",
+            "label": "Guide des tailles",
+            "link": "/pages/guide-des-tailles"
+          }
+        },
+        "contact": {
+          "type": "utility",
+          "settings": {
+            "icon": "message",
+            "label": "Contact",
+            "link": "/pages/contact"
+          }
+        },
+        "argent": {
+          "type": "reassurance",
+          "settings": {
+            "icon": "gem",
+            "heading": "Argent 925",
+            "text": "Des matériaux nobles et durables"
+          }
+        },
+        "garantie": {
+          "type": "reassurance",
+          "settings": {
+            "icon": "shield",
+            "heading": "Garantie 2 ans",
+            "text": "Tous nos bijoux sont garantis"
+          }
+        },
+        "retours": {
+          "type": "reassurance",
+          "settings": {
+            "icon": "return",
+            "heading": "Retours offerts",
+            "text": "Vous disposez de 30 jours"
+          }
+        }
+      },
+      "block_order": [
+        "compte",
+        "favoris",
+        "tailles",
+        "contact",
+        "argent",
+        "garantie",
+        "retours"
+      ],
+      "settings": {
+        "logo_height": 40,
+        "menu": "main-menu"
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

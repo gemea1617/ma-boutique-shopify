@@ -1,0 +1,85 @@
+{%- comment -%}
+  Jeu d'icônes : trait de 1 px, sans remplissage, pour rester dans la même
+  famille visuelle que le logo. Accepte : name, size (px).
+{%- endcomment -%}
+
+{%- assign s = size | default: 18 -%}
+<svg
+  width="{{ s }}" height="{{ s }}" viewBox="0 0 24 24"
+  fill="none" stroke="currentColor" stroke-width="1.2"
+  stroke-linecap="round" stroke-linejoin="round"
+  aria-hidden="true" focusable="false"
+>
+  {%- case name -%}
+    {%- when 'cart' -%}
+      <path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>
+    {%- when 'search' -%}
+      <circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/>
+    {%- when 'account' -%}
+      <circle cx="12" cy="8.5" r="3.75"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/>
+    {%- when 'menu' -%}
+      <path d="M4 7h16M4 12h16M4 17h16"/>
+    {%- when 'close' -%}
+      <path d="m6 6 12 12M18 6 6 18"/>
+    {%- when 'check' -%}
+      <path d="m5 12.5 4.5 4.5L19 7"/>
+    {%- when 'arrow-left' -%}
+      <path d="M19 12H5"/><path d="m11 6-6 6 6 6"/>
+    {%- when 'arrow-right' -%}
+      <path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>
+    {%- when 'truck' -%}
+      <path d="M2 7h11v9H2zM13 10h4.5l2.5 3v3h-7"/><circle cx="6.5" cy="18" r="1.6"/><circle cx="16.5" cy="18" r="1.6"/>
+    {%- when 'return' -%}
+      <path d="M4 10h11a4.5 4.5 0 0 1 0 9H9"/><path d="m8 6-4 4 4 4"/>
+    {%- when 'water' -%}
+      <path d="M12 3.5s5.5 6 5.5 9.5a5.5 5.5 0 0 1-11 0C6.5 9.5 12 3.5 12 3.5Z"/>
+    {%- when 'gem' -%}
+      <path d="m12 4 7 5-7 11L5 9l7-5Z"/><path d="M5 9h14M12 4 9 9l3 11 3-11-3-5Z"/>
+    {%- when 'leaf' -%}
+      <path d="M5 19c0-8 5-13 14-13 0 9-5 13-14 13Z"/><path d="M9 15c2-3 5-5 8-6"/>
+    {%- when 'arrow-down' -%}
+      <path d="M12 5v14"/><path d="m6 13 6 6 6-6"/>
+    {%- when 'expand' -%}
+      <path d="M9 4H4v5"/><path d="M15 4h5v5"/><path d="M15 20h5v-5"/><path d="M9 20H4v-5"/>
+    {%- when 'heart' -%}
+      <path d="M12 20s-7.5-4.6-7.5-9.4A4.1 4.1 0 0 1 12 8a4.1 4.1 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20Z"/>
+    {%- when 'ruler' -%}
+      <rect x="2.5" y="8.5" width="19" height="7"/>
+      <path d="M7 8.5v3M11 8.5v4M15 8.5v3M19 8.5v4"/>
+    {%- when 'shield' -%}
+      <path d="M12 3.5 19 6v6c0 4.2-3 7-7 8.5C8 19 5 16.2 5 12V6l7-2.5Z"/><path d="m9 12 2 2 4-4"/>
+    {%- when 'lock' -%}
+      <rect x="4.5" y="10.5" width="15" height="10" rx="1.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>
+    {%- when 'gift' -%}
+      <rect x="3.5" y="9" width="17" height="11.5" rx="1"/><path d="M3.5 13h17M12 9v11.5"/><path d="M12 9S10.5 4 8 4a2.2 2.2 0 0 0 0 5h4Zm0 0s1.5-5 4-5a2.2 2.2 0 0 1 0 5h-4Z"/>
+    {%- when 'message' -%}
+      <path d="M4.5 5.5h15v11h-9L6 20.5v-4H4.5v-11Z"/>
+    {%- when 'ribbon' -%}
+      <circle cx="12" cy="9" r="5.5"/><path d="m8.5 13.5-2 7 5.5-3 5.5 3-2-7"/>
+    {%- when 'check-circle' -%}
+      <circle cx="12" cy="12" r="8.5"/><path d="m8.5 12.2 2.4 2.4 4.6-4.8"/>
+    {%- when 'chevron-right' -%}
+      <path d="m9 5 7 7-7 7"/>
+    {%- when 'chevron-down' -%}
+      <path d="m5 9 7 7 7-7"/>
+    {%- when 'chevron-up' -%}
+      <path d="m5 15 7-7 7 7"/>
+    {%- when 'globe' -%}
+      <circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/>
+      <path d="M12 3.5c2.2 2.4 3.4 5.3 3.4 8.5S14.2 18.1 12 20.5C9.8 18.1 8.6 15.2 8.6 12S9.8 5.9 12 3.5Z"/>
+    {%- when 'award' -%}
+      <circle cx="12" cy="9" r="5"/>
+      <path d="m12 6.6 1 2 2.2.3-1.6 1.6.4 2.2-2-1.1-2 1.1.4-2.2-1.6-1.6 2.2-.3 1-2Z"/>
+      <path d="M8.6 13.6 6.5 20.5l5.5-2.9 5.5 2.9-2.1-6.9"/>
+    {%- when 'x' -%}
+      <path d="m4.5 4.5 15 15M19.5 4.5l-15 15"/>
+    {%- when 'instagram' -%}
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="3.9"/><circle cx="17" cy="7" r="0.9" fill="currentColor" stroke="none"/>
+    {%- when 'tiktok' -%}
+      <path d="M14 4v10.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 4c.6 2.4 2.2 3.8 4.5 4"/>
+    {%- when 'facebook' -%}
+      <path d="M14.5 8H16V5h-2a3.5 3.5 0 0 0-3.5 3.5V11H9v3h1.5v6h3v-6H16l.5-3h-3V8.8c0-.5.4-.8 1-.8Z"/>
+    {%- when 'pinterest' -%}
+      <circle cx="12" cy="12" r="8.5"/><path d="M10 19c-.4-1.6 0-3 .6-5.2M9.6 11.2c-.6-2.4 1-3.9 2.8-3.9 1.8 0 3.1 1.1 3.1 3 0 2.3-1.3 3.9-3 3.9-.9 0-1.5-.6-1.3-1.4"/>
+  {%- endcase -%}
+</svg>
