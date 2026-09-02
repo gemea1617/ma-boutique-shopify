@@ -1,6 +1,6 @@
-<footer class="footer">
-  <div class="page-width">
-    <div class="footer__links">
+<footer class="g-footer">
+  <div class="g-page-width">
+    <div class="g-footer__links">
       {%- for block in section.blocks -%}
         <div {{ block.shopify_attributes }}>
           <h4>{{ block.settings.heading }}</h4>
@@ -13,7 +13,7 @@
       {%- endfor -%}
     </div>
 
-    <div class="footer__signup">
+    <div class="g-footer__signup">
       <h3>{{ section.settings.newsletter_heading }}</h3>
       {%- if section.settings.newsletter_text != blank -%}
         <p>{{ section.settings.newsletter_text }}</p>
@@ -21,7 +21,7 @@
 
       {%- form 'customer', class: 'footer__form' -%}
         <input type="hidden" name="contact[tags]" value="newsletter">
-        <label class="visually-hidden" for="FooterEmail">Adresse e-mail</label>
+        <label class="g-visually-hidden" for="FooterEmail">Adresse e-mail</label>
         <input
           id="FooterEmail"
           type="email"
@@ -30,22 +30,22 @@
           autocomplete="email"
           required
         >
-        <button class="btn btn--light btn--full" type="submit">{{ section.settings.newsletter_button }}</button>
+        <button class="g-btn g-btn--light g-btn--full" type="submit">{{ section.settings.newsletter_button }}</button>
 
         {%- if form.posted_successfully? -%}
-          <p class="footer__message">Merci, votre inscription est enregistrée.</p>
+          <p class="g-footer__message">Merci, votre inscription est enregistrée.</p>
         {%- elsif form.errors -%}
-          <p class="footer__message">{{ form.errors.messages.email }}</p>
+          <p class="g-footer__message">{{ form.errors.messages.email }}</p>
         {%- endif -%}
       {%- endform -%}
     </div>
 
-    <hr class="footer__rule">
+    <hr class="g-footer__rule">
 
-    <div class="footer__bottom">
+    <div class="g-footer__bottom">
       <div>
-        <div class="footer__wordmark">{{ shop.name | upcase | strip }}</div>
-        <div class="social">
+        <div class="g-footer__wordmark">{{ shop.name | upcase | strip }}</div>
+        <div class="g-social">
           {%- if settings.social_instagram != blank -%}
             <a href="{{ settings.social_instagram }}" aria-label="Instagram">{% render 'gemea-icon', name: 'instagram' %}</a>
           {%- endif -%}
@@ -62,9 +62,9 @@
       </div>
 
       {%- if shop.enabled_payment_types.size > 0 -%}
-        <div class="footer__payments">
+        <div class="g-footer__payments">
           <h4>Moyens de paiement</h4>
-          <div class="payment-icons">
+          <div class="g-payment-icons">
             {%- for type in shop.enabled_payment_types -%}
               {{ type | payment_type_svg_tag }}
             {%- endfor -%}
@@ -73,7 +73,7 @@
       {%- endif -%}
     </div>
 
-    <div class="footer__legal">
+    <div class="g-footer__legal">
       <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name | strip }} — Tous droits réservés</span>
       <nav>
         {%- for link in section.settings.legal_menu.links -%}

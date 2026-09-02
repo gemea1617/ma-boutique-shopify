@@ -188,10 +188,21 @@ hr.rule { border: 0; border-top: 1px solid var(--gris-clair); margin: 0; }
   padding-block: 18px;
 }
 
-.header__left { display: flex; align-items: center; gap: 22px; }
+/* Les colonnes latérales doivent pouvoir se comprimer : sans min-width: 0
+   leur largeur minimale est celle de leur contenu, et c'est la marque du
+   milieu qui se retrouve écrasée — jusqu'à s'écrire une lettre par ligne. */
+.header__left, .header__actions { min-width: 0; }
+.header__left { display: flex; align-items: center; gap: 18px; }
 
 .header__logo { justify-self: center; display: inline-flex; align-items: center; gap: 12px; }
-.header__logo .wordmark { font-family: var(--titre); font-size: 18px; letter-spacing: 0.26em; text-indent: 0.26em; line-height: 1; }
+.header__logo .wordmark {
+  font-family: var(--titre);
+  font-size: 18px;
+  letter-spacing: 0.26em; text-indent: 0.26em;
+  line-height: 1;
+  /* La marque ne se coupe jamais, quelle que soit la place restante. */
+  white-space: nowrap;
+}
 .header__logo img { max-height: 44px; width: auto; }
 
 .header__nav { display: none; gap: 26px; align-items: center; }

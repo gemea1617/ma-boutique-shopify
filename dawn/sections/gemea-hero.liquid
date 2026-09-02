@@ -1,5 +1,5 @@
-<section class="hero{% if section.settings.reverse %} hero--reverse{% endif %}">
-  <div class="hero__media">
+<section class="g-hero{% if section.settings.reverse %} g-hero--reverse{% endif %}">
+  <div class="g-hero__media">
     {%- if section.settings.image != blank -%}
       <img
         src="{{ section.settings.image | image_url: width: 1400 }}"
@@ -15,13 +15,13 @@
         fetchpriority="high"
       >
     {%- else -%}
-      <span class="placeholder">{% render 'gemea-logo', width: 130, unique_id: 'hero' %}</span>
+      <span class="g-placeholder">{% render 'gemea-logo', width: 130, unique_id: 'hero' %}</span>
     {%- endif -%}
   </div>
 
-  <div class="hero__copy">
+  <div class="g-hero__copy">
     {%- if section.settings.eyebrow != blank -%}
-      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+      <p class="g-eyebrow">{{ section.settings.eyebrow }}</p>
     {%- endif -%}
 
     <h1>{{ section.settings.heading }}</h1>
@@ -30,14 +30,14 @@
       <p>{{ section.settings.text }}</p>
     {%- endif -%}
 
-    <div class="hero__cta">
+    <div class="g-hero__cta">
       {%- if section.settings.button_label != blank -%}
-        <a class="btn" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
+        <a class="g-btn" href="{{ section.settings.button_link | default: routes.all_products_collection_url }}">
           {{ section.settings.button_label }}
         </a>
       {%- endif -%}
       {%- if section.settings.button_label_2 != blank -%}
-        <a class="btn btn--ghost" href="{{ section.settings.button_link_2 }}">{{ section.settings.button_label_2 }}</a>
+        <a class="g-btn g-btn--ghost" href="{{ section.settings.button_link_2 }}">{{ section.settings.button_label_2 }}</a>
       {%- endif -%}
     </div>
   </div>

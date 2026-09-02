@@ -5,7 +5,7 @@
   {%- endcomment -%}
   {%- assign current_label = paginate.current_page | append: '' -%}
 
-  <nav class="pagination" role="navigation" aria-label="Pagination">
+  <nav class="g-pagination" role="navigation" aria-label="Pagination">
     {%- if paginate.previous -%}
       <a href="{{ paginate.previous.url }}" aria-label="Page précédente">&larr;</a>
     {%- endif -%}

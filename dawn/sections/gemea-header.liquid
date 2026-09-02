@@ -1,51 +1,31 @@
-{%- comment -%}
-  Feuille et scripts de la charte GEMEA.
-
-  Ils sont chargés ici plutôt que depuis layout/theme.liquid pour ne pas
-  toucher au fichier de Dawn : cette section est rendue sur toutes les pages
-  via le groupe d'en-tête, la couverture est donc la même.
-
-  La classe `gemea` posée sur <body> délimite la portée de notre feuille :
-  chacun de ses sélecteurs en descend, si bien que le panier, la recherche
-  et les autres pages restées à Dawn gardent leur apparence d'origine.
-  Sans elle, nos règles repeindraient le tiroir de panier de Dawn, qui
-  emploie les mêmes noms de classes que nous.
-
-  Pour s'en passer, ajouter `gemea` à la classe du <body> dans
-  layout/theme.liquid et supprimer le script ci-dessous.
-{%- endcomment -%}
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Jost:wght@200;300;400;500&display=swap">
-{{ 'gemea.css' | asset_url | stylesheet_tag }}
-<script>document.body.classList.add('gemea');</script>
-<script src="{{ 'gemea.js' | asset_url }}" defer="defer"></script>
-
-<header class="header">
-  <div class="page-width header__inner">
-    <div class="header__left">
+<header class="g-header">
+  <div class="g-page-width g-header__inner">
+    <div class="g-header__left">
       <button
-        class="header__icon menu-toggle"
+        class="g-header__icon g-menu-toggle"
         type="button"
         data-drawer-toggle
         aria-expanded="false"
         aria-label="Menu"
       >
-        <span class="menu-toggle__open">{% render 'gemea-icon', name: 'menu', size: 20 %}</span>
-        <span class="menu-toggle__close">{% render 'gemea-icon', name: 'close', size: 20 %}</span>
+        <span class="g-menu-toggle__open">{% render 'gemea-icon', name: 'menu', size: 20 %}</span>
+        <span class="g-menu-toggle__close">{% render 'gemea-icon', name: 'close', size: 20 %}</span>
       </button>
 
-      <nav class="header__nav">
+      <a class="g-header__icon" href="{{ routes.search_url }}" aria-label="Recherche">
+        {% render 'gemea-icon', name: 'search' %}
+      </a>
+
+      <nav class="g-header__nav">
         {%- for link in section.settings.menu.links -%}
-          <a class="nav-link" href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %}>
+          <a class="g-nav-link" href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %}>
             {{ link.title }}
           </a>
         {%- endfor -%}
       </nav>
     </div>
 
-    <a class="header__logo" href="{{ routes.root_url }}">
+    <a class="g-header__logo" href="{{ routes.root_url }}">
       {%- if section.settings.logo != blank -%}
         <img
           src="{{ section.settings.logo | image_url: width: 400 }}"
@@ -55,24 +35,20 @@
           style="max-height: {{ section.settings.logo_height }}px"
         >
       {%- else -%}
-        <span class="wordmark">{{ shop.name | upcase | strip }}</span>
+        <span class="g-wordmark">{{ shop.name | upcase | strip }}</span>
       {%- endif -%}
     </a>
 
-    <div class="header__actions">
-      <a class="header__icon" href="{{ routes.search_url }}" aria-label="Recherche">
-        {% render 'gemea-icon', name: 'search' %}
-      </a>
-
+    <div class="g-header__actions">
       {%- if shop.customer_accounts_enabled -%}
-        <a class="header__icon" href="{{ routes.account_url }}" aria-label="Mon compte">
+        <a class="g-header__icon" href="{{ routes.account_url }}" aria-label="Mon compte">
           {% render 'gemea-icon', name: 'account' %}
         </a>
       {%- endif -%}
 
-      <a class="header__icon header__cart" href="{{ routes.cart_url }}" aria-label="Panier">
+      <a class="g-header__icon g-header__cart" href="{{ routes.cart_url }}" aria-label="Panier">
         {% render 'gemea-icon', name: 'cart' %}
-        <span class="cart-count" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+        <span class="g-cart-count" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
       </a>
     </div>
   </div>

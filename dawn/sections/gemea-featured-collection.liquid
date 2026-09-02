@@ -1,8 +1,8 @@
-<section class="section">
-  <div class="page-width">
-    <div class="section-head section-head--center">
+<section class="g-section">
+  <div class="g-page-width">
+    <div class="g-section-head g-section-head--center">
       {%- if section.settings.eyebrow != blank -%}
-        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+        <p class="g-eyebrow">{{ section.settings.eyebrow }}</p>
       {%- endif -%}
       <h2>{{ section.settings.heading }}</h2>
       {%- if section.settings.text != blank -%}
@@ -10,7 +10,7 @@
       {%- endif -%}
     </div>
 
-    <ul class="product-grid{% if section.settings.columns == '4' %} product-grid--4{% endif %}">
+    <ul class="g-product-grid{% if section.settings.columns == '4' %} g-product-grid--4{% endif %}">
       {%- for product in section.settings.collection.products limit: section.settings.count -%}
         {% render 'gemea-product-card', card_product: product %}
       {%- else -%}
@@ -22,7 +22,7 @@
 
     {%- if section.settings.collection != blank -%}
       <div style="text-align:center; margin-top:56px">
-        <a class="link-line" href="{{ section.settings.collection.url }}">
+        <a class="g-link-line" href="{{ section.settings.collection.url }}">
           Voir toute la collection
         </a>
       </div>

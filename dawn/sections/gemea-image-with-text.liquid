@@ -1,5 +1,5 @@
-<section class="split{% if section.settings.reverse %} split--reverse{% endif %}">
-  <div class="split__media">
+<section class="g-split{% if section.settings.reverse %} g-split--reverse{% endif %}">
+  <div class="g-split__media">
     {%- if section.settings.image != blank -%}
       <img
         src="{{ section.settings.image | image_url: width: 1200 }}"
@@ -14,19 +14,19 @@
         loading="lazy"
       >
     {%- else -%}
-      <span class="placeholder">{% render 'gemea-logo', width: 110, unique_id: section.id %}</span>
+      <span class="g-placeholder">{% render 'gemea-logo', width: 110, unique_id: section.id %}</span>
     {%- endif -%}
   </div>
 
-  <div class="split__copy">
+  <div class="g-split__copy">
     {%- if section.settings.eyebrow != blank -%}
-      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+      <p class="g-eyebrow">{{ section.settings.eyebrow }}</p>
     {%- endif -%}
     <h2>{{ section.settings.heading }}</h2>
-    <div class="rte" style="margin-top:16px">{{ section.settings.text }}</div>
+    <div class="g-rte" style="margin-top:16px">{{ section.settings.text }}</div>
     {%- if section.settings.button_label != blank -%}
       <div style="margin-top:30px">
-        <a class="btn btn--ghost" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+        <a class="g-btn g-btn--ghost" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
       </div>
     {%- endif -%}
   </div>

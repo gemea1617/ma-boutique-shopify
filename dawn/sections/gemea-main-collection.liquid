@@ -1,21 +1,21 @@
-<div class="page-width">
-  <header class="collection-header">
-    <p class="eyebrow">Collection</p>
+<div class="g-page-width">
+  <header class="g-collection-header">
+    <p class="g-eyebrow">Collection</p>
     <h1>{{ collection.title }}</h1>
     {%- if collection.description != blank and section.settings.show_description -%}
-      <div class="rte" style="margin-top:14px">{{ collection.description }}</div>
+      <div class="g-rte" style="margin-top:14px">{{ collection.description }}</div>
     {%- endif -%}
   </header>
 
   {%- paginate collection.products by section.settings.per_page -%}
-    <div class="collection-toolbar">
-      <span class="count">
+    <div class="g-collection-toolbar">
+      <span class="g-count">
         {% if collection.products_count == 1 %}{{ collection.products_count }} pièce{% else %}{{ collection.products_count }} pièces{% endif %}
       </span>
 
       {%- if section.settings.show_sort -%}
         {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
-        <label class="visually-hidden" for="SortBy">Trier par</label>
+        <label class="g-visually-hidden" for="SortBy">Trier par</label>
         <select id="SortBy" data-sort>
           {%- for option in collection.sort_options -%}
             <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>
@@ -26,7 +26,7 @@
       {%- endif -%}
     </div>
 
-    <ul class="product-grid{% if section.settings.columns == '4' %} product-grid--4{% endif %}">
+    <ul class="g-product-grid{% if section.settings.columns == '4' %} g-product-grid--4{% endif %}">
       {%- for product in collection.products -%}
         {% render 'gemea-product-card', card_product: product %}
       {%- else -%}

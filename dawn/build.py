@@ -42,7 +42,7 @@ def prefixer_selecteur(sel: str) -> str:
         elif p in GLOBAUX:
             parties.append(p)
         else:
-            parties.append('.gemea ' + p)
+            parties.append('.gemea ' + renommer_selecteur(p))
     return ', '.join(parties)
 
 
@@ -105,9 +105,6 @@ def scoper_avec_commentaires(css: str) -> str:
     return re.sub(r'\u0000(\d+)\u0000', lambda m: gardes[int(m.group(1))], scope)
 
 
-css = (RACINE / 'assets/base.css').read_text()
-scope = scoper_avec_commentaires(css)
-(SORTIE / 'assets/gemea.css').write_text(scope)
 
 # ------------------------------------------------- Fichiers préfixés
 
@@ -165,12 +162,103 @@ def resoudre(txt: str) -> str:
     return APPEL.sub(remplacer, txt)
 
 
+# ----------------------------------------- Noms de classes réservés
+#
+# Le scopage empêche NOS règles de déborder sur Dawn. Il ne fait rien dans
+# l'autre sens : Dawn stylise `.header`, `.card__media`, `.drawer`,
+# `.page-width`… et ces règles atteignaient notre balisage, qui porte les
+# mêmes noms. C'est ce qui écrasait la grille de l'en-tête au point
+# d'écrire la marque une lettre par ligne.
+#
+# On préfixe donc toutes nos classes par `g-`. Le renommage est ciblé :
+# sélecteurs CSS, attributs class, et les quelques appels JS qui nomment
+# une classe. Un remplacement au fil du texte abîmerait le Liquid
+# (`settings.eyebrow`) et les libellés français (« En stock »).
+
+PREFIXE_CLASSE = 'g-'
+
+# Classes qui ne nous appartiennent pas : Shopify les impose.
+ETRANGERES = {'shopify-payment-button__button--unbranded',
+              'shopify-payment-button__more-options'}
+
+
+def classes_du_theme() -> list:
+    css = re.sub(r'/\*.*?\*/', '', (RACINE / 'assets/base.css').read_text(), flags=re.S)
+    noms = set(re.findall(r'\.(-?[A-Za-z_][\w-]*)', css)) - ETRANGERES
+    return sorted(noms, key=len, reverse=True)
+
+
+NOMS = classes_du_theme()
+MOT = re.compile(r'(?<![\w-])(' + '|'.join(re.escape(n) for n in NOMS) + r')(?![\w-])')
+
+
+# Un modificateur peut être complété par du Liquid : `columns--{{ n }}`.
+# Le nom s'arrête alors sur `--`, que le motif ci-dessus ne reconnaît pas.
+MODIFICATEUR = re.compile(r'(?<![\w-])(' + '|'.join(re.escape(n) for n in NOMS) + r')--')
+
+
+def prefixer_mots(txt: str) -> str:
+    txt = MODIFICATEUR.sub(lambda m: PREFIXE_CLASSE + m.group(1) + '--', txt)
+    return MOT.sub(lambda m: PREFIXE_CLASSE + m.group(1), txt)
+
+
+def renommer_selecteur(sel: str) -> str:
+    """Dans un sélecteur, seules les classes sont préfixées."""
+    return re.sub(r'\.(-?[A-Za-z_][\w-]*)',
+                  lambda m: m.group(0) if m.group(1) in ETRANGERES or m.group(1) not in NOMS
+                  else '.' + PREFIXE_CLASSE + m.group(1),
+                  sel)
+
+
+LIQUID = re.compile(r'\{[%{].*?[%}]\}', re.S)
+
+
+def renommer_balisage(txt: str) -> str:
+    """Ne touche qu'au contenu des attributs class.
+
+    Une valeur de class contient souvent du Liquid — `class="pill{% unless
+    ... %} pill--out{% endunless %}"`. Les balises sont laissées de côté :
+    sans quoi `settings.columns` deviendrait `settings.g-columns`.
+    """
+    def dans_attribut(m):
+        guillemet, valeur = m.group(1), m.group(2)
+        morceaux, fin = [], 0
+        for balise in LIQUID.finditer(valeur):
+            morceaux.append(prefixer_mots(valeur[fin:balise.start()]))
+            morceaux.append(balise.group(0))
+            fin = balise.end()
+        morceaux.append(prefixer_mots(valeur[fin:]))
+        return 'class=%s%s%s' % (guillemet, ''.join(morceaux), guillemet)
+
+    return re.sub(r'class=(["\'])(.*?)\1', dans_attribut, txt, flags=re.S)
+
+
+APPELS_JS = [
+    re.compile(r"(classList\.(?:add|remove|contains)\(\s*')([\w-]+)(')"),
+    re.compile(r"(classList\.toggle\(\s*')([\w-]+)(')"),
+    re.compile(r"((?:querySelector|querySelectorAll|closest)\(\s*'[^']*?\.)([\w-]+)"),
+]
+
+
+def renommer_js(txt: str) -> str:
+    for motif in APPELS_JS:
+        txt = motif.sub(
+            lambda m: m.group(1) + (PREFIXE_CLASSE + m.group(2) if m.group(2) in NOMS else m.group(2))
+            + (m.group(3) if m.lastindex == 3 else ''),
+            txt)
+    return txt
+
+
 def reecrire(txt: str) -> str:
     for nom in SNIPPETS:
         txt = txt.replace("render '%s'" % nom, "render 'gemea-%s'" % nom)
     txt = txt.replace("'base.css' | asset_url", "'gemea.css' | asset_url")
     txt = txt.replace("'theme.js' | asset_url", "'gemea.js' | asset_url")
-    return resoudre(txt)
+    return renommer_balisage(resoudre(txt))
+
+css = (RACINE / 'assets/base.css').read_text()
+scope = scoper_avec_commentaires(css)
+(SORTIE / 'assets/gemea.css').write_text(scope)
 
 for nom in SNIPPETS:
     src = RACINE / f'snippets/{nom}.liquid'
@@ -180,7 +268,7 @@ for nom in SECTIONS:
     src = RACINE / f'sections/{nom}.liquid'
     (SORTIE / f'sections/gemea-{nom}.liquid').write_text(reecrire(src.read_text()))
 
-shutil.copy(RACINE / 'assets/theme.js', SORTIE / 'assets/gemea.js')
+(SORTIE / 'assets/gemea.js').write_text(renommer_js((RACINE / 'assets/theme.js').read_text()))
 
 print('feuille scopée :', len(scope), 'octets')
 print('sections :', len(SECTIONS), '· snippets :', len(SNIPPETS))

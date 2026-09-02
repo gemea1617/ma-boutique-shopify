@@ -17,7 +17,7 @@
     /* Le bandeau d'annonce peut avoir défilé : on mesure la position réelle
        du bas de l'en-tête plutôt que de supposer une hauteur fixe. */
     function placer() {
-      var header = document.querySelector('.header');
+      var header = document.querySelector('.g-header');
       var bas = header ? Math.max(0, header.getBoundingClientRect().bottom) : 0;
       drawer.style.setProperty('--drawer-top', bas + 'px');
     }
@@ -238,8 +238,8 @@
 
           var label = input.closest('[data-value-label]');
           if (!label) return;
-          if (label.classList.contains('pill')) label.classList.toggle('pill--out', !reachable);
-          if (label.classList.contains('swatch')) label.classList.toggle('swatch--out', !reachable);
+          if (label.classList.contains('g-pill')) label.classList.toggle('g-pill--out', !reachable);
+          if (label.classList.contains('g-swatch')) label.classList.toggle('g-swatch--out', !reachable);
         });
       });
     }
@@ -281,7 +281,7 @@
       });
 
       if (stock) {
-        stock.classList.toggle('stock--out', !match.available);
+        stock.classList.toggle('g-stock--out', !match.available);
         stock.textContent = match.available ? stock.dataset.inStock : stock.dataset.soldOut;
       }
 
@@ -362,7 +362,7 @@
           return fetch(window.Shopify.routes.root + 'cart.js')
             .then(function (r) { return r.json(); })
             .then(function (cart) {
-              document.querySelectorAll('.cart-count').forEach(function (node) {
+              document.querySelectorAll('.g-cart-count').forEach(function (node) {
                 node.textContent = cart.item_count;
                 node.hidden = cart.item_count === 0;
               });

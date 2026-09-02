@@ -2,18 +2,18 @@
   Avis clients en carrousel. Chaque carte peut porter le produit dont elle
   parle : c'est ce lien qui la rend utile plutôt que décorative.
 {%- endcomment -%}
-<section class="section testimonials">
-  <div class="page-width">
-    <h2 class="section-title">{{ section.settings.heading }}</h2>
+<section class="g-section g-testimonials">
+  <div class="g-page-width">
+    <h2 class="g-section-title">{{ section.settings.heading }}</h2>
 
-    <div class="carousel" data-carousel>
-      <ul class="rail rail--wide" data-carousel-track>
+    <div class="g-carousel" data-carousel>
+      <ul class="g-rail g-rail--wide" data-carousel-track>
         {%- for block in section.blocks -%}
-          <li class="tcard" {{ block.shopify_attributes }}>
-            <div class="tcard__head">
+          <li class="g-tcard" {{ block.shopify_attributes }}>
+            <div class="g-tcard__head">
               {%- if block.settings.avatar != blank -%}
                 <img
-                  class="tcard__avatar"
+                  class="g-tcard__avatar"
                   src="{{ block.settings.avatar | image_url: width: 160 }}"
                   alt=""
                   width="56"
@@ -21,30 +21,30 @@
                   loading="lazy"
                 >
               {%- else -%}
-                <span class="tcard__avatar tcard__avatar--empty">{{ block.settings.author | slice: 0 }}</span>
+                <span class="g-tcard__avatar g-tcard__avatar--empty">{{ block.settings.author | slice: 0 }}</span>
               {%- endif -%}
               <div>
-                <div class="tcard__author">{{ block.settings.author }}</div>
+                <div class="g-tcard__author">{{ block.settings.author }}</div>
                 {%- if block.settings.role != blank -%}
-                  <div class="tcard__role">{{ block.settings.role }}</div>
+                  <div class="g-tcard__role">{{ block.settings.role }}</div>
                 {%- endif -%}
               </div>
             </div>
 
-            <blockquote class="tcard__quote"><p>{{ block.settings.text }}</p></blockquote>
+            <blockquote class="g-tcard__quote"><p>{{ block.settings.text }}</p></blockquote>
 
             {%- assign item = block.settings.product -%}
             {%- if item != blank -%}
-              <a class="tcard__product" href="{{ item.url }}">
+              <a class="g-tcard__product" href="{{ item.url }}">
                 {%- if item.featured_media -%}
                   <img src="{{ item.featured_media | image_url: width: 200 }}" alt="" width="64" height="80" loading="lazy">
                 {%- endif -%}
                 <div>
                   {%- if item.vendor != blank -%}
-                    <div class="tcard__vendor">{{ item.vendor }}</div>
+                    <div class="g-tcard__vendor">{{ item.vendor }}</div>
                   {%- endif -%}
-                  <div class="tcard__name">{{ item.title }}</div>
-                  <div class="tcard__price">{% render 'gemea-price', target: item, show_from: true %}</div>
+                  <div class="g-tcard__name">{{ item.title }}</div>
+                  <div class="g-tcard__price">{% render 'gemea-price', target: item, show_from: true %}</div>
                 </div>
               </a>
             {%- endif -%}
@@ -52,7 +52,7 @@
         {%- endfor -%}
       </ul>
 
-      <div class="carousel__progress" data-progress aria-hidden="true"><span></span></div>
+      <div class="g-carousel__progress" data-progress aria-hidden="true"><span></span></div>
     </div>
   </div>
 </section>

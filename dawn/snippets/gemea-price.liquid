@@ -19,7 +19,7 @@
 {%- else -%}
   {%- if on_sale -%}
     <s>{{ target.compare_at_price | money }}</s>
-    <span class="price--sale">{{ target.price | money }}</span>
+    <span class="g-price--sale">{{ target.price | money }}</span>
   {%- else -%}
     {%- if show_from and target.price_varies -%}
       À partir de {{ target.price_min | money }}

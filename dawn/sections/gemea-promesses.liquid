@@ -1,16 +1,16 @@
 {%- comment -%} Les arguments de réassurance, en colonnes sobres. {%- endcomment -%}
-<section class="section section--tight" style="background: {{ section.settings.background }}">
-  <div class="page-width">
+<section class="g-section g-section--tight" style="background: {{ section.settings.background }}">
+  <div class="g-page-width">
     {%- if section.settings.heading != blank -%}
-      <div class="section-head section-head--center">
+      <div class="g-section-head g-section-head--center">
         <h2>{{ section.settings.heading }}</h2>
       </div>
     {%- endif -%}
 
-    <div class="columns columns--{{ section.blocks.size | at_most: 4 }}">
+    <div class="g-columns g-columns--{{ section.blocks.size | at_most: 4 }}">
       {%- for block in section.blocks -%}
         <div {{ block.shopify_attributes }}>
-          <div class="col__icon">{% render 'gemea-icon', name: block.settings.icon, size: 26 %}</div>
+          <div class="g-col__icon">{% render 'gemea-icon', name: block.settings.icon, size: 26 %}</div>
           <h3>{{ block.settings.heading }}</h3>
           <p>{{ block.settings.text }}</p>
         </div>

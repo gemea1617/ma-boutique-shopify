@@ -9,13 +9,13 @@
   Attend : menu (link_list), section (pour les blocs)
 {%- endcomment -%}
 
-<div class="drawer" data-drawer hidden>
-  <div class="drawer__scrim" data-drawer-close></div>
+<div class="g-drawer" data-drawer hidden>
+  <div class="g-drawer__scrim" data-drawer-close></div>
 
-  <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="Menu">
-    <div class="drawer__views">
-      <nav class="drawer__view" data-view="root">
-        <ul class="drawer__list">
+  <div class="g-drawer__panel" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="g-drawer__views">
+      <nav class="g-drawer__view" data-view="root">
+        <ul class="g-drawer__list">
           {%- for link in menu.links -%}
             <li>
               {%- if link.links.size > 0 -%}
@@ -34,7 +34,7 @@
         </ul>
 
         {%- if section.blocks.size > 0 -%}
-          <ul class="drawer__utils">
+          <ul class="g-drawer__utils">
             {%- for block in section.blocks -%}
               {%- if block.type == 'utility' and block.settings.label != blank -%}
                 <li {{ block.shopify_attributes }}>
@@ -53,10 +53,10 @@
           réellement plusieurs — sinon le sélecteur ne sert à rien.
         {%- endcomment -%}
         {%- if localization.available_languages.size > 1 or localization.available_countries.size > 1 -%}
-          <div class="drawer__locale">
+          <div class="g-drawer__locale">
             {%- if localization.available_languages.size > 1 -%}
               {%- form 'localization', class: 'drawer__locale-form' -%}
-                <label class="visually-hidden" for="DrawerLanguage">Langue</label>
+                <label class="g-visually-hidden" for="DrawerLanguage">Langue</label>
                 <select id="DrawerLanguage" name="locale_code" data-auto-submit>
                   {%- for language in localization.available_languages -%}
                     <option
@@ -70,7 +70,7 @@
 
             {%- if localization.available_countries.size > 1 -%}
               {%- form 'localization', class: 'drawer__locale-form' -%}
-                <label class="visually-hidden" for="DrawerCountry">Devise</label>
+                <label class="g-visually-hidden" for="DrawerCountry">Devise</label>
                 <select id="DrawerCountry" name="country_code" data-auto-submit>
                   {%- for country in localization.available_countries -%}
                     <option
@@ -90,14 +90,14 @@
         {%- endfor -%}
 
         {%- if has_reassurance -%}
-          <ul class="drawer__reassure">
+          <ul class="g-drawer__reassure">
             {%- for block in section.blocks -%}
               {%- if block.type == 'reassurance' -%}
                 <li {{ block.shopify_attributes }}>
                   {% render 'gemea-icon', name: block.settings.icon, size: 26 %}
                   <div>
-                    <div class="drawer__reassure-title">{{ block.settings.heading }}</div>
-                    <div class="drawer__reassure-text">{{ block.settings.text }}</div>
+                    <div class="g-drawer__reassure-title">{{ block.settings.heading }}</div>
+                    <div class="g-drawer__reassure-text">{{ block.settings.text }}</div>
                   </div>
                 </li>
               {%- endif -%}
@@ -109,13 +109,13 @@
       {%- comment -%} Un panneau par entrée ayant des enfants {%- endcomment -%}
       {%- for link in menu.links -%}
         {%- if link.links.size > 0 -%}
-          <nav class="drawer__view" data-view="niveau-{{ forloop.index }}" hidden>
-            <button class="drawer__back" type="button" data-close-view>
+          <nav class="g-drawer__view" data-view="niveau-{{ forloop.index }}" hidden>
+            <button class="g-drawer__back" type="button" data-close-view>
               {% render 'gemea-icon', name: 'arrow-left', size: 16 %}
               <span>{{ link.title }}</span>
             </button>
 
-            <ul class="drawer__list">
+            <ul class="g-drawer__list">
               <li>
                 <a href="{{ link.url }}">
                   <span>Tout voir</span>

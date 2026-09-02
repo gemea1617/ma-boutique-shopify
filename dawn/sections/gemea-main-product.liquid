@@ -13,14 +13,14 @@
   assign media_count = product.media.size
 -%}
 
-<div class="page-width">
-  <div class="pdp" data-pdp data-product-id="{{ product.id }}">
-    <div class="gallery" data-gallery>
-      <div class="gallery__stage">
+<div class="g-page-width">
+  <div class="g-pdp" data-pdp data-product-id="{{ product.id }}">
+    <div class="g-gallery" data-gallery>
+      <div class="g-gallery__stage">
         {%- if media_count > 0 -%}
-          <div class="gallery__track" data-track>
+          <div class="g-gallery__track" data-track>
             {%- for media in product.media -%}
-              <div class="gallery__slide" data-slide>
+              <div class="g-gallery__slide" data-slide>
                 <img
                   src="{{ media | image_url: width: 1400 }}"
                   srcset="
@@ -38,7 +38,7 @@
             {%- endfor -%}
           </div>
 
-          <button class="gallery__zoom" type="button" data-zoom-open aria-label="Agrandir le visuel">
+          <button class="g-gallery__zoom" type="button" data-zoom-open aria-label="Agrandir le visuel">
             {% render 'gemea-icon', name: 'expand', size: 16 %}
           </button>
 
@@ -47,19 +47,19 @@
               Les points ne servent qu'au tactile : sur grand écran les
               vignettes disent déjà où l'on en est.
             {%- endcomment -%}
-            <div class="gallery__dots" data-dots aria-hidden="true">
+            <div class="g-gallery__dots" data-dots aria-hidden="true">
               {%- for media in product.media -%}
                 <span{% if forloop.first %} data-active{% endif %}></span>
               {%- endfor -%}
             </div>
           {%- endif -%}
         {%- else -%}
-          <span class="placeholder">{% render 'gemea-logo', width: 120, unique_id: 'product' %}</span>
+          <span class="g-placeholder">{% render 'gemea-logo', width: 120, unique_id: 'product' %}</span>
         {%- endif -%}
       </div>
 
       {%- if media_count > 1 -%}
-        <div class="gallery__thumbs" data-thumbs>
+        <div class="g-gallery__thumbs" data-thumbs>
           {%- for media in product.media -%}
             <button
               type="button"
@@ -80,46 +80,46 @@
       {%- endif -%}
     </div>
 
-    <div class="pdp__info">
+    <div class="g-pdp__info">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
 
           {%- when 'vendor' -%}
             {%- if product.vendor != blank -%}
-              <p class="pdp__vendor" {{ block.shopify_attributes }}>{{ product.vendor }}</p>
+              <p class="g-pdp__vendor" {{ block.shopify_attributes }}>{{ product.vendor }}</p>
             {%- endif -%}
 
           {%- when 'title' -%}
-            <h1 class="pdp__title" {{ block.shopify_attributes }}>{{ product.title }}</h1>
+            <h1 class="g-pdp__title" {{ block.shopify_attributes }}>{{ product.title }}</h1>
 
           {%- when 'price' -%}
             <div {{ block.shopify_attributes }}>
-              <div class="price-row">
-                <span class="amount" data-variant-price>{% render 'gemea-price', target: current %}</span>
+              <div class="g-price-row">
+                <span class="g-amount" data-variant-price>{% render 'gemea-price', target: current %}</span>
                 {%- assign saved = 0 -%}
                 {%- if current.compare_at_price > current.price -%}
                   {%- assign saved = current.compare_at_price | minus: current.price | times: 100 | divided_by: current.compare_at_price -%}
                 {%- endif -%}
-                <span class="badge-save" data-save {% if saved == 0 %}hidden{% endif %}>
+                <span class="g-badge-save" data-save {% if saved == 0 %}hidden{% endif %}>
                   -{{ saved }} %
                 </span>
               </div>
               {%- if block.settings.note != blank -%}
-                <p class="pdp__tax">{{ block.settings.note }}</p>
+                <p class="g-pdp__tax">{{ block.settings.note }}</p>
               {%- endif -%}
             </div>
 
           {%- when 'pitch' -%}
             {%- if block.settings.text != blank -%}
-              <div class="pdp__pitch rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+              <div class="g-pdp__pitch g-rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
             {%- endif -%}
 
           {%- when 'divider' -%}
-            <hr class="pdp__rule" {{ block.shopify_attributes }}>
+            <hr class="g-pdp__rule" {{ block.shopify_attributes }}>
 
           {%- when 'stock' -%}
             <p
-              class="stock{% unless current.available %} stock--out{% endunless %}"
+              class="g-stock{% unless current.available %} g-stock--out{% endunless %}"
               data-stock
               data-in-stock="{{ block.settings.in_stock }}"
               data-sold-out="Épuisé"
@@ -164,13 +164,13 @@
                       endif
                     -%}
 
-                    <fieldset class="opt" data-option-index="{{ index0 }}">
-                      <div class="opt__head">
-                        <legend class="opt__label">{{ option.name }}</legend>
-                        <span class="opt__chosen" data-option-chosen>{{ option.selected_value }}</span>
+                    <fieldset class="g-opt" data-option-index="{{ index0 }}">
+                      <div class="g-opt__head">
+                        <legend class="g-opt__label">{{ option.name }}</legend>
+                        <span class="g-opt__chosen" data-option-chosen>{{ option.selected_value }}</span>
                       </div>
 
-                      <div class="opt__values{% if is_swatch %} opt__values--swatch{% endif %}">
+                      <div class="g-opt__values{% if is_swatch %} g-opt__values--swatch{% endif %}">
                         {%- for value in option.values -%}
                           {%- liquid
                             assign value_available = false
@@ -188,7 +188,7 @@
                           -%}
 
                           {%- if is_swatch and swatch_image -%}
-                            <label class="swatch{% unless value_available %} swatch--out{% endunless %}" data-value-label>
+                            <label class="g-swatch{% unless value_available %} g-swatch--out{% endunless %}" data-value-label>
                               <input
                                 type="radio"
                                 name="option-{{ option.position }}"
@@ -196,10 +196,10 @@
                                 {% if option.selected_value == value %}checked{% endif %}
                               >
                               <img src="{{ swatch_image | image_url: width: 120 }}" alt="" width="44" height="44" loading="lazy">
-                              <span class="swatch__name">{{ value }}</span>
+                              <span class="g-swatch__name">{{ value }}</span>
                             </label>
                           {%- else -%}
-                            <label class="pill{% unless value_available %} pill--out{% endunless %}" data-value-label>
+                            <label class="g-pill{% unless value_available %} g-pill--out{% endunless %}" data-value-label>
                               <input
                                 type="radio"
                                 name="option-{{ option.position }}"
@@ -217,9 +217,9 @@
 
                 <input type="hidden" name="id" value="{{ current.id }}" data-variant-id>
 
-                <div class="qty-field">
-                  <label class="opt__label" for="Quantity">Quantité</label>
-                  <div class="qty" data-qty>
+                <div class="g-qty-field">
+                  <label class="g-opt__label" for="Quantity">Quantité</label>
+                  <div class="g-qty" data-qty>
                     <button type="button" data-qty-step="-1" aria-label="Diminuer la quantité">&minus;</button>
                     <input id="Quantity" type="number" name="quantity" value="1" min="1" inputmode="numeric">
                     <button type="button" data-qty-step="1" aria-label="Augmenter la quantité">+</button>
@@ -227,15 +227,15 @@
                 </div>
 
                 {%- if block.settings.size_guide != blank -%}
-                  <a class="size-guide" href="{{ block.settings.size_guide }}">
-                    <span class="size-guide__icon">{% render 'gemea-icon', name: 'ruler', size: 15 %}</span>
+                  <a class="g-size-guide" href="{{ block.settings.size_guide }}">
+                    <span class="g-size-guide__icon">{% render 'gemea-icon', name: 'ruler', size: 15 %}</span>
                     {{ block.settings.size_guide_label }}
                   </a>
                 {%- endif -%}
 
-                <div class="buy">
+                <div class="g-buy">
                   <button
-                    class="btn btn--full"
+                    class="g-btn g-btn--full"
                     type="submit"
                     name="add"
                     data-add-button
@@ -258,7 +258,7 @@
             </div>
 
           {%- when 'features' -%}
-            <ul class="features" {{ block.shopify_attributes }}>
+            <ul class="g-features" {{ block.shopify_attributes }}>
               {%- for i in (1..3) -%}
                 {%- assign key = 'text_' | append: i -%}
                 {%- assign line = block.settings[key] -%}
@@ -269,22 +269,22 @@
             </ul>
 
           {%- when 'description' -%}
-            <details class="accordion" open {{ block.shopify_attributes }}>
+            <details class="g-accordion" open {{ block.shopify_attributes }}>
               <summary>{{ block.settings.heading }}</summary>
-              <div class="accordion__body rte">{{ product.description }}</div>
+              <div class="g-accordion__body g-rte">{{ product.description }}</div>
             </details>
 
           {%- when 'accordion' -%}
-            <details class="accordion" {{ block.shopify_attributes }}>
+            <details class="g-accordion" {{ block.shopify_attributes }}>
               <summary>{{ block.settings.heading }}</summary>
-              <div class="accordion__body rte">{{ block.settings.content }}</div>
+              <div class="g-accordion__body g-rte">{{ block.settings.content }}</div>
             </details>
 
           {%- when 'share' -%}
             {%- assign share_url = shop.url | append: product.url | url_encode -%}
             {%- assign share_title = product.title | url_encode -%}
-            <div class="share" {{ block.shopify_attributes }}>
-              <span class="share__label">Partager :</span>
+            <div class="g-share" {{ block.shopify_attributes }}>
+              <span class="g-share__label">Partager :</span>
               <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url }}" target="_blank" rel="noopener" aria-label="Facebook">
                 {% render 'gemea-icon', name: 'facebook', size: 18 %}
               </a>
@@ -308,14 +308,14 @@
   formulaire, elle le soumet — un seul panier, une seule source de vérité.
 {%- endcomment -%}
 {%- if section.settings.sticky_buy -%}
-  <div class="sticky-buy" data-sticky-buy data-visible="false">
-    <div class="sticky-buy__inner">
-      <div class="sticky-buy__text">
-        <div class="sticky-buy__title">{{ product.title }}</div>
-        <div class="sticky-buy__price" data-variant-price>{% render 'gemea-price', target: current %}</div>
+  <div class="g-sticky-buy" data-sticky-buy data-visible="false">
+    <div class="g-sticky-buy__inner">
+      <div class="g-sticky-buy__text">
+        <div class="g-sticky-buy__title">{{ product.title }}</div>
+        <div class="g-sticky-buy__price" data-variant-price>{% render 'gemea-price', target: current %}</div>
       </div>
       <button
-        class="btn"
+        class="g-btn"
         type="button"
         data-sticky-add
         data-add="Ajouter au panier"
@@ -332,8 +332,8 @@
   </div>
 {%- endif -%}
 
-<dialog class="lightbox" data-lightbox>
-  <button class="lightbox__close" type="button" data-lightbox-close aria-label="Fermer">
+<dialog class="g-lightbox" data-lightbox>
+  <button class="g-lightbox__close" type="button" data-lightbox-close aria-label="Fermer">
     {% render 'gemea-icon', name: 'close', size: 20 %}
   </button>
   <img data-lightbox-image src="" alt="">

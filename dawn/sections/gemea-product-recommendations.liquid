@@ -10,18 +10,18 @@
   data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.count }}"
 >
   {%- if recommendations.performed and recommendations.products_count > 0 -%}
-    <section class="section">
-      <div class="page-width">
-        <h2 class="section-title">{{ section.settings.heading }}</h2>
+    <section class="g-section">
+      <div class="g-page-width">
+        <h2 class="g-section-title">{{ section.settings.heading }}</h2>
 
-        <div class="carousel" data-carousel>
-          <ul class="rail" data-carousel-track>
+        <div class="g-carousel" data-carousel>
+          <ul class="g-rail" data-carousel-track>
             {%- for product in recommendations.products -%}
               {% render 'gemea-product-card', card_product: product, show_vendor: false, quick_add: section.settings.quick_add %}
             {%- endfor -%}
           </ul>
 
-          <div class="carousel__progress" data-progress aria-hidden="true"><span></span></div>
+          <div class="g-carousel__progress" data-progress aria-hidden="true"><span></span></div>
         </div>
       </div>
     </section>

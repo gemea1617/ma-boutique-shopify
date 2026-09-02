@@ -12,6 +12,10 @@
         <span class="menu-toggle__close">{% render 'icon', name: 'close', size: 20 %}</span>
       </button>
 
+      <a class="header__icon" href="{{ routes.search_url }}" aria-label="{{ 'general.search.title' | t }}">
+        {% render 'icon', name: 'search' %}
+      </a>
+
       <nav class="header__nav">
         {%- for link in section.settings.menu.links -%}
           <a class="nav-link" href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %}>
@@ -36,10 +40,6 @@
     </a>
 
     <div class="header__actions">
-      <a class="header__icon" href="{{ routes.search_url }}" aria-label="{{ 'general.search.title' | t }}">
-        {% render 'icon', name: 'search' %}
-      </a>
-
       {%- if shop.customer_accounts_enabled -%}
         <a class="header__icon" href="{{ routes.account_url }}" aria-label="{{ 'customer.account.title' | t }}">
           {% render 'icon', name: 'account' %}

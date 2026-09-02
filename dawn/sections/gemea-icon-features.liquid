@@ -1,15 +1,15 @@
 {%- comment -%}
   Les garanties de la boutique : une icône, un titre, une phrase.
 {%- endcomment -%}
-<section class="section guarantees">
-  <div class="page-width">
+<section class="g-section guarantees">
+  <div class="g-page-width">
     {%- if section.settings.heading != blank -%}
-      <h2 class="section-title">{{ section.settings.heading }}</h2>
+      <h2 class="g-section-title">{{ section.settings.heading }}</h2>
     {%- endif -%}
 
-    <div class="guarantees__grid">
+    <div class="g-guarantees__grid">
       {%- for block in section.blocks -%}
-        <div class="guarantee" {{ block.shopify_attributes }}>
+        <div class="g-guarantee" {{ block.shopify_attributes }}>
           {% render 'gemea-icon', name: block.settings.icon, size: 52 %}
           <h3>{{ block.settings.heading }}</h3>
           <p>{{ block.settings.text }}</p>

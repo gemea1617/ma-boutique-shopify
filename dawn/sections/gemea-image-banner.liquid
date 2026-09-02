@@ -3,10 +3,10 @@
   Un voile assombrit l'image : la charte interdit de poser le texte sur une
   photo chargée sans voile, et c'est aussi ce qui garantit la lisibilité.
 {%- endcomment -%}
-<section class="banner">
+<section class="g-banner">
   {%- if section.settings.image != blank -%}
     <img
-      class="banner__image"
+      class="g-banner__image"
       src="{{ section.settings.image | image_url: width: 2000 }}"
       srcset="
         {{ section.settings.image | image_url: width: 900 }} 900w,
@@ -21,15 +21,15 @@
     >
   {%- endif -%}
 
-  <div class="banner__veil" style="background: rgb(15 15 15 / {{ section.settings.veil | divided_by: 100.0 }})"></div>
+  <div class="g-banner__veil" style="background: rgb(15 15 15 / {{ section.settings.veil | divided_by: 100.0 }})"></div>
 
-  <div class="banner__copy page-width page-width--narrow">
+  <div class="g-banner__copy g-page-width g-page-width--narrow">
     <h2>{{ section.settings.heading }}</h2>
     {%- if section.settings.text != blank -%}
       <p>{{ section.settings.text }}</p>
     {%- endif -%}
     {%- if section.settings.button_label != blank -%}
-      <a class="btn btn--light" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+      <a class="g-btn g-btn--light" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
     {%- endif -%}
   </div>
 </section>

@@ -7,12 +7,12 @@
 
 {%- if section.settings.text != blank -%}
   <div
-    class="announcement"
+    class="g-announcement"
     data-announcement
     data-key="{{ section.settings.text | strip | md5 }}"
     {% if section.settings.dismissible %}hidden{% endif %}
   >
-    <div class="announcement__text">
+    <div class="g-announcement__text">
       {%- if section.settings.link != blank -%}
         <a href="{{ section.settings.link }}">{{ section.settings.text }}</a>
       {%- else -%}
@@ -22,7 +22,7 @@
 
     {%- if section.settings.dismissible -%}
       <button
-        class="announcement__close"
+        class="g-announcement__close"
         type="button"
         data-announcement-close
         aria-label="Fermer"

@@ -10,7 +10,9 @@ boutique : il n'appartient pas à ce thème et n'est pas contrôlé ici.
 """
 import json, re, pathlib, sys
 
-SKIP = {'.git', 'balance'}
+# balance/ et dawn/ sont des portages vers d'autres thèmes : ils ont leurs
+# propres conventions de nommage et sont vérifiés séparément.
+SKIP = {'.git', 'balance', 'dawn'}
 
 def walk(pattern):
     for path in sorted(pathlib.Path('.').rglob(pattern)):

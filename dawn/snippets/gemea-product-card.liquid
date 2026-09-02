@@ -9,12 +9,12 @@
 
 {%- if card_product and card_product != empty -%}
   {%- assign variant = card_product.selected_or_first_available_variant -%}
-  <li class="card">
-    <div class="card__media">
+  <li class="g-card">
+    <div class="g-card__media">
       <a href="{{ card_product.url }}" aria-label="{{ card_product.title | escape }}">
         {%- if card_product.featured_media -%}
           <img
-            class="card__img--main"
+            class="g-card__img--main"
             src="{{ card_product.featured_media | image_url: width: 800 }}"
             srcset="
               {{ card_product.featured_media | image_url: width: 400 }} 400w,
@@ -28,7 +28,7 @@
           >
           {%- if card_product.media[1] -%}
             <img
-              class="card__img--hover"
+              class="g-card__img--hover"
               src="{{ card_product.media[1] | image_url: width: 800 }}"
               alt=""
               width="{{ card_product.media[1].width }}"
@@ -37,19 +37,19 @@
             >
           {%- endif -%}
         {%- else -%}
-          <span class="placeholder">{% render 'gemea-logo', width: 62, unique_id: card_product.id %}</span>
+          <span class="g-placeholder">{% render 'gemea-logo', width: 62, unique_id: card_product.id %}</span>
         {%- endif -%}
       </a>
 
       {%- if card_product.available == false -%}
-        <span class="card__badge card__badge--sold">Épuisé</span>
+        <span class="g-card__badge g-card__badge--sold">Épuisé</span>
       {%- elsif card_product.compare_at_price > card_product.price -%}
-        <span class="card__badge">Promo</span>
+        <span class="g-card__badge">Promo</span>
       {%- endif -%}
 
       {%- if quick_add and card_product.available and card_product.variants.size == 1 -%}
         <button
-          class="card__add"
+          class="g-card__add"
           type="button"
           data-quick-add="{{ variant.id }}"
           aria-label="Ajouter au panier"
@@ -60,23 +60,23 @@
       {%- endif -%}
     </div>
 
-    <div class="card__info">
+    <div class="g-card__info">
       {%- if show_vendor and card_product.vendor != blank -%}
-        <div class="card__vendor">{{ card_product.vendor }}</div>
+        <div class="g-card__vendor">{{ card_product.vendor }}</div>
       {%- endif -%}
-      <a class="card__title" href="{{ card_product.url }}">{{ card_product.title }}</a>
-      <div class="card__price">{% render 'gemea-price', target: card_product, show_from: true %}</div>
+      <a class="g-card__title" href="{{ card_product.url }}">{{ card_product.title }}</a>
+      <div class="g-card__price">{% render 'gemea-price', target: card_product, show_from: true %}</div>
     </div>
   </li>
 {%- else -%}
   {%- comment -%} Squelette affiché dans l'éditeur tant qu'aucun produit n'est choisi {%- endcomment -%}
-  <li class="card">
-    <div class="card__media">
-      <span class="placeholder">{% render 'gemea-logo', width: 62, unique_id: 'ph' %}</span>
+  <li class="g-card">
+    <div class="g-card__media">
+      <span class="g-placeholder">{% render 'gemea-logo', width: 62, unique_id: 'ph' %}</span>
     </div>
-    <div class="card__info">
-      <span class="card__title">Nom du produit</span>
-      <div class="card__price">{{ 1990 | money }}</div>
+    <div class="g-card__info">
+      <span class="g-card__title">Nom du produit</span>
+      <div class="g-card__price">{{ 1990 | money }}</div>
     </div>
   </li>
 {%- endif -%}
