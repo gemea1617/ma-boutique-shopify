@@ -264,9 +264,38 @@ for nom in SNIPPETS:
     src = RACINE / f'snippets/{nom}.liquid'
     (SORTIE / f'snippets/gemea-{nom}.liquid').write_text(reecrire(src.read_text()))
 
+PREAMBULE = """{%- comment -%}
+  Feuille et scripts de la charte GEMEA.
+
+  Ils sont chargés ici plutôt que depuis layout/theme.liquid pour ne pas
+  toucher au fichier du thème hôte : cette section est rendue sur toutes les
+  pages via le groupe d'en-tête, la couverture est donc la même.
+
+  La classe `gemea` posée sur <body> délimite la portée de notre feuille :
+  chacun de ses sélecteurs en descend, si bien que le panier, la recherche et
+  les autres pages restées à l'hôte gardent leur apparence d'origine. Sans
+  elle, nos règles repeindraient son tiroir de panier, qui emploie les mêmes
+  noms de classes que nous.
+
+  Pour s'en passer, ajouter `gemea` à la classe du <body> dans
+  layout/theme.liquid et supprimer le script ci-dessous.
+{%- endcomment -%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Jost:wght@200;300;400;500&display=swap">
+{{ 'gemea.css' | asset_url | stylesheet_tag }}
+<script>document.body.classList.add('gemea');</script>
+<script src="{{ 'gemea.js' | asset_url }}" defer="defer"></script>
+
+"""
+
 for nom in SECTIONS:
     src = RACINE / f'sections/{nom}.liquid'
-    (SORTIE / f'sections/gemea-{nom}.liquid').write_text(reecrire(src.read_text()))
+    txt = reecrire(src.read_text())
+    if nom == 'header':
+        txt = PREAMBULE + txt
+    (SORTIE / f'sections/gemea-{nom}.liquid').write_text(txt)
 
 (SORTIE / 'assets/gemea.js').write_text(renommer_js((RACINE / 'assets/theme.js').read_text()))
 
