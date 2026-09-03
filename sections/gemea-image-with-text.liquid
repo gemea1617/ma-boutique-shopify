@@ -1,0 +1,179 @@
+{%- style -%}
+  .gemea .g-split__media--video,
+  .gemea .g-split__media--embed { overflow: hidden; }
+  .gemea .g-split__media video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .gemea .g-split__media iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+  /* Recadre l'embed 16:9 pour remplir le bloc sans bandes noires. */
+  @supports (width: 100cqw) {
+    .gemea .g-split__media--embed { container-type: size; }
+    .gemea .g-split__media--embed iframe {
+      width: max(100cqw, calc(100cqh * 16 / 9));
+      height: max(100cqh, calc(100cqw * 9 / 16));
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign autoplay = section.settings.video_autoplay
+  assign loop = section.settings.video_loop
+  assign controls = section.settings.video_controls
+-%}
+
+<section class="g-split{% if section.settings.reverse %} g-split--reverse{% endif %}">
+  <div class="g-split__media{% if section.settings.video != blank %} g-split__media--video{% elsif section.settings.video_url != blank %} g-split__media--embed{% endif %}">
+    {%- if section.settings.video != blank -%}
+      {{
+        section.settings.video
+        | video_tag:
+          image_size: '1200x',
+          autoplay: autoplay,
+          loop: loop,
+          muted: true,
+          controls: controls,
+          preload: 'metadata'
+      }}
+    {%- elsif section.settings.video_url != blank -%}
+      {%- liquid
+        assign video_id = section.settings.video_url.id
+        if section.settings.video_url.type == 'youtube'
+          capture embed_url
+            echo 'https://www.youtube.com/embed/'
+            echo video_id
+            echo '?playsinline=1&rel=0&modestbranding=1&mute=1'
+            if autoplay
+              echo '&autoplay=1'
+            endif
+            if loop
+              echo '&loop=1&playlist='
+              echo video_id
+            endif
+            unless controls
+              echo '&controls=0'
+            endunless
+          endcapture
+        else
+          capture embed_url
+            echo 'https://player.vimeo.com/video/'
+            echo video_id
+            echo '?muted=1&dnt=1'
+            if autoplay
+              echo '&autoplay=1'
+            endif
+            if loop
+              echo '&loop=1'
+            endif
+            unless controls
+              echo '&background=1'
+            endunless
+          endcapture
+        endif
+      -%}
+      <iframe
+        src="{{ embed_url }}"
+        title="{{ section.settings.video_alt | default: section.settings.heading | escape }}"
+        frameborder="0"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    {%- elsif section.settings.image != blank -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 1200 }}"
+        srcset="
+          {{ section.settings.image | image_url: width: 600 }} 600w,
+          {{ section.settings.image | image_url: width: 1200 }} 1200w
+        "
+        sizes="(min-width: 900px) 50vw, 100vw"
+        alt="{{ section.settings.image.alt | escape }}"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        loading="lazy"
+      >
+    {%- else -%}
+      <span class="g-placeholder">{% render 'gemea-logo', width: 110, unique_id: section.id %}</span>
+    {%- endif -%}
+  </div>
+
+  <div class="g-split__copy">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="g-eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    <h2>{{ section.settings.heading }}</h2>
+    <div class="g-rte" style="margin-top:16px">{{ section.settings.text }}</div>
+    {%- if section.settings.button_label != blank -%}
+      <div style="margin-top:30px">
+        <a class="g-btn g-btn--ghost" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image et texte",
+  "settings": [
+    { "type": "checkbox", "id": "reverse", "label": "Média à droite", "default": false },
+    { "type": "header", "content": "Média" },
+    {
+      "type": "paragraph",
+      "content": "La vidéo Shopify est prioritaire, puis le lien YouTube/Vimeo, puis l'image."
+    },
+    { "type": "video", "id": "video", "label": "Vidéo (hébergée par Shopify)" },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "accept": ["youtube", "vimeo"],
+      "label": "Ou lien vidéo YouTube / Vimeo"
+    },
+    {
+      "type": "text",
+      "id": "video_alt",
+      "label": "Description de la vidéo",
+      "info": "Utilisée comme titre de l'iframe pour l'accessibilité."
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "Lecture automatique",
+      "default": true,
+      "info": "La vidéo est toujours coupée au démarrage : les navigateurs bloquent le son en lecture automatique."
+    },
+    { "type": "checkbox", "id": "video_loop", "label": "Lecture en boucle", "default": true },
+    { "type": "checkbox", "id": "video_controls", "label": "Afficher les contrôles", "default": false },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Affichée si aucune vidéo n'est définie."
+    },
+    { "type": "header", "content": "Texte" },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Notre matière" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Plaqué or 18 carats" },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Texte",
+      "default": "<p>Une couche d'or de 3 microns déposée sur laiton, épaisse assez pour tenir la douche, la mer et les jours qui s'enchaînent. Nos pièces ne noircissent pas et ne verdissent pas la peau.</p>"
+    },
+    { "type": "text", "id": "button_label", "label": "Bouton" },
+    { "type": "url", "id": "button_link", "label": "Lien du bouton" }
+  ],
+  "presets": [{ "name": "Image et texte" }]
+}
+{% endschema %}
