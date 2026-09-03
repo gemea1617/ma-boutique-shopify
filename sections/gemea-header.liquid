@@ -1,0 +1,225 @@
+{%- comment -%}
+  Feuille et scripts de la charte GEMEA.
+
+  Ils sont chargés ici plutôt que depuis layout/theme.liquid pour ne pas
+  toucher au fichier du thème hôte : cette section est rendue sur toutes les
+  pages via le groupe d'en-tête, la couverture est donc la même.
+
+  La classe `gemea` posée sur <body> délimite la portée de notre feuille :
+  chacun de ses sélecteurs en descend, si bien que le panier, la recherche et
+  les autres pages restées à l'hôte gardent leur apparence d'origine. Sans
+  elle, nos règles repeindraient son tiroir de panier, qui emploie les mêmes
+  noms de classes que nous.
+
+  Pour s'en passer, ajouter `gemea` à la classe du <body> dans
+  layout/theme.liquid et supprimer le script ci-dessous.
+{%- endcomment -%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Jost:wght@200;300;400;500&display=swap">
+{{ 'gemea.css' | asset_url | stylesheet_tag }}
+<script>document.body.classList.add('gemea');</script>
+<script src="{{ 'gemea.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  /* Le menu occupe sa propre ligne, centrée sous la marque.
+
+     Sur une seule ligne, la grille « 1fr auto 1fr » impose à la colonne de
+     droite — deux icônes — la largeur de celle de gauche, qui doit loger la
+     recherche et six intitulés : environ 640 px pour 536 px disponibles à
+     1360 px de page. Les liens passaient donc à la ligne un par un, d'où le
+     tassement et les hauteurs inégales. */
+  .gemea .g-nav-link {
+    white-space: nowrap;
+  }
+
+  @media (min-width: 990px) {
+    .gemea .g-header__inner {
+      grid-template-areas:
+        'left logo actions'
+        'nav  nav  nav';
+      row-gap: 20px;
+      padding-block: 24px;
+    }
+
+    .gemea .g-header__left { grid-area: left; }
+    .gemea .g-header__logo { grid-area: logo; }
+    .gemea .g-header__actions { grid-area: actions; }
+
+    .gemea .g-header__nav {
+      grid-area: nav;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      column-gap: clamp(28px, 3.4vw, 46px);
+      row-gap: 10px;
+    }
+  }
+{%- endstyle -%}
+
+<header class="g-header">
+  <div class="g-page-width g-header__inner">
+    <div class="g-header__left">
+      <button
+        class="g-header__icon g-menu-toggle"
+        type="button"
+        data-drawer-toggle
+        aria-expanded="false"
+        aria-label="Menu"
+      >
+        <span class="g-menu-toggle__open">{% render 'gemea-icon', name: 'menu', size: 20 %}</span>
+        <span class="g-menu-toggle__close">{% render 'gemea-icon', name: 'close', size: 20 %}</span>
+      </button>
+
+      <a class="g-header__icon" href="{{ routes.search_url }}" aria-label="Recherche">
+        {% render 'gemea-icon', name: 'search' %}
+      </a>
+    </div>
+
+    <a class="g-header__logo" href="{{ routes.root_url }}">
+      {%- if section.settings.logo != blank -%}
+        <img
+          src="{{ section.settings.logo | image_url: width: 400 }}"
+          alt="{{ shop.name | escape }}"
+          width="{{ section.settings.logo.width }}"
+          height="{{ section.settings.logo.height }}"
+          style="max-height: {{ section.settings.logo_height }}px"
+        >
+      {%- else -%}
+        <span class="g-wordmark">{{ shop.name | upcase | strip }}</span>
+      {%- endif -%}
+    </a>
+
+    <div class="g-header__actions">
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="g-header__icon" href="{{ routes.account_url }}" aria-label="Mon compte">
+          {% render 'gemea-icon', name: 'account' %}
+        </a>
+      {%- endif -%}
+
+      <a class="g-header__icon g-header__cart" href="{{ routes.cart_url }}" aria-label="Panier">
+        {% render 'gemea-icon', name: 'cart' %}
+        <span class="g-cart-count" {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+      </a>
+    </div>
+
+    <nav class="g-header__nav">
+      {%- for link in section.settings.menu.links -%}
+        <a class="g-nav-link" href="{{ link.url }}" {% if link.active %}aria-current="page"{% endif %}>
+          {{ link.title }}
+        </a>
+      {%- endfor -%}
+    </nav>
+  </div>
+
+</header>
+
+{% render 'gemea-menu-drawer', menu: section.settings.menu, section: section %}
+
+{% schema %}
+{
+  "name": "En-tête",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Hauteur du logo",
+      "min": 24,
+      "max": 70,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    }
+  ],
+  "enabled_on": {
+    "groups": [
+      "header"
+    ]
+  },
+  "blocks": [
+    {
+      "type": "utility",
+      "name": "Lien pratique",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icône",
+          "options": [
+            { "value": "account", "label": "Compte" },
+            { "value": "heart", "label": "Favoris" },
+            { "value": "ruler", "label": "Guide des tailles" },
+            { "value": "message", "label": "Contact" },
+            { "value": "truck", "label": "Livraison" },
+            { "value": "return", "label": "Retours" },
+            { "value": "shield", "label": "Garantie" },
+            { "value": "gem", "label": "Matière" },
+            { "value": "gift", "label": "Cadeau" }
+          ],
+          "default": "account"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Libellé",
+          "default": "Mon compte"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien"
+        }
+      ]
+    },
+    {
+      "type": "reassurance",
+      "name": "Réassurance",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icône",
+          "options": [
+            { "value": "account", "label": "Compte" },
+            { "value": "heart", "label": "Favoris" },
+            { "value": "ruler", "label": "Guide des tailles" },
+            { "value": "message", "label": "Contact" },
+            { "value": "truck", "label": "Livraison" },
+            { "value": "return", "label": "Retours" },
+            { "value": "shield", "label": "Garantie" },
+            { "value": "gem", "label": "Matière" },
+            { "value": "gift", "label": "Cadeau" }
+          ],
+          "default": "gem"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Titre",
+          "default": "Argent 925"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Des matériaux nobles et durables"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
